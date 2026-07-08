@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 003 功能完成 — 等待用户验收（构建时内容插件 + 项目详情页）**
+**Task 003 ✅ 已完成（含 Release Gate 验收 + 合并到 master + Tag v0.3.0）**
 
-- **Master Baseline：** `a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
-- **Develop HEAD：** `ed957a6` on `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master 8 commits）
-- **Release Review：** Task 001/002 已通过；Task 003 等待用户验收
-- **工作区状态：** Task 003 全部子任务完成，等待用户确认是否合并到 master
+- **Master Baseline：** Task 003 Release（Tag `v0.3.0`）
+- **Develop HEAD：** 与 master 同步（Task 003 已 FF 合并）
+- **Release Review：** Task 001/002/003 全部通过
+- **工作区状态：** Task 003 Release Gate 全部通过（14/14 Playwright 测试），已合并到 master 并打 Tag
 
 ### Task 进度总览
 
@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🟡 功能完成，等待验收（003.1-003.8 全部 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -31,11 +31,10 @@
 
 ### 后续开发顺序
 
-1. **Task 003** — Vite 构建时 Markdown 转换插件 + 项目详情页
-2. **Task 004** — `/interview` + `/ai-practice` 两个内容页
-3. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
-4. **Task 006** — Vercel 部署上线
-5. **Task 007** — Release Audit（最终质量关卡）
+1. **Task 004** — `/interview` + `/ai-practice` 两个内容页
+2. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
+3. **Task 006** — Vercel 部署上线
+4. **Task 007** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
 
@@ -44,8 +43,8 @@
 ## Task 003 — 构建时内容插件 + 项目详情页
 
 **开始时间：** 2026-07-09
-**状态：** 🚧 In Progress
-**Git 分支：** feature/task-003-content-plugin（从 develop `6d54dc1` 创建）
+**状态：** ✅ 已完成（含 Release Gate 验收 + 合并 master + Tag v0.3.0）
+**Git 分支：** feature/task-003-content-plugin（已 FF 合并到 develop → master）
 
 ### Execution Plan v2 要点
 
@@ -414,8 +413,80 @@ dist/
 │   ├── Skills-Cdv6AiB-.js      0.42 KB │ gzip:  0.34 KB   (占位)
 │   ├── About-TFiScCjP.js       0.42 KB │ gzip:  0.35 KB   (占位)
 │   ├── AiPractice-eRLynjzv.js  0.42 KB │ gzip:  0.33 KB   (占位)
-│   └── Interview-B6I_IOT-.js   0.45 KB │ gzip:  0.36 KB   (占位)
+│   └── Interview-B6I_IOT-.js   0.45 kB │ gzip:  0.36 kB   (占位)
 ```
+
+### 子任务 003.RG — Release Gate 验收（Playwright 端到端测试）
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成（14/14 测试通过）
+
+#### 验收流程
+
+1. **启动 dev server** — Vite dev server 运行于 `localhost:5174`（5173 被其他项目占用）
+2. **Playwright 浏览器自动化** — 14 项端到端测试覆盖所有验收点
+3. **截图保存** — `C:\Users\lai\AppData\Local\Temp\trae-release-gate\screenshots\`
+
+#### 测试覆盖（14 项）
+
+| # | 测试 | 结果 | 关键验证 |
+|---|------|------|----------|
+| 1 | 首页渲染 | ✅ | h1 + 3 项目卡片 + 时间线 + 联系方式 |
+| 2 | 江南出行详情页 | ✅ | h1 + GitHub 链接 + h2 + 表格 + 代码块 + DecisionSection |
+| 3 | 两地书详情页 | ✅ | 同上 |
+| 4 | 题库系统详情页 | ✅ | 同上 |
+| 5 | Markdown 元素 | ✅ | h2:11, p:25, table:4, strong:37, pre:1, hr:3（h3=0 内容未用 ###，可选） |
+| 6 | 代码块样式 | ✅ | pre:not(.shiki) bg = rgb(30,41,59) = --code-bg |
+| 7 | 上一篇/下一篇导航 | ✅ | jiangnan-travel → love-letter 导航成功 |
+| 8 | 404 页面 | ✅ | /projects/nonexistent → 重定向 404 |
+| 9 | 响应式桌面 (1280x800) | ✅ | 无水平溢出 |
+| 10 | 响应式平板 (768x1024) | ✅ | 无水平溢出 |
+| 11 | 响应式移动 (375x667) | ✅ | 无水平溢出 + 汉堡菜单 aria-label 匹配 |
+| 12 | 移动端项目详情 | ✅ | 表格父容器 overflow-x: auto（修复后） |
+| 13 | 点击卡片导航 | ✅ | 首页卡片 → 项目详情页 |
+| 14 | 全站控制台错误扫描 | ✅ | 4 个路由 0 错误 |
+
+#### Bug 修复清单
+
+| # | 问题 | 严重度 | 修复 | Commit |
+|---|------|--------|------|--------|
+| 1 | MarkdownContent 表格在移动端可能溢出（overflow-x: visible） | 🟡 P2 | `.markdown` 容器添加 `overflow-x: auto` | `02e79f8` |
+| 2 | 测试脚本 h3 检查失败（内容未使用 ### 标题） | 🟢 测试 | h3 改为可选警告（非代码 bug） | 测试脚本修改（未提交） |
+| 3 | 测试脚本汉堡菜单选择器未匹配（按钮用 aria-label + 图标无文本） | 🟢 测试 | 改用 `button[aria-label="切换菜单"]` 选择器 | 测试脚本修改（未提交） |
+
+#### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| Playwright 端到端测试 | ✅ 14/14 通过 |
+| 无运行时报错 | ✅ |
+| 无控制台错误 | ✅ 4 路由 0 错误 |
+| 无白屏 | ✅ 所有页面 h1 渲染 |
+| 无样式异常 | ✅ 代码块背景 + 表格溢出修复 |
+| 所有链接正常 | ✅ 导航 + 卡片点击 |
+| `npm run typecheck` | ✅ 通过（0 错误） |
+| `npm run build` | ✅ 成功（1640 模块，2.69s） |
+| lint | ⏭️ 跳过（项目未配置 ESLint） |
+
+#### 最终 Bundle Size（Release Gate 后）
+
+| Chunk | gzip | 说明 |
+|-------|------|------|
+| index.js | 41.66 KB | Vue + Router + Lucide |
+| Home.js | 4.48 KB | 首页 + virtual:content 数据 |
+| ProjectDetail.js | 10.97 KB | 懒加载（3 项目 + 3 决策 + 5 组件） |
+| index.css | 2.55 KB | 全局 + code-theme |
+| Home.css | 1.98 KB | 首页组件 |
+| ProjectDetail.css | 1.31 KB | 项目详情组件 |
+| **初始加载** | **50.67 KB** | 首屏 |
+| **懒加载** | **12.54 KB** | 项目详情 |
+
+#### Git 操作
+
+1. `feature/task-003-content-plugin` FF 合并到 `develop`
+2. `develop` FF 合并到 `master`
+3. 创建 Tag `v0.3.0`（Task 003 Release）
+4. 推送到 GitHub 远程仓库
 
 ---
 

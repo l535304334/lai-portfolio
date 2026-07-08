@@ -17,13 +17,13 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
-| Task 003 | 🟡 功能完成，等待用户验收（003.1-003.8 全部 ✅） |
-| Release Review | ✅ Task 001/002 已通过；Task 003 等待验收 |
-| **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
-| **Develop HEAD** | `ed957a6` on `feature/task-003-content-plugin`（领先 master 8 commits） |
-| **工作区状态** | Task 003 全部子任务完成，等待用户确认是否合并到 master |
-| 验证 | ✅ build 成功（1640 模块，初始 50.67 KB + ProjectDetail 懒加载 12.27 KB）/ typecheck 通过 |
-| **当前进度** | Task 003 功能完成，等待用户验收。验收通过后 FF 合并 develop → master（Task 003 Release Baseline） |
+| Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
+| Release Review | ✅ Task 001/002/003 全部通过 |
+| **Master Baseline** | Task 003 Release（Tag `v0.3.0`） |
+| **Develop HEAD** | 与 master 同步（Task 003 已 FF 合并） |
+| **工作区状态** | Task 003 Release Gate 全部通过，已合并 master + 打 Tag + 推送 GitHub |
+| 验证 | ✅ build 成功（1640 模块，初始 50.67 KB + ProjectDetail 懒加载 12.54 KB）/ typecheck 通过 / Playwright 14/14 |
+| **当前进度** | Task 003 已完成。等待用户批准开始 Task 004 |
 
 ---
 
@@ -120,7 +120,7 @@
 
 ---
 
-## 6. 当前阶段 — Task 003（进行中）
+## 6. 当前阶段 — Task 003（✅ 已完成）
 
 ### 目标
 
@@ -138,6 +138,14 @@
 | 003.6 | ProjectDetail 组装 | ✅ 完成 |
 | 003.7 | Decision 展示（DecisionSection.vue） | ✅ 完成 |
 | 003.8 | 最终验证 + Release Report | ✅ 完成 |
+| 003.RG | Release Gate 验收（Playwright 14/14） | ✅ 完成 |
+
+### Task 003 Release Gate 结果
+
+- ✅ Playwright 端到端测试 14/14 通过
+- ✅ 3 个项目详情页 + Markdown + Shiki + DecisionSection + 导航 + 404 + 响应式 全部验收
+- ✅ 修复 1 项代码 bug（MarkdownContent 表格 overflow-x: auto，commit `02e79f8`）
+- ✅ Tag `v0.3.0` 已创建并推送 GitHub
 
 ### Task 003 范围
 
@@ -220,7 +228,7 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
    - [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — 项目上下文索引
    - [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
    - 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
-3. **直接从 Task 003 开始** — Master Baseline `a805869`（Task 002 Release），Develop HEAD 可领先
+3. **直接从 Task 004 开始** — Master Baseline 为 Task 003 Release（Tag `v0.3.0`），develop 与 master 同步
 
 ### 接手后第一步
 
@@ -229,16 +237,16 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
 node --version   # 需 ≥18（当前 v22.19.0）
 npm --version    # 需 ≥9（当前 v11.18.0）
 
-# 2. 确认 Baseline（master 与 develop 可不同步，master 为 Release Baseline）
+# 2. 确认 Baseline（master 与 develop 同步，Task 003 已合并）
 git branch --show-current   # develop（默认开发分支）
-git rev-parse master        # 应为 a805869（Task 002 Release Baseline）
-git rev-parse develop       # 可领先 master（当前 6d54dc1）
+git rev-parse master        # Task 003 Release（Tag v0.3.0）
+git rev-parse develop       # 与 master 同步
 git status                  # 应为 clean
 
 # 3. 验证可运行
 npm install            # 恢复依赖
 npm run typecheck      # 应通过
-npm run build          # 应成功（gzip ~48KB）
+npm run build          # 应成功（gzip ~51KB 初始 + 12.54KB 懒加载）
 npm run dev            # 启动 localhost:5173 或 5174
 ```
 

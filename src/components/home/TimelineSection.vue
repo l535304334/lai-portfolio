@@ -19,7 +19,7 @@ defineProps<{
         <p class="timeline__eyebrow mono">// 技术成长</p>
         <h2 class="timeline__title">从单文件到分布式系统的演进</h2>
         <p class="timeline__lead">
-          三个项目按时间倒序排列，每个项目都是一次完整的能力跃迁。
+          三个项目按时间正序排列，每个项目都是一次完整的能力跃迁。
         </p>
       </header>
 

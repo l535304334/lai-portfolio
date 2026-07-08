@@ -132,12 +132,12 @@ const stats: HeroStat[] = [
 
 .hero__cta--primary {
   background-color: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .hero__cta--primary:hover {
   background-color: var(--color-accent-strong);
-  color: #fff;
+  color: var(--color-on-accent);
   transform: translateY(-1px);
 }
 

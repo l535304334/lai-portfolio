@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 003 Ready（Task 002 已合并到 master）**
+**Task 003 In Progress（构建时内容插件 + 项目详情页）**
 
 - **Master Baseline：** `a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
-- **Develop HEAD：** `6d54dc1`（可领先 master，含文档同步提交）· 默认开发分支 `develop` · feature/task-002-homepage 保留
+- **Develop HEAD：** feature/task-003-content-plugin（从 develop `6d54dc1` 创建）
 - **Release Review：** 已通过（Self Review 修复 1 WARNING + Acceptance Review 修复 1 P1 + 1 P2）
-- **工作区状态：** clean（1 个无关 untracked PNG）
+- **工作区状态：** Task 003 开发中
 
 ### Task 进度总览
 
@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **⏸️ Task 003 Ready** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -38,6 +38,61 @@
 5. **Task 007** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
+## Task 003 — 构建时内容插件 + 项目详情页
+
+**开始时间：** 2026-07-09
+**状态：** 🚧 In Progress
+**Git 分支：** feature/task-003-content-plugin（从 develop `6d54dc1` 创建）
+
+### Execution Plan v2 要点
+
+1. **Baseline 管理：** Master Baseline / Develop HEAD 分离，Release 以 master 为准
+2. **双虚拟模块：** virtual:content（摘要，无 HTML）+ virtual:project-detail（完整 HTML，懒加载）
+3. **Decision 简化：** 仅 Markdown → HTML 渲染，无结构化解析（用户决定，偏离 v1.2 §8 DecisionItem）
+4. **独立类型：** ProjectSummary 独立于 ProjectContent，不用 Omit 派生
+5. **类型拆分：** 5 个文件（content / project / decision / timeline / contact）
+6. **开发顺序：** 003.1→003.8，提前验证 virtual:content
+7. **最终验证：** Bundle Size 对比（ESLint 未配置，跳过 lint）
+
+### 子任务 003.1 — 类型设计 + 依赖安装
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件（5 项）
+
+- `src/types/content.ts` — 基础类型：ContentMeta, Metric
+- `src/types/project.ts` — ProjectSummary（首页，无 HTML）+ ProjectContent（详情页，含 HTML）
+- `src/types/decision.ts` — DecisionContent（frontmatter + html，无结构化解析）
+- `src/types/timeline.ts` — TimelineStage（首页时间线，当前静态）
+- `src/types/contact.ts` — ContactInfo（首页联系方式，当前静态）
+
+#### 新增依赖（4 项，均 devDependencies，不进运行时 bundle）
+
+- markdown-it ^14.3.0 — Markdown → HTML
+- gray-matter ^4.0.3 — Frontmatter 解析
+- shiki ^4.3.1 — 代码高亮（构建时）
+- @types/markdown-it ^14.1.2 — TS 类型声明
+
+#### 设计决策
+
+1. **ProjectSummary 独立于 ProjectContent** — 不用 Omit 派生，后续 ProjectContent 字段扩展不影响首页
+2. **DecisionContent 无结构化解析** — 用户决定不做 DecisionItem 解析器，仅 HTML 渲染（偏离 v1.2 §8，用户批准）
+3. **类型按域拆分** — 用户决定拆分为 5 文件，保持后续可维护性（v1.2 §8 说单文件，用户批准拆分）
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 5 文件职责清晰，类型匹配 frontmatter |
+| Duplicate Review | ✅ 新文件无重复（现有重复在 003.3 解决） |
+| Architecture Review | ✅ 用户批准的偏离已记录 |
+| Design Token Review | ✅ N/A（纯类型文件） |
+| typecheck | ✅ 通过 |
+| build | ✅ gzip ~52KB（与 Task 002 一致） |
 
 ---
 

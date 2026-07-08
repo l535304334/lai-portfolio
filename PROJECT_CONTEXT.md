@@ -2,9 +2,9 @@
 
 > 本文件是项目上下文索引，任何 AI 接手本项目时应优先阅读此文件，而非重新分析整个项目。
 > 最后更新：2026-07-09
-> 当前阶段：Task 003 Ready（Task 002 已合并到 master）
-> 当前 Baseline：master `a805869` · develop `a805869`（Task 002 Release, 2026-07-09）
-> 默认开发分支：`develop`
+> 当前阶段：Task 003 Planning（Task 002 已合并到 master）
+> Master Baseline：`a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
+> Develop HEAD：`6d54dc1`（可领先 master）· 默认开发分支：`develop`
 
 ---
 

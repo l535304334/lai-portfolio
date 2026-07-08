@@ -18,9 +18,9 @@
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
 | Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
-| **Git Commit** | master `a805869` · develop `a805869`（Task 002 Release） |
-| **当前分支** | `develop`（默认开发分支） |
-| **工作区状态** | clean |
+| **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
+| **Develop HEAD** | `6d54dc1`（可领先 master）· 默认开发分支：`develop` |
+| **工作区状态** | clean（1 个无关 untracked PNG） |
 | 验证 | ✅ build 成功（gzip ~48KB）/ typecheck 通过 / 无 TODO / 无 FIXME / 无 console.log |
 | **待用户操作** | 启动 Task 003 |
 
@@ -206,7 +206,7 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
    - [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — 项目上下文索引
    - [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
    - 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
-3. **直接从 Task 003 开始** — 当前 Baseline `a805869`（master == develop，Task 002 Release）
+3. **直接从 Task 003 开始** — Master Baseline `a805869`（Task 002 Release），Develop HEAD 可领先
 
 ### 接手后第一步
 
@@ -215,10 +215,10 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
 node --version   # 需 ≥18（当前 v22.19.0）
 npm --version    # 需 ≥9（当前 v11.18.0）
 
-# 2. 确认 Baseline
+# 2. 确认 Baseline（master 与 develop 可不同步，master 为 Release Baseline）
 git branch --show-current   # develop（默认开发分支）
-git log --oneline -6        # 顶部为 baseline 固化文档提交，其下为 a805869 (Task 002 Release) + 6013367 (fix) + 4db5f7f (docs) + df83559 (Task 002) + 2c57d64 (Task 001 handoff)
-git rev-parse master develop # 两者应均为 a805869（Task 002 Release Baseline）
+git rev-parse master        # 应为 a805869（Task 002 Release Baseline）
+git rev-parse develop       # 可领先 master（当前 6d54dc1）
 git status                  # 应为 clean
 
 # 3. 验证可运行

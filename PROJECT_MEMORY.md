@@ -10,10 +10,10 @@
 
 **Task 003 Ready（Task 002 已合并到 master）**
 
-- **当前 Baseline：** master `a805869` · develop `a805869`（Task 002 Release, 2026-07-09）
-- **Git 工作流：** master ← develop（Task 002 已 FF 合并）· 默认开发分支 `develop` · feature/task-002-homepage 保留
+- **Master Baseline：** `a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
+- **Develop HEAD：** `6d54dc1`（可领先 master，含文档同步提交）· 默认开发分支 `develop` · feature/task-002-homepage 保留
 - **Release Review：** 已通过（Self Review 修复 1 WARNING + Acceptance Review 修复 1 P1 + 1 P2）
-- **工作区状态：** 本地有文档更新待提交（Baseline 固化）
+- **工作区状态：** clean（1 个无关 untracked PNG）
 
 ### Task 进度总览
 

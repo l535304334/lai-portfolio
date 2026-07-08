@@ -3,8 +3,8 @@
 > 本文件是本项目所有 AI（Trae / Claude Code / Codex / ChatGPT 等）的统一协作规范。
 > 所有开发默认遵守本文件。如本文件与《架构确认文档-v1.2.md》冲突，以 v1.2 为准并立即报告冲突。
 > 最后更新：2026-07-09
-> 当前 Baseline：master `a805869` · develop `a805869`（Task 002 Release, 2026-07-09）
-> 默认开发分支：`develop`
+> Master Baseline：`a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
+> Develop HEAD：`6d54dc1`（可领先 master，含文档同步提交）· 默认开发分支：`develop`
 
 ---
 

@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 002 已完成 · 等待 Task 003 启动指令**
+**Task 003 Ready（Task 002 已合并到 master）**
 
-- **当前 Baseline：** master `2c57d64` · develop `6013367`（2026-07-09）
-- **Git 工作流：** master → develop（已合并 feature/task-002-homepage）· feature/task-002-homepage 保留
+- **当前 Baseline：** master `a805869` · develop `a805869`（Task 002 Release, 2026-07-09）
+- **Git 工作流：** master ← develop（Task 002 已 FF 合并）· 默认开发分支 `develop` · feature/task-002-homepage 保留
 - **Release Review：** 已通过（Self Review 修复 1 WARNING + Acceptance Review 修复 1 P1 + 1 P2）
-- **工作区状态：** 本地有文档更新待提交（Duplicate Review 收尾 + 一致性同步）
+- **工作区状态：** 本地有文档更新待提交（Baseline 固化）
 
 ### Task 进度总览
 
@@ -22,8 +22,8 @@
 | 000 | 项目内容资产整理 | ✅ 已完成 |
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
-| **002** | **首页开发** | **✅ 已完成（含 Self Review）** |
-| **003** | **构建时内容插件 + 项目详情页** | **⏸️ 待开始（下一阶段）** |
+| **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
+| **003** | **构建时内容插件 + 项目详情页** | **⏸️ Task 003 Ready** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -45,7 +45,7 @@
 
 **完成时间：** 2026-07-08
 **状态：** ✅ 已完成（含 Self Review + Release Review + Acceptance Review）
-**Git Commit：** 代码 `df83559` + 文档 `4db5f7f` + 修复 `6013367`（已合并到 develop）
+**Git Commit：** 代码 `df83559` + 文档 `4db5f7f` + 修复 `6013367` + 收尾 `a805869`（已 FF 合并到 master，Task 002 Release Baseline）
 
 ### 本次修改内容
 
@@ -67,7 +67,7 @@
 - 从 `develop` 创建 `feature/task-002-homepage` 分支
 - 所有 Task 002 开发均在 feature 分支完成
 - Acceptance Review 通过后，fast-forward 合并 `feature/task-002-homepage` → `develop`（当前 develop HEAD `6013367`）
-- feature 分支保留，未合并 develop → master，等待用户确认
+- feature 分支保留，develop 已 FF 合并到 master（Task 002 Release Baseline `a805869`）
 
 ### 设计决策
 

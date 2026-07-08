@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅ 003.7 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -283,6 +283,65 @@
 | Home.js (gzip) | 4.50 KB | 4.48 KB | -0.02 KB（ArrowRight 共享 chunk） |
 | index.js (gzip) | 41.62 KB | 41.66 KB | +0.04 KB |
 | arrow-right.js (gzip) | — | 0.27 KB | 新增共享 chunk |
+
+### 子任务 003.7 — Decision 展示（DecisionSection.vue）
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件
+
+- `src/components/project/DecisionSection.vue` — 技术决策区段组件，区段标题（"TECH DECISIONS" eyebrow + "技术决策" h2 + 设计意图 hint）+ MarkdownContent 渲染决策 HTML
+
+#### 修改文件
+
+- `src/types/project.ts` — `ProjectContent` 新增 `decision?: DecisionContent` 字段（可选，按 slug 匹配 decisions/*.md）
+- `src/utils/content.ts` — 新增 `loadDecisionBySlug(root, slug)` 辅助函数；`scanProjectDetails` 在渲染项目 HTML 后尝试加载同 slug 决策文件并渲染 HTML；`virtual:project-detail` load 钩子新增 decisions 目录 HMR watch
+- `src/pages/ProjectDetail.vue` — 在 MarkdownContent 与 ProjectNav 之间插入 `<DecisionSection v-if="project.decision" :decision="project.decision" />`
+
+#### 设计决策
+
+1. **扩展 virtual:project-detail 而非新建虚拟模块** — 决策与项目一一对应（slug 匹配），合并到同一懒加载 chunk 减少模块数（KISS）；首页 `virtual:content` 不受影响，仍只含摘要
+2. **复用 MarkdownContent 组件** — 决策 Markdown 与项目 Markdown 共用同一渲染容器，DRY；表格、列表、加粗等样式一致
+3. **区段视觉层次：顶部 border + 大间距** — `margin-top: var(--space-16)` + `padding-top: var(--space-10)` + `border-top` 区分主文档与决策章节，无需新设计 token
+4. **eyebrow "TECH DECISIONS"** — 与 HeroSection / TimelineSection / ContactSection 的 eyebrow 模式一致（mono 字体 + accent 色 + 字间距 0.08em），保持设计语言统一
+5. **设计意图 hint 显式说明** — "不是'我做了什么'，而是'为什么这样做而不那样做'" — 直接引用《架构确认文档-v1.2.md》§4.1 设计意图，向面试官/导师明确区段价值
+6. **decision 可选字段** — `decision?: DecisionContent`，决策文件不存在时 `loadDecisionBySlug` 返回 null，`?? undefined` 后赋值；ProjectDetail 用 `v-if` 控制区段显示
+7. **`loadDecisionBySlug` 返回 null 而非 undefined** — 函数内部 null 表达"未找到文件"的语义，调用处 `?? undefined` 适配可选字段类型（TS strict 兼容）
+
+#### 遇到的问题与解决
+
+##### 问题 1：TypeScript 类型不匹配（typecheck 失败）
+
+**现象：** `loadDecisionBySlug` 返回 `Promise<DecisionContent | null>`，但 `ProjectContent.decision` 字段类型为 `DecisionContent | undefined`，TS2322 错误。
+
+**解决：** 调用处加 `?? undefined`：`decision: (await loadDecisionBySlug(root, slug)) ?? undefined`。
+
+**验证：** 修复后 `npm run typecheck` 通过。
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 4 文件改动聚焦决策展示，类型扩展可选字段不破坏既有 API |
+| Duplicate Review | ✅ 复用 DecisionContent 类型 + MarkdownContent 组件，无重复 |
+| Architecture Review | ✅ 符合 v1.2 §4（决策区段置于详情页底部）+ Plan v2 #3（标准 Markdown 渲染，无结构化解析器） |
+| Design Token Review | ✅ 全部使用 tokens.css 令牌（--space-* / --color-* / --text-* / --font-weight-*） |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ 1640 模块，2.35s |
+
+#### Bundle 影响
+
+| Chunk | 003.6 | 003.7 | 变化 |
+|-------|-------|-------|------|
+| ProjectDetail.js (gzip) | 7.57 KB | 10.97 KB | +3.40 KB（3 个决策文件渲染 HTML，懒加载） |
+| ProjectDetail.css (gzip) | 1.20 KB | 1.30 KB | +0.10 KB（DecisionSection 样式） |
+| Home.js (gzip) | 4.48 KB | 4.48 KB | 无变化（首页不加载决策） |
+| index.js (gzip) | 41.66 KB | 41.66 KB | 无变化 |
+| index.css (gzip) | 2.55 KB | 2.55 KB | 无变化 |
+
+**评估：** ProjectDetail.js 增长 3.40 KB gzip 来自 3 个决策文件的 Markdown 渲染 HTML（含表格、决策说明、加粗文本等），属内容驱动型增长，可接受。该 chunk 仅在访问 `/projects/:slug` 时懒加载，不影响首页性能。
 
 ---
 

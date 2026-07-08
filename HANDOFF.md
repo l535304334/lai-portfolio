@@ -17,13 +17,13 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
-| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅） |
+| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅ 003.7 ✅） |
 | Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
 | **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
 | **Develop HEAD** | `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master） |
-| **工作区状态** | Task 003 开发中（003.1-003.6 已完成，进行 003.7） |
-| 验证 | ✅ build 成功（gzip ~52KB + ProjectDetail 懒加载 7.57KB）/ typecheck 通过 |
-| **当前进度** | Task 003.6 完成（ProjectDetail.vue 已组装），继续 003.7 Decision 展示 |
+| **工作区状态** | Task 003 开发中（003.1-003.7 已完成，进行 003.8 最终验证） |
+| 验证 | ✅ build 成功（gzip ~52KB + ProjectDetail 懒加载 10.97KB）/ typecheck 通过 |
+| **当前进度** | Task 003.7 完成（DecisionSection 已集成），继续 003.8 最终验证 + Release Report |
 
 ---
 
@@ -84,6 +84,7 @@
     ├── layouts/DefaultLayout.vue
     ├── components/common/         # NavBar / Footer / ThemeToggle / BackToTop
     ├── components/home/           # HeroSection / ProjectCard / TimelineSection / ContactSection
+    ├── components/project/        # ProjectHeader / MetricCard / MarkdownContent / DecisionSection / ProjectNav
     ├── pages/                     # 8 个页面（见 §5）
     ├── styles/
     │   ├── tokens.css             # v1.2 §2.2 全量设计令牌
@@ -135,8 +136,8 @@
 | 003.4 | Markdown 渲染 + Shiki（virtual:project-detail） | ✅ 完成 |
 | 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | ✅ 完成 |
 | 003.6 | ProjectDetail 组装 | ✅ 完成 |
-| 003.7 | Decision 展示（DecisionSection.vue） | 🚧 进行中 |
-| 003.8 | 最终验证 + Release Report | 待开始 |
+| 003.7 | Decision 展示（DecisionSection.vue） | ✅ 完成 |
+| 003.8 | 最终验证 + Release Report | 🚧 进行中 |
 
 ### Task 003 范围
 

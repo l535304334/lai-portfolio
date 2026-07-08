@@ -6,6 +6,7 @@
  */
 
 import type { Metric } from './content'
+import type { DecisionContent } from './decision'
 
 /** 首页项目摘要 — 从 frontmatter 提取，无 HTML */
 export interface ProjectSummary {
@@ -20,7 +21,7 @@ export interface ProjectSummary {
   github?: string
 }
 
-/** 项目详情 — 含 markdown-it + Shiki 渲染后的 HTML */
+/** 项目详情 — 含 markdown-it + Shiki 渲染后的 HTML，可选附带技术决策 */
 export interface ProjectContent {
   slug: string
   title: string
@@ -32,4 +33,6 @@ export interface ProjectContent {
   order?: number
   github?: string
   html: string
+  /** 技术决策记录（按 slug 匹配 decisions/*.md，可选） */
+  decision?: DecisionContent
 }

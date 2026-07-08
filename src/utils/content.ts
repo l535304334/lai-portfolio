@@ -12,6 +12,7 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import type { Plugin } from 'vite'
 import type { ProjectSummary, ProjectContent } from '../types/project'
+import type { DecisionContent } from '../types/decision'
 import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
@@ -94,6 +95,7 @@ async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
         order: typeof data.order === 'number' ? data.order : undefined,
         github: data.github ? String(data.github) : undefined,
         html,
+        decision: (await loadDecisionBySlug(root, String(data.slug))) ?? undefined,
       }
       return detail
     }),
@@ -110,6 +112,25 @@ function getContentFiles(root: string, subdir: string): string[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith('.md'))
     .map((f) => path.resolve(dir, f))
+}
+
+/** 按 slug 加载单个决策文件，渲染为 DecisionContent；不存在返回 null */
+async function loadDecisionBySlug(root: string, slug: string): Promise<DecisionContent | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'decisions', `${slug}.md`)
+  if (!fs.existsSync(filePath)) return null
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in decision ${filePath}`)
+  }
+  const html = await renderMarkdown(content)
+  return {
+    slug: String(data.slug ?? slug),
+    type: 'decision',
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    html,
+  }
 }
 
 /** Vite 构建时内容插件 — 导出虚拟模块 */
@@ -140,6 +161,9 @@ export function contentPlugin(): Plugin {
         const details = await scanProjectDetails(root)
 
         for (const file of getContentFiles(root, 'projects')) {
+          this.addWatchFile(file)
+        }
+        for (const file of getContentFiles(root, 'decisions')) {
           this.addWatchFile(file)
         }
 

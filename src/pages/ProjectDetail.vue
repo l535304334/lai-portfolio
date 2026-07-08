@@ -5,6 +5,7 @@ import { projectDetails } from 'virtual:project-detail'
 import ProjectHeader from '@/components/project/ProjectHeader.vue'
 import MetricCard from '@/components/project/MetricCard.vue'
 import MarkdownContent from '@/components/project/MarkdownContent.vue'
+import DecisionSection from '@/components/project/DecisionSection.vue'
 import ProjectNav from '@/components/project/ProjectNav.vue'
 
 const route = useRoute()
@@ -53,6 +54,8 @@ onMounted(() => {
       </section>
 
       <MarkdownContent :html="project.html" />
+
+      <DecisionSection v-if="project.decision" :decision="project.decision" />
 
       <ProjectNav :prev="prev" :next="next" />
     </div>

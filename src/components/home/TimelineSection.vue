@@ -1,11 +1,5 @@
 <script setup lang="ts">
-interface TimelineStage {
-  date: string
-  title: string
-  stack: string
-  highlights: string[]
-  upcoming?: boolean
-}
+import type { TimelineStage } from '@/types/timeline'
 
 defineProps<{
   stages: TimelineStage[]

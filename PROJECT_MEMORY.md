@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -125,6 +125,46 @@
 | Design Token Review | ✅ N/A（无 CSS） |
 | typecheck | ✅ 通过 |
 | build | ✅ gzip ~52KB（插件未被消费，无运行时影响） |
+
+### 子任务 003.3 — Home.vue 改造 + 验证 virtual:content
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 修改文件（4 项）
+
+- `src/pages/Home.vue` — 移除 3 个 inline interface（ProjectSummary / TimelineStage / ContactInfo），移除硬编码 projects 数组（42 行），改用 `import { projectSummaries as projects } from 'virtual:content'`
+- `src/components/home/ProjectCard.vue` — 移除重复 interface（ProjectMetric + ProjectSummary，18 行），改用 `import type { ProjectSummary } from '@/types/project'`，处理可选 `order` 字段（`v-if="project.order"`）
+- `src/components/home/TimelineSection.vue` — 移除重复 interface（TimelineStage，8 行），改用 `import type { TimelineStage } from '@/types/timeline'`
+- `src/components/home/ContactSection.vue` — 移除重复 interface（ContactInfo，6 行），改用 `import type { ContactInfo } from '@/types/contact'`
+
+#### 设计决策
+
+1. **`projectSummaries as projects`** — 虚拟模块导出名是 `projectSummaries`，但 Home.vue 模板用 `projects` 变量名，用 `as` 别名保持模板不变，最小化改动
+2. **`order` 可选处理用 `v-if`** — `order?: number` 后，`String(undefined).padStart()` 会渲染 "undefined"，用 `v-if="project.order"` 在 order 未定义时隐藏序号徽章（KISS，order=0 在项目中不可能出现）
+3. **Timeline / Contact 保持静态** — 这两类数据属于 Task 005 范围，暂保留在 Home.vue 内联
+
+#### Duplicate Review 结果
+
+3 个重复 interface 全部消除：
+
+| Interface | 原位置 | 现位置 |
+|-----------|--------|--------|
+| ProjectSummary | Home.vue + ProjectCard.vue | `src/types/project.ts`（仅 1 处） |
+| TimelineStage | Home.vue + TimelineSection.vue | `src/types/timeline.ts`（仅 1 处） |
+| ContactInfo | Home.vue + ContactSection.vue | `src/types/contact.ts`（仅 1 处） |
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 4 文件改动最小化，类型导入正确 |
+| Duplicate Review | ✅ 3 个重复 interface 全部消除 |
+| Architecture Review | ✅ 符合 v1.2 §3.3 + Execution Plan v2 双虚拟模块设计 |
+| Design Token Review | ✅ N/A（无 CSS 改动） |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ Home.js gzip 4.50 KB（+0.04 KB vs Task 002），总 gzip ~52 KB |
 
 ---
 

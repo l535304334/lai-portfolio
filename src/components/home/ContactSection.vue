@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Github, Mail, ArrowUpRight } from 'lucide-vue-next'
-
-interface ContactInfo {
-  github: string
-  email: string | null
-}
+import type { ContactInfo } from '@/types/contact'
 
 const props = defineProps<{
   contact: ContactInfo

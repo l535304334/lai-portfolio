@@ -17,12 +17,13 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
+| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅） |
 | Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
 | **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
-| **Develop HEAD** | `6d54dc1`（可领先 master）· 默认开发分支：`develop` |
-| **工作区状态** | clean（1 个无关 untracked PNG） |
-| 验证 | ✅ build 成功（gzip ~48KB）/ typecheck 通过 / 无 TODO / 无 FIXME / 无 console.log |
-| **待用户操作** | 启动 Task 003 |
+| **Develop HEAD** | `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master） |
+| **工作区状态** | Task 003 开发中（003.1-003.3 已完成，进行 003.4） |
+| 验证 | ✅ build 成功（gzip ~52KB）/ typecheck 通过 |
+| **当前进度** | Task 003.3 完成（Home.vue 已消费 virtual:content），继续 003.4 Markdown 渲染 |
 
 ---
 
@@ -39,12 +40,12 @@
 | 字体 | Inter + JetBrains Mono（Google Fonts） | — |
 | 部署 | Vercel（SPA rewrites） | — |
 
-**运行时 bundle 仅含：** Vue 3 + Vue Router + Lucide Vue + CSS（gzip ~45KB）。
+**运行时 bundle 仅含：** Vue 3 + Vue Router + Lucide Vue + CSS（gzip ~52KB）。
 
 **运行时依赖（3 项）：** vue@^3.5.13 / vue-router@^4.5.0 / lucide-vue-next@^0.460.0
-**开发时依赖（5 项）：** @types/node / @vitejs/plugin-vue / typescript / vite / vue-tsc
+**开发时依赖（9 项）：** @types/node / @vitejs/plugin-vue / typescript / vite / vue-tsc / markdown-it / gray-matter / shiki / @types/markdown-it
 
-**Task 003 将引入（仅构建时）：** markdown-it / gray-matter / Shiki — **Task 002 不引入。**
+**Task 003 已引入（仅构建时，不进运行时 bundle）：** markdown-it ^14.3.0 / gray-matter ^4.0.3 / shiki ^4.3.1 / @types/markdown-it ^14.1.2
 
 ---
 
@@ -82,15 +83,23 @@
     ├── composables/useTheme.ts    # 单例主题（system/light/dark 三态）
     ├── layouts/DefaultLayout.vue
     ├── components/common/         # NavBar / Footer / ThemeToggle / BackToTop
+    ├── components/home/           # HeroSection / ProjectCard / TimelineSection / ContactSection
     ├── pages/                     # 8 个页面（见 §5）
     ├── styles/
     │   ├── tokens.css             # v1.2 §2.2 全量设计令牌
     │   └── global.css             # reset + .page 全局样式 + 工具类
+    ├── types/                     # Task 003 类型定义（按域拆分）
+    │   ├── content.ts             # ContentMeta / Metric
+    │   ├── project.ts             # ProjectSummary / ProjectContent
+    │   ├── decision.ts            # DecisionContent
+    │   ├── timeline.ts            # TimelineStage
+    │   └── contact.ts             # ContactInfo
     ├── content/                   # 14 个 Markdown 内容文件（Task 003 渲染）
     │   ├── personal/  projects/  decisions/
     │   ├── interview/  skills/  growth/  ai-practice/
     ├── assets/                    # 空（Task 004 SVG 图表）
-    └── utils/                     # 空（Task 003 content 工具）
+    └── utils/
+        └── content.ts             # Task 003 Vite 虚拟模块插件（virtual:content）
 ```
 
 ---
@@ -110,42 +119,46 @@
 
 ---
 
-## 6. 下一阶段 — Task 003
+## 6. 当前阶段 — Task 003（进行中）
 
 ### 目标
 
 构建时内容插件 + 项目详情页开发。
 
-### 需要开发的组件与文件
+### Execution Plan v2 子任务进度
 
-| 类型 | 文件 | 说明 |
-|------|------|------|
-| 插件 | `src/utils/content.ts`（或按 v1.2 决定位置） | Vite 虚拟模块 `virtual:content`，构建时解析 Markdown |
-| 类型 | `src/env.d.ts` 扩展或新建声明文件 | `virtual:content` 模块类型声明 |
-| 页面 | `src/pages/ProjectDetail.vue` | 项目详情页模板（替换占位） |
-| 配置 | `vite.config.ts` | 注册 Markdown 插件 |
+| 子任务 | 名称 | 状态 |
+|--------|------|------|
+| 003.1 | 类型设计 + 依赖安装 | ✅ 完成 |
+| 003.2 | virtual:content 插件实现 | ✅ 完成 |
+| 003.3 | Home.vue 改造 + 验证 virtual:content | ✅ 完成 |
+| 003.4 | Markdown 渲染 + Shiki（virtual:project-detail） | 🚧 进行中 |
+| 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | 待开始 |
+| 003.6 | ProjectDetail 组装 | 待开始 |
+| 003.7 | Decision 展示（DecisionSection.vue） | 待开始 |
+| 003.8 | 最终验证 + Release Report | 待开始 |
 
 ### Task 003 范围
 
-- Vite 构建时 Markdown 转换插件（virtual:content 虚拟模块）
+- Vite 构建时 Markdown 转换插件（virtual:content + virtual:project-detail 双虚拟模块）
 - 项目详情页模板（`ProjectDetail.vue` 替换占位）
 - 3 个项目 Markdown 渲染（江南出行 / 两地书 / 题库）
 - Shiki 代码高亮（仅构建时，深色主题不随主题切换）
 - markdown-it + gray-matter（仅构建时依赖）
+- Decision 内容仅 Markdown → HTML 渲染，无结构化解析（用户决定，偏离 v1.2 §8）
 
-### Task 003 将引入的依赖（仅构建时）
+### Task 003 已引入的依赖（仅构建时，不进运行时 bundle）
 
 | 类型 | 包名 | 用途 |
 |------|------|------|
-| 构建时 | markdown-it | Markdown → HTML |
-| 构建时 | gray-matter | Frontmatter 解析 |
-| 构建时 | Shiki | 代码高亮（v1.2 §2.7 规定） |
-
-**这些依赖仅在构建时使用，不进入运行时 bundle。**
+| 构建时 | markdown-it ^14.3.0 | Markdown → HTML |
+| 构建时 | gray-matter ^4.0.3 | Frontmatter 解析 |
+| 构建时 | shiki ^4.3.1 | 代码高亮（v1.2 §2.7 规定） |
+| 构建时 | @types/markdown-it ^14.1.2 | TS 类型声明 |
 
 ### Task 003 边界
 
-✅ **允许：** virtual:content 插件 / ProjectDetail.vue / Shiki / markdown-it / gray-matter
+✅ **允许：** virtual:content / virtual:project-detail 插件 / ProjectDetail.vue / Shiki / markdown-it / gray-matter
 ❌ **禁止：** 提前实现 Task 004 内容（`/interview` + `/ai-practice` 页面）
 
 ### Task 002 完成回顾

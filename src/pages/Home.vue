@@ -3,75 +3,9 @@ import HeroSection from '@/components/home/HeroSection.vue'
 import ProjectCard from '@/components/home/ProjectCard.vue'
 import TimelineSection from '@/components/home/TimelineSection.vue'
 import ContactSection from '@/components/home/ContactSection.vue'
-
-// Task 002 数据来源：从 src/content/*.md frontmatter 提取
-// Task 003 实现 virtual:content 插件后将替换为虚拟模块导入
-
-interface ProjectSummary {
-  slug: string
-  order: number
-  title: string
-  subtitle: string
-  tags: string[]
-  metrics: { label: string; value: number | string }[]
-  github?: string
-}
-
-interface TimelineStage {
-  date: string
-  title: string
-  stack: string
-  highlights: string[]
-  upcoming?: boolean
-}
-
-interface ContactInfo {
-  github: string
-  email: string | null
-}
-
-const projects: ProjectSummary[] = [
-  {
-    slug: 'jiangnan-travel',
-    order: 1,
-    title: '江南出行智慧服务平台',
-    subtitle: '基于二阶分布式锁和动态评分引擎的网约车调度系统',
-    tags: ['Java', 'Spring Boot', 'Redis', 'Vue 3', 'MySQL', 'Docker'],
-    metrics: [
-      { label: '源文件', value: 218 },
-      { label: 'API 端点', value: 97 },
-      { label: '测试用例', value: 155 },
-      { label: '数据库表', value: 27 },
-    ],
-    github: 'https://github.com/l535304334/jiangnan-travel',
-  },
-  {
-    slug: 'love-letter',
-    order: 2,
-    title: '两地书 Love',
-    subtitle: '为异地恋情侣打造的微信小程序陪伴工具',
-    tags: ['TypeScript', 'React', 'Taro', '微信云开发', 'DeepSeek', 'Serverless'],
-    metrics: [
-      { label: '页面', value: 23 },
-      { label: '云函数', value: 26 },
-      { label: '数据库集合', value: 22 },
-      { label: 'AI 功能', value: 9 },
-    ],
-  },
-  {
-    slug: 'exam-system',
-    order: 3,
-    title: '医学考试刷题系统',
-    subtitle: '单文件 14,000 行纯前端应用，SM-2 间隔复习算法实践',
-    tags: ['JavaScript', 'CSS', 'Chart.js', 'SM-2算法', 'localStorage'],
-    metrics: [
-      { label: '代码行数', value: 14563 },
-      { label: '题目数量', value: 5944 },
-      { label: '功能模块', value: 20 },
-      { label: 'V1→V9 迭代', value: 9 },
-    ],
-  },
-]
+import { projectSummaries as projects } from 'virtual:content'
+import type { TimelineStage } from '@/types/timeline'
+import type { ContactInfo } from '@/types/contact'
 
 const timelineStages: TimelineStage[] = [
   {

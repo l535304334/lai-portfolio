@@ -1,21 +1,7 @@
 <script setup lang="ts">
 import { ArrowRight, Github } from 'lucide-vue-next'
 import { computed } from 'vue'
-
-interface ProjectMetric {
-  label: string
-  value: number | string
-}
-
-interface ProjectSummary {
-  slug: string
-  order: number
-  title: string
-  subtitle: string
-  tags: string[]
-  metrics: ProjectMetric[]
-  github?: string
-}
+import type { ProjectSummary } from '@/types/project'
 
 const props = withDefaults(defineProps<{
   project: ProjectSummary
@@ -34,7 +20,7 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
     :class="{ 'card--featured': featured }"
   >
     <div class="card__head">
-      <span class="card__order mono">{{ String(project.order).padStart(2, '0') }}</span>
+      <span v-if="project.order" class="card__order mono">{{ String(project.order).padStart(2, '0') }}</span>
       <a
         v-if="project.github"
         :href="project.github"

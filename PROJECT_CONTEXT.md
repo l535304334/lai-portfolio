@@ -1,9 +1,9 @@
 # 项目上下文说明（PROJECT_CONTEXT.md）
 
 > 本文件是项目上下文索引，任何 AI 接手本项目时应优先阅读此文件，而非重新分析整个项目。
-> 最后更新：2026-07-08
+> 最后更新：2026-07-09
 > 当前阶段：Task 002 已完成 · 等待 Task 003 启动指令
-> 当前 Baseline：master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
+> 当前 Baseline：master `2c57d64` · develop `6013367`（2026-07-09）
 
 ---
 

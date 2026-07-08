@@ -2,7 +2,7 @@
 
 > 本文件记录每个 Task 的执行过程、设计决策、遇到的问题与遗留事项。
 > 供未来 AI 接手时快速理解历史决策脉络，避免重复踩坑。
-> 最后更新：2026-07-08
+> 最后更新：2026-07-09
 
 ---
 
@@ -10,10 +10,10 @@
 
 **Task 002 已完成 · 等待 Task 003 启动指令**
 
-- **当前 Baseline：** master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
-- **Git 工作流：** master → develop → feature/task-002-homepage（未合并，等待用户确认）
-- **Release Review：** 已通过（Self Review 修复 1 项响应式问题）
-- **工作区状态：** 本地有文档更新待提交（AI_RULES.md / PROJECT_CONTEXT.md / PROJECT_MEMORY.md / HANDOFF.md）
+- **当前 Baseline：** master `2c57d64` · develop `6013367`（2026-07-09）
+- **Git 工作流：** master → develop（已合并 feature/task-002-homepage）· feature/task-002-homepage 保留
+- **Release Review：** 已通过（Self Review 修复 1 WARNING + Acceptance Review 修复 1 P1 + 1 P2）
+- **工作区状态：** 本地有文档更新待提交（Duplicate Review 收尾 + 一致性同步）
 
 ### Task 进度总览
 
@@ -44,8 +44,8 @@
 ## Task 002 — 首页开发
 
 **完成时间：** 2026-07-08
-**状态：** ✅ 已完成（含 Self Review + Release Review）
-**Git Commit：** `df83559`（feature/task-002-homepage 分支，未合并）
+**状态：** ✅ 已完成（含 Self Review + Release Review + Acceptance Review）
+**Git Commit：** 代码 `df83559` + 文档 `4db5f7f` + 修复 `6013367`（已合并到 develop）
 
 ### 本次修改内容
 
@@ -66,7 +66,8 @@
 - 从 master `2c57d64` 创建 `develop` 分支
 - 从 `develop` 创建 `feature/task-002-homepage` 分支
 - 所有 Task 002 开发均在 feature 分支完成
-- **未合并回 develop，未切换 master，等待用户确认**
+- Acceptance Review 通过后，fast-forward 合并 `feature/task-002-homepage` → `develop`（当前 develop HEAD `6013367`）
+- feature 分支保留，未合并 develop → master，等待用户确认
 
 ### 设计决策
 
@@ -197,6 +198,44 @@
 | 6. hover/focus/active 状态有设计感 | ✅ | 卡片 hover translateY + border 变色；链接 hover 颜色过渡；CTA hover 阴影增强 |
 | 7. 网格破坏型编辑/便当布局 | ✅ | Bento 网格精选卡片 `grid-row: span 2` |
 | 8. 质感、纹理、氛围 | ⚠️ | 当前无纹理/质感装饰，纯色块为主。Task 007 可评估是否添加 |
+
+### Acceptance Review 补充
+
+**Acceptance Review 时间：** 2026-07-09
+**Git Commit：** `6013367`（feature/task-002-homepage，已合并到 develop）
+
+#### 额外发现并修复的问题
+
+| # | 问题 | 严重度 | 修复方式 |
+|---|------|--------|---------|
+| 4 | TimelineSection.vue L22 文字写"按时间**倒序**排列"，但实际数据是正序（05→06→07→下一步），与设计决策矛盾 | 🔴 P1 | 改为"按时间**正序**排列" |
+| 5 | HeroSection.vue L135/L140 硬编码 `color: #fff`，违反 AI_RULES.md §4「禁止硬编码颜色值」 | 🟡 P2 | 新增 `--color-on-accent` 设计令牌，替换 `#fff` 为 `var(--color-on-accent)` |
+
+#### 新增设计令牌：`--color-on-accent`
+
+**令牌：** `--color-on-accent: #ffffff`
+**位置：** `src/styles/tokens.css` — `:root`（L20）+ `[data-theme='dark']`（L111）
+**用途：** Accent 强调色背景上的文字颜色（如 Hero CTA 按钮的文字色）。
+**暗色模式：** 保持 `#ffffff`（amber 强调色在亮/暗模式下均需白色文字）。
+**原因：** Acceptance Review 发现 HeroSection 使用硬编码 `#fff`，违反 AI_RULES.md §4。原 tokens.css 无"accent 背景上的文字色"令牌，新增此令牌填补设计系统空缺。
+
+#### Duplicate Review 结果
+
+**扫描范围：** `src/` 下所有 `.vue` 和 `.ts` 文件
+**扫描维度：** Interface / Type / CSS / Utility / Computed / Constant
+
+| # | 类型 | 重复项 | 文件 | 行数 | 处置 |
+|---|------|--------|------|------|------|
+| 1 | Interface | `ProjectSummary` | Home.vue L10 + ProjectCard.vue L10 | 各 8 行 | Task 003 统一（virtual:content 类型声明） |
+| 2 | Interface | `TimelineStage` | Home.vue L20 + TimelineSection.vue L2 | 各 6 行 | Task 003 统一 |
+| 3 | Interface | `ContactInfo` | Home.vue L28 + ContactSection.vue L5 | 各 3 行 | Task 003 统一 |
+| 4 | CSS | `__eyebrow` 样式块 | TimelineSection.vue L69 + ContactSection.vue L88 + Home.vue L166 | 各 6 行，共 18 行 | P3：可提取为 `.section__eyebrow` 到 global.css（类似已有 `.page__eyebrow`）。当前不重构 |
+
+**无重复项：** Utility 函数、Computed 属性、Constant 常量均无重复。
+
+**说明：**
+- Interface 重复属于 Task 003 范围 — virtual:content 插件实现后，类型将集中声明在 `src/env.d.ts` 或独立类型文件中，Home.vue 和子组件的重复 interface 将被 import 替代。当前不提前重构。
+- CSS `__eyebrow` 重复属于轻微代码质量问题（18 行），可提取为 `.section__eyebrow` 全局类。但当前 3 个组件各自 scoped 样式独立维护更安全，待全局样式进一步积累后再统一提取。
 
 ---
 

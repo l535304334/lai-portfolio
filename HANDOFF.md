@@ -1,7 +1,7 @@
 # 项目交接文档（HANDOFF.md）
 
 > 本文件是 AI 接手入口。任何 AI（Trae / GLM / Claude Code / Codex / ChatGPT 等）接手本项目时，**优先阅读本文件**，无需重新分析整个项目。
-> 最后更新：2026-07-08
+> 最后更新：2026-07-09
 
 ---
 
@@ -17,12 +17,12 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
-| Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：1 WARNING） |
-| **Git Commit** | master `2c57d64` · feature/task-002-homepage `df83559` |
-| **当前分支** | `feature/task-002-homepage`（未合并回 develop，等待用户确认） |
+| Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
+| **Git Commit** | master `2c57d64` · develop `6013367` |
+| **当前分支** | `develop`（feature/task-002-homepage 已合并） |
 | **工作区状态** | 本地有文档更新待提交 |
 | 验证 | ✅ build 成功（gzip ~48KB）/ typecheck 通过 / 无 TODO / 无 FIXME / 无 console.log |
-| **待用户操作** | 确认后合并 feature/task-002-homepage → develop → master |
+| **待用户操作** | 确认后合并 develop → master（可选）；启动 Task 003 |
 
 ---
 
@@ -206,7 +206,7 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
    - [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — 项目上下文索引
    - [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
    - 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
-3. **直接从 Task 003 开始** — 当前 Baseline `df83559` 已稳定（feature/task-002-homepage 分支，等待用户确认合并）
+3. **直接从 Task 003 开始** — 当前 Baseline `6013367`（develop 分支，已合并 feature/task-002-homepage）
 
 ### 接手后第一步
 
@@ -215,10 +215,10 @@ Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/tas
 node --version   # 需 ≥18（当前 v22.19.0）
 npm --version    # 需 ≥9（当前 v11.18.0）
 
-# 2. 确认 Baseline（视用户是否已合并 feature 分支而定）
-git branch --show-current   # 可能是 master / develop / feature/task-002-homepage
-git log --oneline -3        # 应显示 df83559 (Task 002) + 2c57d64 (Task 001 handoff)
-git status                  # 确认工作区状态
+# 2. 确认 Baseline
+git branch --show-current   # develop
+git log --oneline -5        # 应显示 6013367 (fix) + 4db5f7f (docs) + df83559 (Task 002) + 2c57d64 (Task 001 handoff) + 483a9e1 (Task 001)
+git status                  # 应为 clean
 
 # 3. 验证可运行
 npm install            # 恢复依赖
@@ -236,7 +236,7 @@ npm run dev            # 启动 localhost:5173 或 5174
 
 ### 已知问题（不阻塞 Task 003）
 
-详见 [AI_RULES.md §13](AI_RULES.md) 与 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」章节。核心 6 项：
+详见 [AI_RULES.md §13](AI_RULES.md) 与 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」与「Duplicate Review 结果」章节。核心 8 项：
 
 1. 文档版本号不一致（v1.0 文件名 / v1.1 内容）— 以 v1.2 为准
 2. tokens.css 预定义未使用令牌（`--color-java` 等、`--code-*` 高亮令牌）— Task 003 使用
@@ -244,6 +244,8 @@ npm run dev            # 启动 localhost:5173 或 5174
 4. Google Fonts CDN 国内访问 — Task 007 评估是否自托管字体子集
 5. 未配置 ESLint / Prettier — Task 007 可选添加
 6. `src/content/personal/about.md` 中 Email 待补充 — Task 005 前补充
+7. Interface 类型跨组件重复（`ProjectSummary` / `TimelineStage` / `ContactInfo` 在 Home.vue 与子组件各定义一次，共约 34 行）— Task 003 统一（virtual:content 类型集中声明）
+8. CSS `__eyebrow` 样式块跨 3 组件重复（TimelineSection / ContactSection / Home，共约 18 行）— 后续统一提取为 `.section__eyebrow` 全局类
 
 ---
 

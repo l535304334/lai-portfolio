@@ -2,8 +2,8 @@
 
 > 本文件是本项目所有 AI（Trae / Claude Code / Codex / ChatGPT 等）的统一协作规范。
 > 所有开发默认遵守本文件。如本文件与《架构确认文档-v1.2.md》冲突，以 v1.2 为准并立即报告冲突。
-> 最后更新：2026-07-08
-> 当前 Baseline：master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
+> 最后更新：2026-07-09
+> 当前 Baseline：master `2c57d64` · develop `6013367`（2026-07-09）
 
 ---
 
@@ -115,12 +115,12 @@
 **亮色模式（默认）：**
 - 主色：Slate 系（`#f8f9fa` bg / `#ffffff` surface / `#e2e8f0` border）
 - 文字：`#1a202c` primary / `#4a5568` secondary / `#a0aec0` muted
-- 强调：Amber（`#d97706` accent / `#fef3c7` light / `#b45309` strong）
+- 强调：Amber（`#d97706` accent / `#fef3c7` light / `#b45309` strong / `#ffffff` on-accent）
 
 **暗色模式：**
 - bg `#0f172a` / surface `#1e293b` / border `#334155`
 - text `#f1f5f9` / `#94a3b8` / `#64748b`
-- accent `#f59e0b`
+- accent `#f59e0b` / on-accent `#ffffff`
 
 **色彩使用规则：**
 - 大面积只用 `bg` 和 `surface`
@@ -341,8 +341,10 @@ Vercel 部署、SPA rewrites 验证、HTTPS、所有路由刷新不 404。
 | 4 | Google Fonts CDN 国内访问较慢 | 中 | Task 007 评估是否自托管字体子集 |
 | 5 | 未配置 ESLint / Prettier | 低 | Task 007 可选添加 |
 | 6 | `src/content/personal/about.md` 中 Email 待补充 | 低 | Task 005 前补充 |
+| 7 | Interface 类型跨组件重复（`ProjectSummary` / `TimelineStage` / `ContactInfo` 在 Home.vue 与子组件各定义一次，共约 34 行） | 中 | Task 003 统一（virtual:content 类型集中声明） |
+| 8 | CSS `__eyebrow` 样式块跨 3 组件重复（TimelineSection / ContactSection / Home，共约 18 行） | 低 | 后续统一提取为 `.section__eyebrow` 全局类 |
 
-**权威来源：** 详细处置方案见 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」章节。
+**权威来源：** 详细处置方案见 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」与「Duplicate Review 结果」章节。
 
 ---
 

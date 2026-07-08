@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -93,6 +93,38 @@
 | Design Token Review | ✅ N/A（纯类型文件） |
 | typecheck | ✅ 通过 |
 | build | ✅ gzip ~52KB（与 Task 002 一致） |
+
+### 子任务 003.2 — virtual:content 插件实现
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件
+
+- `src/utils/content.ts` — Vite 虚拟模块插件，扫描 src/content/projects/*.md，解析 frontmatter，导出 projectSummaries
+
+#### 修改文件
+
+- `vite.config.ts` — 注册 contentPlugin()
+- `src/env.d.ts` — 添加 `virtual:content` 模块类型声明
+
+#### 设计决策
+
+1. **使用相对导入** — 插件文件在 Node (Vite config) 上下文运行，`@/` alias 在 config 加载时不可用，改用 `../types/project` 相对路径
+2. **frontmatter 字段校验** — 缺失 slug/title 时 throw Error（失败显性化），可选字段用默认值
+3. **HMR 支持** — `this.addWatchFile()` 添加所有 projects/*.md 到 watch 列表，内容变更时自动重新加载
+4. **JSON 序列化导出** — `JSON.stringify(summaries)` 生成虚拟模块内容，运行时零解析开销
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 插件逻辑清晰，字段校验完整，HMR 支持 |
+| Duplicate Review | ✅ 新功能无重复 |
+| Architecture Review | ✅ 符合 v1.2 §3.3 virtual:content 规范 |
+| Design Token Review | ✅ N/A（无 CSS） |
+| typecheck | ✅ 通过 |
+| build | ✅ gzip ~52KB（插件未被消费，无运行时影响） |
 
 ---
 

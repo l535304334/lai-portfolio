@@ -51,7 +51,7 @@
 | 子任务 | 名称 | 状态 |
 |--------|------|------|
 | 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
-| 004.2 | Interview 组件 + 页面组装 | 待开始 |
+| 004.2 | Interview 组件 + 页面组装 | ✅ 完成 |
 | 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | 待开始 |
 | 004.4 | 最终验证 + Release | 待开始 |
 
@@ -109,6 +109,69 @@
 | 初始加载 | 50.67 KB | 50.67 KB | 0 |
 
 **评估：** 虚拟模块已注册但未被任何页面消费，对运行时 bundle 零影响。004.2 接入 Interview.vue 后将生成懒加载 chunk。
+
+### 子任务 004.2 — Interview 组件 + 页面组装
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件（2 项，位于 `src/components/interview/`）
+
+- `InterviewQuestion.vue` — `<details>/<summary>` 原生折叠面板，ChevronRight 图标展开时旋转 90°，复用 MarkdownContent 渲染回答 HTML
+- `InterviewCategory.vue` — 分类区段（eyebrow 项目名 + 标题 + 题数 + Q&A 列表），遵循 DecisionSection 头部模式
+
+#### 修改文件
+
+- `src/pages/Interview.vue` — 替换占位页面，导入 `interviewCategories` from `virtual:interview-content`，计算总题数，渲染分类列表
+
+#### 设计决策
+
+1. **`<details>/<summary>` 原生折叠** — 遵循 v1.2 §2.3「折叠面板用原生 HTML」，自带无障碍支持，比 el-collapse 或手写 JS toggle 更简洁
+2. **ChevronRight 图标旋转 90°** — 闭合时指向右（▶），展开时旋转 90° 指向下（▼），CSS `details[open] .chevron { transform: rotate(90deg) }` 实现，零 JS
+3. **复用 MarkdownContent 组件** — 面试回答的 Markdown 渲染与项目详情共用同一容器，DRY；MarkdownContent 成为 ProjectDetail + Interview 共享 chunk
+4. **`::-webkit-details-marker { display: none }`** — 隐藏默认三角形标记，用自定义 ChevronRight 替代
+5. **`surface` 背景 + border + accent hover** — 卡片视觉层次：折叠态 surface 背景 + border，hover/展开态 border 变 accent 色，遵循 ProjectCard hover 模式
+6. **InterviewCategory 头部模式** — eyebrow（项目名 mono + accent）+ title + count，与 DecisionSection / HeroSection / TimelineSection / ContactSection 的 eyebrow 模式一致
+7. **Interview.vue 用全局 `.page__*` 类** — 不重新定义 `.page__eyebrow` / `.page__title` / `.page__hint`（global.css 已定义），仅 scoped `.interview__header` 自定义布局
+8. **`totalQuestions` computed** — `reduce()` 统计所有分类题数，页面 hint 显示「N 个分类 · M 道问题 · 点击展开查看回答思路」
+
+#### Design Token 修复（Self Review 发现）
+
+| 问题 | 原值（不存在） | 修复值（已存在） |
+|------|---------------|-----------------|
+| InterviewCategory margin-bottom | `--space-14` | `--space-12`（3rem/48px） |
+| InterviewCategory title line-height | `--leading-tight` | `--leading-heading`（1.3） |
+| InterviewQuestion question line-height | `--leading-snug` | `--leading-normal`（1.6） |
+| InterviewQuestion summary hover bg | `--color-surface-hover` | 移除（遵循 ProjectCard 仅 border 变色模式） |
+
+**根因：** 开发时使用了未在 tokens.css 中定义的令牌名。CSS 变量未定义时不报错（fallback 到 inherited/initial），但设计不一致。
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| Self Review | ✅ 3 组件职责清晰，Props 类型化，修复 4 项不存在的令牌 |
+| Duplicate Review | ✅ 复用 MarkdownContent + 全局 .page__* 类，无重复样式 |
+| Architecture Review | ✅ 符合 v1.2 §2.3（details/summary）+ §8（interview/ 组件树） |
+| Design Token Review | ✅ 修复后全部使用已定义令牌 |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ 成功（1648 模块，2.40s） |
+| TODO/FIXME/console.log 扫描 | ✅ 0 处 |
+
+#### Bundle 影响
+
+| Chunk | Task 003 (gzip) | 004.2 (gzip) | 变化 |
+|-------|----------------|-------------|------|
+| index.js | 41.66 KB | 41.73 KB | +0.07 KB（ChevronRight 图标进主 chunk） |
+| Interview.js | 0.36 KB | 6.85 KB | +6.49 KB（懒加载：4 分类 17 题 + 3 组件 + Shiki HTML） |
+| Interview.css | 0 | 0.71 KB | +0.71 KB（懒加载组件样式） |
+| MarkdownContent.js | — | 0.23 KB | 新增共享 chunk（ProjectDetail + Interview 共用） |
+| MarkdownContent.css | — | 0.60 KB | 新增共享 chunk |
+| ProjectDetail.js | 10.97 KB | 10.93 KB | -0.04 KB（MarkdownContent 拆出共享 chunk） |
+| 初始加载 | 50.67 KB | 50.69 KB | +0.02 KB（ChevronRight 图标） |
+
+**评估：** 面试页懒加载 6.85 KB gzip 包含 4 个分类的 17 道问答（含 Shiki 渲染 HTML）+ 3 个组件，仅在访问 `/interview` 时加载。MarkdownContent 拆为共享 chunk，ProjectDetail 体积微降。初始加载几乎不变。
 
 ---
 

@@ -18,14 +18,14 @@
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
-| Task 004 | 🔄 进行中（004.1 完成） |
+| Task 004 | 🔄 进行中（004.1 + 004.2 完成） |
 | Release Review | ✅ Task 001/002/003 全部通过 |
 | **Master Baseline** | Task 003 Release（Tag `v0.3.0`） |
 | **当前分支** | `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`） |
 | **Develop HEAD** | 与 master 同步（Task 003 已 FF 合并） |
-| **工作区状态** | 004.1 完成（面试类型 + virtual:interview-content 模块），004.2 待开始 |
-| 验证 | ✅ build 成功（1640 模块）/ typecheck 通过 |
-| **当前进度** | Task 004 进行中，004.1 已完成 |
+| **工作区状态** | 004.2 完成（面试页组件 + 页面组装），004.3 待开始 |
+| 验证 | ✅ build 成功（1648 模块）/ typecheck 通过 |
+| **当前进度** | Task 004 进行中，004.2 已完成 |
 
 ---
 
@@ -133,7 +133,7 @@
 | 子任务 | 名称 | 状态 |
 |--------|------|------|
 | 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
-| 004.2 | Interview 组件 + 页面组装 | 待开始 |
+| 004.2 | Interview 组件 + 页面组装 | ✅ 完成 |
 | 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | 待开始 |
 | 004.4 | 最终验证 + Release | 待开始 |
 
@@ -143,15 +143,21 @@
 - `src/utils/content.ts` — 新增 `virtual:interview-content` 虚拟模块（`parseInterviewQA` + `scanInterviews` + resolveId/load 钩子 + HMR watch）
 - `src/env.d.ts` — 新增 `virtual:interview-content` 模块声明
 
+### 004.2 交付物
+
+- `src/components/interview/InterviewQuestion.vue` — `<details>/<summary>` 原生折叠面板，ChevronRight 旋转 90°，复用 MarkdownContent
+- `src/components/interview/InterviewCategory.vue` — 分类区段（eyebrow + 标题 + 题数 + Q&A 列表）
+- `src/pages/Interview.vue` — 替换占位页，接入 `virtual:interview-content`，4 分类 17 题懒加载（gzip 6.85 KB）
+
 ### 架构冲突（Rule 7）
 
 架构文档 §3.3 规定"一个 `virtual:content` 导出所有内容"，但 Task 003 已批准 `virtual:project-detail` 懒加载分离模式。004.1 遵循既有模式新建 `virtual:interview-content`。详见 PROJECT_MEMORY.md「Task 004 — 架构冲突记录」。
 
-### 004.2 待开始
+### 004.3 待开始
 
-- 创建 `src/components/interview/InterviewQuestion.vue`（`<details>/<summary>` 折叠 Q&A）
-- 创建 `src/components/interview/InterviewCategory.vue`（分类标题 + Q&A 列表）
-- 替换 `src/pages/Interview.vue` 占位页面
+- 创建 `src/types/ai-practice.ts`（AI 实践内容类型）
+- 扩展 content.ts 添加 `scanAiPractice()` + `virtual:ai-practice-content`
+- 替换 `src/pages/AiPractice.vue` 占位页面
 
 ---
 

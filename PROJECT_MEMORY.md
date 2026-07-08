@@ -6,6 +6,42 @@
 
 ---
 
+## 当前阶段
+
+**Task 001 已完成 · 等待 Task 002 启动指令**
+
+- **当前 Baseline：** Git Commit `483a9e1`（master 分支，2026-07-08）
+- **Release Review：** 已通过（Self Review 修复 1 CRITICAL + 5 WARNING）
+- **Git Baseline：** 已建立（78 files, 8356 insertions）
+- **工作区状态：** clean
+
+### Task 进度总览
+
+| Task | 名称 | 状态 |
+|------|------|------|
+| 000 | 项目内容资产整理 | ✅ 已完成 |
+| 000.5 | 架构图与展示素材 | ✅ 已完成 |
+| 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
+| **002** | **首页开发** | **⏸️ 待开始（下一阶段）** |
+| 003 | 构建时内容插件 + 项目详情页 | 待开始 |
+| 004 | 面试准备页 + AI 实践页 | 待开始 |
+| 005 | 能力页 + 简历页 + 关于页 | 待开始 |
+| 006 | 部署与上线（Vercel） | 待开始 |
+| 007 | Release Audit | 待开始 |
+
+### 后续开发顺序
+
+1. **Task 002** — 首页开发（Hero + ProjectCard + Timeline + Contact + Home.vue）
+2. **Task 003** — Vite 构建时 Markdown 转换插件 + 项目详情页
+3. **Task 004** — `/interview` + `/ai-practice` 两个内容页
+4. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
+5. **Task 006** — Vercel 部署上线
+6. **Task 007** — Release Audit（最终质量关卡）
+
+**规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
 ## Task 001 — 项目初始化与基础设施
 
 **完成时间：** 2026-07-08
@@ -173,6 +209,12 @@ v1.2 未要求 ESLint / Prettier。
 
 **处置：** Task 007 可选添加。当前依赖 TypeScript strict 模式保证代码质量。
 
+#### 6. Email 待补充（低风险）
+
+`src/content/personal/about.md` 联系方式中 Email 标注为 `[待补充]`。
+
+**处置：** Task 005 前补充真实 Email。不阻塞 Task 002（首页 Contact 区域先用 GitHub 链接占位）。
+
 ### 验证结果
 
 | 验证项 | 结果 |
@@ -210,6 +252,25 @@ v1.2 未要求 ESLint / Prettier。
 **交付物：** 14 个 Markdown 内容文件 + 7 套 SVG 架构图
 
 详见 [docs/task000-completion-report.md](docs/task000-completion-report.md)
+
+---
+
+## Task 000.5 — 架构图与展示素材（已完成）
+
+**完成时间：** 2026-07-07（本 AI 接手前）
+**交付物：** 7 套 SVG 架构图 + Mermaid 源码，位于 [docs/assets/architecture/](docs/assets/architecture/)
+
+| 文件 | 内容 |
+|------|------|
+| `overall-tech-stack` | 个人技术栈全景 |
+| `jiangnan-architecture` | 江南出行系统架构 |
+| `exam-system-architecture` | 题库系统架构 |
+| `love-letter-architecture` | 两地书系统架构 |
+| `dispatch-flow` | 并发调度流程 |
+| `sm2-flow` | SM-2 算法流程 |
+| `ai-development-flow` | AI 开发流程 |
+
+**说明：** Task 001 由本 AI 接手。Task 000 与 Task 000.5 均在本 AI 接手前完成，以上为记录留存，便于后续 AI 理解资产来源。
 
 ---
 

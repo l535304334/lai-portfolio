@@ -3,6 +3,7 @@
 > 本文件是本项目所有 AI（Trae / Claude Code / Codex / ChatGPT 等）的统一协作规范。
 > 所有开发默认遵守本文件。如本文件与《架构确认文档-v1.2.md》冲突，以 v1.2 为准并立即报告冲突。
 > 最后更新：2026-07-08
+> 当前 Baseline：Git Commit `483a9e1`（master 分支，2026-07-08）
 
 ---
 
@@ -206,6 +207,19 @@
 - 每个 Task 完成后暂停，等待下一条指令
 - **不得提前开发后续 Task 的内容**
 
+### 当前已实现页面（Task 001）
+
+| 路径 | 文件 | 状态 |
+|------|------|------|
+| `/` | [src/pages/Home.vue](src/pages/Home.vue) | 占位（Task 002 替换） |
+| `/projects/:slug` | [src/pages/ProjectDetail.vue](src/pages/ProjectDetail.vue) | 占位（Task 003 替换） |
+| `/skills` | [src/pages/Skills.vue](src/pages/Skills.vue) | 占位（Task 005 替换） |
+| `/interview` | [src/pages/Interview.vue](src/pages/Interview.vue) | 占位（Task 004 替换） |
+| `/ai-practice` | [src/pages/AiPractice.vue](src/pages/AiPractice.vue) | 占位（Task 004 替换） |
+| `/resume` | [src/pages/Resume.vue](src/pages/Resume.vue) | 占位（Task 005 替换） |
+| `/about` | [src/pages/About.vue](src/pages/About.vue) | 占位（Task 005 替换） |
+| 404 | [src/pages/NotFound.vue](src/pages/NotFound.vue) | 最终版 |
+
 ---
 
 ## 8. 各 Task 范围边界
@@ -312,6 +326,23 @@ Vercel 部署、SPA rewrites 验证、HTTPS、所有路由刷新不 404。
 2. 本文件 AI_RULES.md
 3. 《开发设计规范-v1.0.md》（内容实际为 v1.1，作为参考）
 4. 《个人能力分析与网站规划报告.md》（v1.0，背景资料）
+
+---
+
+## 13. 已知问题（Task 001 遗留）
+
+以下问题不阻塞 Task 002，但需在后续 Task 关注：
+
+| # | 问题 | 风险等级 | 处置 Task |
+|---|------|---------|----------|
+| 1 | `docs/开发设计规范-v1.0.md` 文件名 v1.0 / 内容 v1.1，版本号不一致 | 中 | 等待用户决策是否重命名 |
+| 2 | `tokens.css` 预定义未使用令牌（`--color-java` 等、`--code-*` 高亮令牌） | 低 | Task 003 代码高亮实现时使用 |
+| 3 | `src/assets/` 与 `src/utils/` 为空目录，Git 不追踪 | 低 | Task 003/004 添加首文件时自然解决 |
+| 4 | Google Fonts CDN 国内访问较慢 | 中 | Task 007 评估是否自托管字体子集 |
+| 5 | 未配置 ESLint / Prettier | 低 | Task 007 可选添加 |
+| 6 | `src/content/personal/about.md` 中 Email 待补充 | 低 | Task 005 前补充 |
+
+**权威来源：** 详细处置方案见 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」章节。
 
 ---
 

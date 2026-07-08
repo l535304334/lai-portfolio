@@ -3,6 +3,7 @@
 > 本文件是项目上下文索引，任何 AI 接手本项目时应优先阅读此文件，而非重新分析整个项目。
 > 最后更新：2026-07-08
 > 当前阶段：Task 001 已完成 · 等待 Task 002 启动指令
+> 当前 Baseline：Git Commit `483a9e1`（master 分支，2026-07-08）
 
 ---
 
@@ -226,6 +227,21 @@ src/content/
 - ✅ 路由、布局、主题系统、占位页面全部就绪
 - ✅ Release Review 通过（Self Review + Release Audit）
 
+**当前依赖清单：**
+
+| 类型 | 包名 | 版本 |
+|------|------|------|
+| 运行时 | vue | ^3.5.13 |
+| 运行时 | vue-router | ^4.5.0 |
+| 运行时 | lucide-vue-next | ^0.460.0 |
+| 开发时 | @types/node | ^22.10.0 |
+| 开发时 | @vitejs/plugin-vue | ^5.2.1 |
+| 开发时 | typescript | ~5.6.3 |
+| 开发时 | vite | ^6.0.7 |
+| 开发时 | vue-tsc | ^2.1.10 |
+
+**禁止引入：** Element Plus / Tailwind / Pinia / 后端 / 数据库 / 运行时 Markdown 解析 / 未经确认的新依赖。
+
 ### 待补资产（不阻塞 Task 002）
 
 - ❌ `public/resume.pdf` 简历 PDF 终稿（Task 005 需要）
@@ -237,6 +253,8 @@ src/content/
 1. **文档版本号不一致**：`开发设计规范-v1.0.md` 文件名为 v1.0，内容首行标注 v1.1。**以《架构确认文档-v1.2.md》为权威**。
 2. **虚拟模块类型声明位置**：v1.1 规范说 `src/env.d.ts`，v1.2 说 `src/utils/content.ts`。Task 001 先用 `src/env.d.ts` 统一管理 Vue SFC 类型，Task 003 实现插件时再决定是否拆分。
 3. **Shiki 主题选择**：v1.2 §2.7 规定代码块始终深色不随主题切换，需在 Task 003 确定主题。
+4. **Google Fonts CDN 国内访问**：Inter + JetBrains Mono 通过 Google Fonts CDN 加载，国内首次访问可能较慢。已用 `preconnect` + `display=swap` 优化。Task 007 评估是否自托管字体子集。
+5. **未配置 ESLint / Prettier**：v1.2 未要求。当前依赖 TypeScript strict 模式保证代码质量。Task 007 可选添加。
 
 ---
 

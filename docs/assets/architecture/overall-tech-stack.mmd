@@ -1,0 +1,69 @@
+graph LR
+    subgraph Backend["🔧 后端开发"]
+        Java["Java 17"]
+        Spring["Spring Boot 3"]
+        MP["MyBatis-Plus"]
+        MySQL["MySQL 8.0"]
+        Redis["Redis + Redisson"]
+        Security["Spring Security + JWT"]
+    end
+
+    subgraph Frontend["🎨 前端开发"]
+        Vue["Vue 3"]
+        React2["React 18"]
+        TS["TypeScript strict"]
+        Vite["Vite 5"]
+        CSS2["CSS 设计令牌"]
+        Chart["ECharts · Chart.js"]
+    end
+
+    subgraph Mini["📱 小程序 & Serverless"]
+        Taro["Taro 4"]
+        WeApp["微信小程序"]
+        CloudBase["CloudBase 云开发"]
+        CloudFunc["26 云函数"]
+    end
+
+    subgraph AI2["🤖 AI 工程化"]
+        DeepSeek["DeepSeek API"]
+        Prompt["Prompt Engineering"]
+        SSE["SSE 流式响应"]
+        Claude["Claude Code · Trae"]
+    end
+
+    subgraph DevOps["🛠️ DevOps"]
+        Docker["Docker Compose"]
+        CI["GitHub Actions"]
+        Nginx["Nginx"]
+        Git["Git Conventional Commits"]
+    end
+
+    subgraph SE["📋 软件工程"]
+        FSM["状态机设计"]
+        ES["事件溯源"]
+        DLock["分布式锁"]
+        Security2["安全加固 OWASP"]
+        Test["155 测试用例"]
+        Docs["25+ 技术文档"]
+    end
+
+    Java --> Spring
+    Spring --> MySQL
+    Spring --> Redis
+    Vue --> Vite
+    Vue --> TS
+    Taro --> React2
+    Taro --> CloudBase
+    CloudBase --> CloudFunc
+    DeepSeek --> SSE
+    DeepSeek --> Prompt
+    CloudFunc --> DeepSeek
+    Docker --> Nginx
+    Docker --> CI
+
+    style Backend fill:#fef3c7,stroke:#d97706
+    style Frontend fill:#eff6ff,stroke:#3b82f6
+    style Mini fill:#f0fdf4,stroke:#22c55e
+    style AI2 fill:#ede9fe,stroke:#7c3aed
+    style DevOps fill:#fee2e2,stroke:#dc2626
+    style SE fill:#f1f5f9,stroke:#64748b

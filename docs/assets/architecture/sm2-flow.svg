@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" font-family="'Inter','Noto Sans SC',system-ui,sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#64748b"/></marker>
+  </defs>
+  <rect width="820" height="560" fill="#f8f9fa" rx="10"/>
+  <text x="410" y="26" text-anchor="middle" font-size="15" font-weight="600" fill="#1a202c">SM-2 间隔复习算法流程</text>
+
+  <!-- Start -->
+  <rect x="285" y="38" width="250" height="34" rx="17" fill="#1e293b"/><text x="410" y="60" text-anchor="middle" font-size="11" font-weight="600" fill="#f1f5f9">用户答题 (每次一道)</text>
+  <line x1="410" y1="72" x2="410" y2="96" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Correct/Wrong branch -->
+  <rect x="285" y="100" width="250" height="30" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/><text x="410" y="120" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">答题结果？</text>
+
+  <line x1="285" y1="115" x2="120" y2="115" stroke="#64748b" stroke-width="1"/><line x1="120" y1="115" x2="120" y2="150" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="200" y="108" font-size="10" font-weight="600" fill="#059669">✅ 答对 (q=5)</text>
+
+  <line x1="535" y1="115" x2="680" y2="115" stroke="#64748b" stroke-width="1"/><line x1="680" y1="115" x2="680" y2="150" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="610" y="108" font-size="10" font-weight="600" fill="#dc2626">❌ 答错 (q=2)</text>
+
+  <!-- Correct path -->
+  <rect x="20" y="154" width="200" height="50" rx="4" fill="#dcfce7" stroke="#059669" stroke-width="1"/><text x="120" y="172" text-anchor="middle" font-size="10" font-weight="600" fill="#065f46">计算 EF 因子</text><text x="120" y="188" text-anchor="middle" font-size="8" fill="#065f46">EF' = EF + 0.1</text><text x="120" y="200" text-anchor="middle" font-size="7" fill="#065f46">(q=5 时修正值为 +0.1)</text>
+  <line x1="120" y1="204" x2="120" y2="222" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="20" y="226" width="200" height="36" rx="4" fill="#dcfce7" stroke="#059669" stroke-width="0.8"/><text x="120" y="242" text-anchor="middle" font-size="10" fill="#065f46">EF ≥ 1.3？</text><text x="120" y="256" text-anchor="middle" font-size="8" fill="#065f46">(下限保护，不足则 EF=1.3)</text>
+  <line x1="120" y1="262" x2="120" y2="280" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="20" y="284" width="200" height="30" rx="4" fill="#dcfce7" stroke="#059669" stroke-width="0.8"/><text x="120" y="304" text-anchor="middle" font-size="10" fill="#065f46">rep++ (连续正确次数+1)</text>
+  <line x1="120" y1="314" x2="120" y2="338" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="20" y="342" width="200" height="52" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/><text x="120" y="358" text-anchor="middle" font-size="9" font-weight="600" fill="#92400e">计算间隔</text>
+  <text x="120" y="374" text-anchor="middle" font-size="8" fill="#92400e">rep=1 → interval=1天</text>
+  <text x="120" y="386" text-anchor="middle" font-size="8" fill="#92400e">rep=2 → interval=6天</text>
+
+  <!-- Wrong path -->
+  <rect x="620" y="154" width="180" height="50" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1"/><text x="710" y="172" text-anchor="middle" font-size="10" font-weight="600" fill="#991b1b">计算 EF 因子</text><text x="710" y="188" text-anchor="middle" font-size="8" fill="#991b1b">EF' = EF - 0.14</text><text x="710" y="200" text-anchor="middle" font-size="7" fill="#991b1b">(q=2 时修正值为 -0.14)</text>
+  <line x1="710" y1="204" x2="710" y2="222" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="620" y="226" width="180" height="36" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="0.8"/><text x="710" y="242" text-anchor="middle" font-size="10" fill="#991b1b">重置 rep = 0</text><text x="710" y="256" text-anchor="middle" font-size="8" fill="#991b1b">连续正确中断</text>
+  <line x1="710" y1="262" x2="710" y2="280" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="620" y="284" width="180" height="30" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="0.8"/><text x="710" y="304" text-anchor="middle" font-size="10" fill="#991b1b">interval = 1 天</text>
+  <line x1="710" y1="314" x2="710" y2="342" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="620" y="342" width="180" height="52" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="0.8"/><text x="710" y="358" text-anchor="middle" font-size="10" fill="#991b1b">加入 SRS 调度</text>
+  <text x="710" y="374" text-anchor="middle" font-size="8" fill="#991b1b">首次答错即进入</text>
+  <text x="710" y="386" text-anchor="middle" font-size="8" fill="#991b1b">SRS 复习循环</text>
+
+  <!-- Merge: rep>=3 case -->
+  <line x1="120" y1="394" x2="120" y2="420" stroke="#059669" stroke-width="1.5"/>
+  <line x1="710" y1="394" x2="710" y2="420" stroke="#dc2626" stroke-width="1.5"/>
+
+  <rect x="195" y="400" width="150" height="22" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.5"/><text x="270" y="415" text-anchor="middle" font-size="8" fill="#92400e">rep≥3: interval = round(n × EF)</text>
+  <line x1="270" y1="411" x2="120" y2="411" stroke="#d97706" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="270" y1="411" x2="710" y2="411" stroke="#d97706" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Merge point -->
+  <line x1="120" y1="420" x2="120" y2="444" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="710" y1="420" x2="710" y2="444" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="120" y1="444" x2="710" y2="444" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="410" y1="444" x2="410" y2="464" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Save and update -->
+  <rect x="225" y="468" width="370" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/><text x="410" y="486" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">持久化到 localStorage: tiku_v8_srs</text><text x="410" y="500" text-anchor="middle" font-size="8" fill="#5b21b6">同时更新 wrongSet · wrongCountMap · dailyHistory</text>
+
+  <!-- Daily review side -->
+  <rect x="225" y="520" width="370" height="32" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+  <text x="410" y="536" text-anchor="middle" font-size="9" fill="#64748b">📅 每日复习检查: filter next ≤ today AND rep > 0 → 复习按钮显示待复习数量</text>
+  <line x1="410" y1="508" x2="410" y2="520" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Legend -->
+  <rect x="20" y="528" width="180" height="28" rx="4" fill="transparent"/>
+  <rect x="28" y="536" width="8" height="8" rx="2" fill="#dcfce7" stroke="#059669" stroke-width="0.3"/><text x="40" y="545" font-size="8" fill="#64748b">答对</text>
+  <rect x="72" y="536" width="8" height="8" rx="2" fill="#fee2e2" stroke="#dc2626" stroke-width="0.3"/><text x="84" y="545" font-size="8" fill="#64748b">答错</text>
+  <rect x="116" y="536" width="8" height="8" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="0.3"/><text x="128" y="545" font-size="8" fill="#64748b">计算</text>
+  <rect x="158" y="536" width="8" height="8" rx="2" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.3"/><text x="170" y="545" font-size="8" fill="#64748b">持久化</text>
+</svg>

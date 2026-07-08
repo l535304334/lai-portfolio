@@ -1,0 +1,41 @@
+flowchart TD
+    Start(["新功能需求"]) --> Analysis["1️⃣ 需求分析<br/>━━━━━━━━<br/>🧠 人独立完成<br/>明确目标 · 定义成功标准<br/>识别技术风险"]
+
+    Analysis --> Design["2️⃣ 方案设计<br/>━━━━━━━━<br/>🧠 人主导 + 🤖 AI 辅助<br/>列出候选方案 (A/B/C)<br/>对比优缺点<br/>选择最优方案"]
+
+    Design --> Coding["3️⃣ AI 辅助编码<br/>━━━━━━━━<br/>🤖 AI 生成代码 + 🧠 人监督<br/>Claude Code / Trae 生成<br/>人设定约束规则<br/>共享模块提取"]
+
+    Coding --> Review{"4️⃣ 人工 Review<br/>━━━━━━━━<br/>🧠 人审查每一行代码"}
+
+    Review -->|"✅ 通过"| Test["5️⃣ 测试验证<br/>━━━━━━━━<br/>🧠 人编写核心测试<br/>🤖 AI 生成用例草稿<br/>单元测试 · API测试 · 压测"]
+
+    Review -->|"❌ 发现问题"| Fix["🐛 修复问题<br/>━━━━━━━━<br/>🧠 人分析根因<br/>🤖 AI 辅助修复"]
+
+    Fix --> Review
+
+    Test --> TestResult{"测试通过？"}
+    TestResult -->|"✅ 通过"| Refactor["6️⃣ 重构优化<br/>━━━━━━━━<br/>🧠 人主导<br/>消除重复 · 性能优化<br/>安全加固"]
+
+    TestResult -->|"❌ 失败"| Fix
+
+    Refactor --> Deploy["7️⃣ 部署上线<br/>━━━━━━━━<br/>🧠 人操作<br/>Docker · Vercel<br/>CI/CD 流水线"]
+
+    Deploy --> Done(["✅ 功能交付"])
+
+    subgraph Legend["人机分工"]
+        Human["🧠 人做决策<br/>架构 · 安全 · 算法 · 方案对比"]
+        AI2["🤖 AI 辅助<br/>代码生成 · 文档 · 测试用例"]
+        Check["👀 人审查<br/>每行 AI 代码都经人工审查"]
+    end
+
+    style Start fill:#f8f9fa,stroke:#e2e8f0
+    style Analysis fill:#eff6ff,stroke:#3b82f6
+    style Design fill:#fef3c7,stroke:#d97706
+    style Coding fill:#ede9fe,stroke:#7c3aed
+    style Review fill:#fef3c7,stroke:#d97706
+    style Test fill:#dcfce7,stroke:#059669
+    style Refactor fill:#eff6ff,stroke:#3b82f6
+    style Deploy fill:#dcfce7,stroke:#059669
+    style Done fill:#f8f9fa,stroke:#e2e8f0
+    style Fix fill:#fee2e2,stroke:#dc2626
+    style Legend fill:#f8f9fa,stroke:#e2e8f0

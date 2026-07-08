@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+*.local
+.cache/
+.turbo/
+.ai-backups/
+.ai-workspace-state.json
+
+# AI 工具本地配置（同步生成，不提交）
+.claude/
+.trae/
+.workbuddy/

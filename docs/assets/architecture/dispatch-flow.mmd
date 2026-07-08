@@ -1,0 +1,54 @@
+sequenceDiagram
+    participant P as 乘客端 (Vue 3)
+    participant API as Spring Boot API
+    participant Lock as Redisson 分布式锁
+    participant Score as 评分引擎
+    participant DB as MySQL
+    participant D as 司机端 (Vue 3)
+    participant Event as 事件溯源表
+
+    P->>API: 1. 创建订单 + 支付
+    API->>DB: 2. 保存订单 (CREATED → PAID)
+    API->>API: 3. 触发派单 (findCandidates)
+
+    Note over API,Score: 评分阶段 (静态 + 动态)
+
+    API->>Score: 4. 获取司机评分排序
+    Score->>Score: 距离(40%) + 评分(30%) + 空闲(20%) + 惩罚(10%)
+    Score->>Score: 动态修正: +/-modifier, 半衰期衰减
+    Score-->>API: 排序后的司机列表
+
+    Note over API,Lock: 锁阶段 (二阶分布式锁)
+
+    loop 遍历候选司机
+        API->>Lock: 5a. lock("order:dispatch:{orderId}")
+        Lock-->>API: 获取成功
+        API->>Lock: 5b. tryLock("driver:lock:{driverId}", 500ms)
+        alt 获取成功
+            Lock-->>API: 获取成功
+            API->>DB: 5c. 重读司机状态 (防 ABA)
+            DB-->>API: 司机仍可用
+            API->>DB: 5d. 分配司机 (ASSIGNED)
+            API->>Event: 5e. 记录事件 DISPATCHED
+            API->>D: 6. WebSocket 推送接单通知
+            API->>Lock: 5f. 释放 order lock
+            Note over API,Lock: 派单成功 ✓
+        else tryLock 失败
+            Lock-->>API: 超时 (司机已被分配)
+            Note over API,Lock: 尝试下一位司机
+        end
+    end
+
+    D->>API: 7. 接单确认 / 拒单
+    alt 接单
+        API->>DB: 更新状态 (ASSIGNED → ARRIVED)
+        API->>Score: 记录接单 (+5 modifier)
+        API->>Event: 记录事件 ACCEPTED
+        D->>API: 到达 → 开始行程 → 完成
+        API->>Event: ARRIVED → IN_PROGRESS → COMPLETED
+        API->>P: 8. 生成账单 + 推送评价入口
+    else 拒单
+        API->>Score: 记录拒单 (-10 modifier)
+        API->>Event: 记录事件 REJECTED
+        Note over API,Lock: 触发重新派单
+    end

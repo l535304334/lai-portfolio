@@ -1,0 +1,78 @@
+graph TB
+    subgraph UI["🖥️ 用户界面层"]
+        Nav["导航栏<br/>科目筛选 · 模式切换"]
+        Question["题目卡片<br/>题干 · 选项 · 反馈"]
+        Modal["模态框<br/>搜索 · 报告 · 考试 · 管理"]
+        Keyboard["键盘快捷键<br/>17个快捷键全覆盖"]
+    end
+
+    subgraph Render["🎨 渲染引擎"]
+        RenderQ["renderQuestion()<br/>单题渲染"]
+        RenderB["renderBrowse()<br/>浏览模式"]
+        RenderE["renderExam()<br/>考试模式"]
+        RenderR["buildReport()<br/>Chart.js 图表"]
+    end
+
+    subgraph State["📦 状态管理 (内存)"]
+        CurrentIdx["currentIndex<br/>当前题目"]
+        WrongSet["wrongSet<br/>错题集合"]
+        DoneSet["doneSet<br/>已做集合"]
+        FavSet["favSet<br/>收藏集合"]
+        WrongMap["wrongCountMap<br/>错题次数"]
+        SRSMap["srsMap<br/>SM-2 状态"]
+        DailyLog["dailyHistory<br/>90天日志"]
+    end
+
+    subgraph Features["⚡ 功能模块"]
+        Practice["刷题模式<br/>普通 · 错题 · 收藏 · 复合"]
+        SM2["SM-2 间隔复习 ★<br/>EF因子 · 间隔调度"]
+        Exam["模拟考试<br/>分页 · 倒计时 · 自动交卷"]
+        Search["全局搜索<br/>异步索引 · mark高亮"]
+        Chart["数据可视化<br/>4个Chart.js图表"]
+        Snap["快照系统<br/>10份备份 · 90%压缩"]
+        CustomQ["自定义题目<br/>ID ≥ 1,000,000"]
+        Dark["深色模式<br/>CSS变量 · 20变量覆盖"]
+    end
+
+    subgraph Storage["💾 持久化层"]
+        LS["localStorage<br/>前缀 tiku_v8_"]
+        Quota["配额管理 ★<br/>压缩 · 淘汰 · 监控"]
+        Import["JSON 导入/导出"]
+    end
+
+    subgraph Data["📚 数据层"]
+        Questions["ALL_QUESTIONS<br/>5,944 道题目"]
+        DesignTokens["CSS 设计令牌<br/>65+ 自定义属性"]
+        ChartJS["Chart.js v4.4.4<br/>内联 205KB"]
+    end
+
+    Nav --> Practice
+    Practice --> RenderQ
+    RenderQ --> State
+    State --> Storage
+    Storage --> LS
+
+    Practice --> SM2
+    Practice --> Exam
+    Practice --> Search
+    Practice --> Chart
+    Practice --> Snap
+    Practice --> CustomQ
+    Practice --> Dark
+
+    LS --> Quota
+    LS --> Import
+
+    Questions --> Practice
+    DesignTokens --> Dark
+    ChartJS --> Chart
+
+    style UI fill:#f8f9fa,stroke:#e2e8f0
+    style Render fill:#ffffff,stroke:#e2e8f0
+    style State fill:#f1f5f9,stroke:#cbd5e1
+    style Features fill:#ffffff,stroke:#e2e8f0
+    style Storage fill:#f8f9fa,stroke:#e2e8f0
+    style Data fill:#f1f5f9,stroke:#cbd5e1
+    style SM2 fill:#fef3c7,stroke:#d97706
+    style Quota fill:#fef3c7,stroke:#d97706
+    style DesignTokens fill:#ede9fe,stroke:#7c3aed

@@ -1,0 +1,63 @@
+graph TB
+    subgraph Client["📱 微信小程序客户端"]
+        Home["首页 Dashboard<br/>心情 · 天气 · 倒计时"]
+        Mailbox["信箱<br/>留言 · 书信 · 取件 · 备忘"]
+        Us["我们<br/>打卡 · 纪念日 · 愿望 · 照片"]
+        Care["关怀<br/>经期管理 · 科普文章"]
+        Today["今日心情"]
+    end
+
+    subgraph CloudFunc["☁️ 微信云函数 (26个)"]
+        direction TB
+        subgraph Auth["认证层"]
+            Login["login<br/>OpenID 查/建用户"]
+            Pair["generatePairCode<br/>joinPair<br/>6位配对码 24h过期"]
+        end
+        subgraph Business["业务层"]
+            MailboxCF["getMailbox<br/>统一信箱代理 ★"]
+            Letter["sendLetter<br/>定时发送 · msgSecCheck"]
+            Mood["saveMood<br/>心情管理"]
+            Period["updatePeriod<br/>经期 · pendingConfirm"]
+            Record["manageRecord<br/>通用CRUD网关"]
+        end
+        subgraph AI["AI 层 (9个函数)"]
+            Polish["aiPolishLetter<br/>书信润色"]
+            Poem["aiGeneratePoem<br/>诗歌生成"]
+            Article["aiGenerateArticle<br/>每日4篇科普"]
+            Tone["aiCheckTone<br/>语感检查"]
+            Report["aiGenerateReport<br/>周报月报"]
+        end
+        subgraph Shared["共享模块"]
+            DeepSeek["common/deepseek.js<br/>AI 调用封装"]
+            RateLimit["common/rateLimit.js<br/>滑动窗口 10次/分"]
+        end
+    end
+
+    subgraph CloudBase["🗄️ 微信云开发 CloudBase"]
+        DB["云数据库<br/>22个集合"]
+        Storage["云存储<br/>照片 · 头像"]
+        Notify["定时任务<br/>scheduledTasks<br/>每5分钟"]
+    end
+
+    subgraph External["🌐 外部 API"]
+        DeepSeekAPI["DeepSeek Chat API"]
+        Weather["和风天气 API"]
+        WechatPush["微信订阅推送"]
+    end
+
+    Client --> CloudFunc
+    CloudFunc --> CloudBase
+    CloudFunc --> External
+    AI --> Shared
+    Notify --> DB
+
+    style Client fill:#f8f9fa,stroke:#e2e8f0
+    style CloudFunc fill:#ffffff,stroke:#e2e8f0
+    style CloudBase fill:#f1f5f9,stroke:#cbd5e1
+    style External fill:#f8f9fa,stroke:#e2e8f0
+    style MailboxCF fill:#fef3c7,stroke:#d97706
+    style DeepSeek fill:#ede9fe,stroke:#7c3aed
+    style RateLimit fill:#fee2e2,stroke:#dc2626
+    style Auth fill:#f0fdf4,stroke:#22c55e
+    style AI fill:#eff6ff,stroke:#3b82f6
+    style Shared fill:#fefce8,stroke:#eab308

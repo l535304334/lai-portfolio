@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>赖睿轩 | 软件工程学生 · 技术成长档案</title>
+    <meta
+      name="description"
+      content="赖睿轩的软件工程实践记录。三个完整项目：Spring Boot 分布式调度、微信小程序 AI 工程化、Vanilla JS 刷题系统。从需求分析到系统设计的工程实践。"
+    />
+
+    <!-- Prevent theme flash: apply data-theme before render -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme-mode')
+          var mode = 'system'
+          if (stored === 'light' || stored === 'dark' || stored === 'system') {
+            mode = stored
+          }
+          var resolved = mode
+          if (mode === 'system') {
+            resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          document.documentElement.setAttribute('data-theme', resolved)
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light')
+        }
+      })()
+    </script>
+
+    <!-- Font preconnect (performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Inter (400/500/600) + JetBrains Mono (400) — font-display: swap -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="软件工程学生 · 技术成长档案" />
+    <meta
+      property="og:description"
+      content="三个完整项目，从需求分析到分布式调度的工程实践记录与技术成长。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

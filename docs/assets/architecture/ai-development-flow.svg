@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 620" font-family="'Inter','Noto Sans SC',system-ui,sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#64748b"/></marker>
+  </defs>
+  <rect width="860" height="620" fill="#f8f9fa" rx="10"/>
+  <text x="430" y="26" text-anchor="middle" font-size="15" font-weight="600" fill="#1a202c">AI 辅助软件开发流程</text>
+
+  <!-- Step 1 -->
+  <rect x="20" y="40" width="820" height="42" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/><text x="70" y="66" text-anchor="middle" font-size="18">🧠</text><text x="430" y="58" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a5f">1. 需求分析</text><text x="430" y="74" text-anchor="middle" font-size="9" fill="#3b82f6">人独立完成 — 明确目标 · 定义成功标准 · 识别技术风险 · 确定关键约束</text>
+  <line x1="430" y1="82" x2="430" y2="102" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="20" y="106" width="820" height="42" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/><text x="70" y="132" text-anchor="middle" font-size="18">🧠+🤖</text><text x="430" y="124" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">2. 方案设计</text><text x="430" y="140" text-anchor="middle" font-size="9" fill="#d97706">人主导 + AI 辅助 — 列出候选方案 (A/B/C) · 对比优缺点 · 选择最优方案 · AI 帮忙搜索参考实现</text>
+  <line x1="430" y1="148" x2="430" y2="168" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="20" y="172" width="820" height="42" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/><text x="70" y="198" text-anchor="middle" font-size="18">🤖+🧠</text><text x="430" y="190" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">3. AI 辅助编码</text><text x="430" y="206" text-anchor="middle" font-size="9" fill="#7c3aed">AI 生成代码 + 人设定约束规则 · Claude Code / Trae 生成 · 共享模块提取 · 代码生成</text>
+  <line x1="430" y1="214" x2="430" y2="234" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Review (diamond) -->
+  <rect x="200" y="238" width="460" height="42" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="70" y="264" text-anchor="middle" font-size="18">🧠</text><text x="430" y="256" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">4. 人工 Review — 人审查每一行 AI 生成的代码</text>
+  <text x="430" y="272" text-anchor="middle" font-size="9" fill="#d97706">安全检查 · 逻辑正确性 · 代码质量 · 性能 · 是否有隐藏 Bug</text>
+
+  <line x1="200" y1="259" x2="120" y2="259" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="120" y1="259" x2="120" y2="298" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="160" y="252" font-size="10" font-weight="600" fill="#dc2626">❌ 发现问题</text>
+
+  <line x1="660" y1="259" x2="740" y2="259" stroke="#059669" stroke-width="1.5"/>
+  <line x1="740" y1="259" x2="740" y2="298" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="700" y="252" font-size="10" font-weight="600" fill="#059669">✅ 通过</text>
+
+  <!-- Fix loop -->
+  <rect x="20" y="302" width="200" height="36" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="0.8"/>
+  <text x="120" y="318" text-anchor="middle" font-size="11" font-weight="600" fill="#991b1b">🐛 修复问题</text>
+  <text x="120" y="332" text-anchor="middle" font-size="8" fill="#991b1b">人分析根因 + AI 辅助修复</text>
+  <line x1="120" y1="338" x2="120" y2="380" stroke="#dc2626" stroke-width="1.5"/>
+  <line x1="120" y1="380" x2="430" y2="380" stroke="#dc2626" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="430" y1="380" x2="430" y2="234" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="275" y="375" font-size="8" fill="#dc2626">回到步骤4 Review</text>
+
+  <!-- Step 5 -->
+  <rect x="630" y="302" width="220" height="50" rx="6" fill="#dcfce7" stroke="#059669" stroke-width="1"/>
+  <text x="740" y="320" text-anchor="middle" font-size="13" font-weight="600" fill="#065f46">5. 测试验证</text>
+  <text x="740" y="338" text-anchor="middle" font-size="8" fill="#065f46">人编写核心测试</text>
+  <text x="740" y="350" text-anchor="middle" font-size="8" fill="#065f46">🤖 AI 生成用例草稿</text>
+  <line x1="740" y1="352" x2="740" y2="372" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Test result branch -->
+  <rect x="630" y="376" width="220" height="28" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="0.8"/>
+  <text x="740" y="394" text-anchor="middle" font-size="10" fill="#92400e">测试通过？</text>
+
+  <line x1="630" y1="390" x2="550" y2="390" stroke="#dc2626" stroke-width="1"/>
+  <line x1="550" y1="390" x2="550" y2="332" stroke="#dc2626" stroke-width="1"/>
+  <line x1="550" y1="332" x2="225" y2="332" stroke="#dc2626" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="590" y="383" font-size="8" fill="#dc2626">❌</text>
+
+  <line x1="740" y1="404" x2="740" y2="424" stroke="#059669" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Step 6 -->
+  <rect x="225" y="428" width="410" height="42" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+  <text x="430" y="446" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a5f">6. 重构优化 — 人主导</text>
+  <text x="430" y="462" text-anchor="middle" font-size="9" fill="#3b82f6">消除重复 · 性能优化 · 安全加固 · N+1 修复 · 代码审查清零</text>
+  <line x1="430" y1="470" x2="430" y2="490" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Step 7 -->
+  <rect x="225" y="494" width="410" height="42" rx="6" fill="#dcfce7" stroke="#059669" stroke-width="1"/>
+  <text x="430" y="512" text-anchor="middle" font-size="13" font-weight="600" fill="#065f46">7. 部署上线 — 人操作</text>
+  <text x="430" y="528" text-anchor="middle" font-size="9" fill="#059669">Docker Compose · Vercel · GitHub Actions CI/CD · Nginx · 环境变量配置</text>
+
+  <!-- Done -->
+  <line x1="430" y1="536" x2="430" y2="556" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="310" y="560" width="240" height="30" rx="15" fill="#1e293b"/>
+  <text x="430" y="580" text-anchor="middle" font-size="12" font-weight="600" fill="#f1f5f9">✅ 功能交付 · 证据留存</text>
+
+  <!-- Human/AI split legend -->
+  <rect x="20" y="544" width="210" height="72" rx="6" fill="#f8f9fa" stroke="#e2e8f0" stroke-width="0.8"/>
+  <text x="125" y="560" text-anchor="middle" font-size="10" font-weight="600" fill="#1e293b">人机分工</text>
+  <rect x="30" y="568" width="80" height="20" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.5"/><text x="70" y="582" text-anchor="middle" font-size="8" fill="#1e40af">🧠 人决策</text>
+  <rect x="120" y="568" width="100" height="20" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.5"/><text x="170" y="582" text-anchor="middle" font-size="8" fill="#5b21b6">🤖 AI 辅助</text>
+  <rect x="30" y="592" width="190" height="18" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.3"/><text x="125" y="605" text-anchor="middle" font-size="8" fill="#64748b">关键案例: 分布式锁方案 (人) + 代码实现 (AI) + Bug发现 (人审查)</text>
+
+  <!-- Stats -->
+  <rect x="240" y="600" width="600" height="16" rx="3" fill="transparent"/>
+  <text x="540" y="612" text-anchor="middle" font-size="8" fill="#94a3b8">三个项目约 60% 代码由 AI 生成，但 100% 关键决策是人做的 — 对 AI 代码的审查能力是 AI 时代工程师的新基本功</text>
+</svg>

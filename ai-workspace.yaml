@@ -1,0 +1,8 @@
+# AI Workspace v1.0 — 项目声明
+# Canonical Source: ~/.ai-workspace/
+name: 个人网页
+description: 个人面试/作品集网站 — 展示个人能力、项目经历、技术栈
+type: web-frontend
+language: zh-CN
+profiles: [vue, typescript, git]
+platforms: [claude-code, trae, workbuddy]

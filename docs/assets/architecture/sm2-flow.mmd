@@ -1,0 +1,44 @@
+flowchart TD
+    Start(["用户答题"]) --> Answer{"答对还是答错？"}
+
+    Answer -->|"✅ 答对 (q=5)"| CorrectEF["计算 EF 因子<br/>EF' = EF + (0.1 - (5-5)×(0.08+(5-5)×0.02))<br/>= EF + 0.1"]
+    Answer -->|"❌ 答错 (q=2)"| WrongReset["EF 因子降低<br/>EF' = EF + (0.1 - (5-2)×(0.08+(5-2)×0.02))<br/>= EF - 0.14<br/>rep 重置为 0<br/>间隔重置为 1 天"]
+
+    CorrectEF --> EFCheck{"EF ≥ 1.3？"}
+    EFCheck -->|"是"| IncRep["rep++<br/>连续正确次数 +1"]
+    EFCheck -->|"否"| FloorEF["EF = 1.3<br/>（下限保护）"]
+    FloorEF --> IncRep
+
+    IncRep --> CalcInterval{"rep 值？"}
+    CalcInterval -->|"rep = 1"| Day1["interval = 1 天"]
+    CalcInterval -->|"rep = 2"| Day6["interval = 6 天"]
+    CalcInterval -->|"rep ≥ 3"| GrowInterval["interval = round(n × EF)<br/>间隔按 EF 指数增长"]
+
+    Day1 --> SetNext["设置 next 日期<br/>next = today + interval"]
+    Day6 --> SetNext
+    GrowInterval --> SetNext
+
+    WrongReset --> SetNext2["设置 next 日期<br/>next = today + 1 天"]
+
+    SetNext --> SaveSRS["持久化到 localStorage<br/>tiku_v8_srs"]
+
+    SaveSRS --> UpdateWrong["更新错题统计<br/>wrongSet + wrongCountMap"]
+
+    UpdateWrong --> DailyLog["记录每日日志<br/>dailyHistory[YYYY-MM-DD]"]
+
+    DailyLog --> NextQ(["显示下一题"])
+
+    SetNext2 --> SaveSRS
+
+    subgraph DailyReview["📅 每日复习检查"]
+        CheckToday["今日待复习<br/>filter: next ≤ today AND rep > 0"] --> CountBadge["复习按钮显示<br/>待复习数量徽章"]
+    end
+
+    SaveSRS -.-> CheckToday
+
+    style Start fill:#f8f9fa,stroke:#e2e8f0
+    style Answer fill:#fef3c7,stroke:#d97706
+    style CorrectEF fill:#dcfce7,stroke:#059669
+    style WrongReset fill:#fee2e2,stroke:#dc2626
+    style SaveSRS fill:#ede9fe,stroke:#7c3aed
+    style DailyReview fill:#f1f5f9,stroke:#cbd5e1

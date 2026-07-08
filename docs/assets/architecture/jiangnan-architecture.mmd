@@ -1,0 +1,81 @@
+graph TB
+    subgraph Client["🖥️ 客户端层"]
+        Passenger["乘客端<br/>Vue 3 + Vite"]
+        Driver["司机端<br/>Vue 3 + Vite"]
+        Admin["管理后台<br/>Vue 3 + ECharts"]
+        WS["WebSocket<br/>实时通信"]
+    end
+
+    subgraph Gateway["🔐 网关层"]
+        JWT["JWT 认证"]
+        RateLimit["速率限制<br/>Redis 滑动窗口"]
+        CORS["CORS / CSRF"]
+        Blacklist["Token 黑名单"]
+    end
+
+    subgraph Business["⚙️ 业务 & 调度层 — Spring Boot 3.2.6"]
+        Order["订单服务"]
+        Dispatch["调度引擎 ★<br/>二阶分布式锁"]
+        Score["评分引擎 ★<br/>动态学习反馈"]
+        Payment["支付服务"]
+        Billing["计费引擎<br/>四段阶梯计价"]
+        User["用户服务"]
+        SM["状态机<br/>10状态 15+转换"]
+        AI["AI 客服<br/>DeepSeek SSE"]
+        Risk["风控系统<br/>3条检测规则"]
+        Event["事件溯源<br/>12类事件"]
+        Observe["三层可观测性<br/>Metrics · Health · Anomaly"]
+    end
+
+    subgraph Data["💾 数据层"]
+        MySQL["MySQL 8.0<br/>27张表 · MyBatis-Plus"]
+        Redis["Redis + Redisson<br/>分布式锁 · 缓存"]
+        EventTable["事件溯源表<br/>t_order_event"]
+    end
+
+    subgraph Infra["🔧 基础设施"]
+        Docker["Docker Compose"]
+        Nginx["Nginx 反向代理"]
+        CI["GitHub Actions CI"]
+        API["Knife4j API 文档"]
+        JUnit["JUnit + Vitest<br/>155 测试用例"]
+    end
+
+    External["DeepSeek API<br/>和风天气 API"]
+
+    Passenger --> JWT
+    Driver --> JWT
+    Admin --> JWT
+    WS --> JWT
+
+    JWT --> Order
+    JWT --> Dispatch
+    JWT --> Score
+    JWT --> Payment
+    JWT --> User
+
+    Order --> MySQL
+    Order --> EventTable
+    Dispatch --> Redis
+    Dispatch --> MySQL
+    Score --> Redis
+    Payment --> MySQL
+    Billing --> MySQL
+
+    AI --> External
+    Event --> EventTable
+
+    MySQL --> Docker
+    Redis --> Docker
+    Docker --> Nginx
+    Docker --> CI
+
+    style Client fill:#f8f9fa,stroke:#e2e8f0
+    style Gateway fill:#f1f5f9,stroke:#cbd5e1
+    style Business fill:#ffffff,stroke:#e2e8f0
+    style Data fill:#f8f9fa,stroke:#e2e8f0
+    style Infra fill:#f1f5f9,stroke:#cbd5e1
+    style Dispatch fill:#fef3c7,stroke:#d97706
+    style Score fill:#fef3c7,stroke:#d97706
+    style Redis fill:#fee2e2,stroke:#dc2626
+    style EventTable fill:#ede9fe,stroke:#7c3aed

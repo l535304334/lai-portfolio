@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -244,6 +244,45 @@
 | Documentation Sync | ✅ 本节记录 |
 | typecheck | ✅ 通过 |
 | build | ✅ 通过（组件未被消费，不影响 bundle，003.6 将接入） |
+
+### 子任务 003.6 — ProjectDetail 组装
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 修改文件
+
+- `src/pages/ProjectDetail.vue` — 完全重写，组合 4 个 project 组件 + virtual:project-detail 数据
+
+#### 实现细节
+
+1. **数据流：** `virtual:project-detail` → `projectDetails` 数组 → `findIndex(slug)` → `project` computed
+2. **导航计算：** `currentIndex` ± 1 推导 `prev` / `next`，`noUncheckedIndexedAccess` 合规（null check）
+3. **404 处理：** `onMounted` 检查 `project.value`，为 null 时 `router.replace({ name: 'not-found' })`
+4. **响应式指标网格：** 1 列（移动）→ 2 列（≥480px）→ 4 列（≥768px）
+5. **slug 类型安全：** `computed(() => String(route.params.slug))` 处理 Vue Router 的 `string | string[]` 类型
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 数据流清晰，404 处理完整，类型安全 |
+| Duplicate Review | ✅ 无重复 |
+| Architecture Review | ✅ 符合 v1.2 §8 ProjectDetail 组合方式 |
+| Design Token Review | ✅ 全部使用设计令牌 |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ 1637 模块，ProjectDetail.js gzip 7.57 KB（6.25 KB HTML + 1.32 KB 组件），CSS gzip 1.20 KB |
+
+#### Bundle 影响
+
+| Chunk | 003.5 | 003.6 | 变化 |
+|-------|-------|-------|------|
+| ProjectDetail.js (gzip) | 0.39 KB | 7.57 KB | +7.18 KB（懒加载） |
+| ProjectDetail.css (gzip) | 0.08 KB | 1.20 KB | +1.12 KB（懒加载） |
+| Home.js (gzip) | 4.50 KB | 4.48 KB | -0.02 KB（ArrowRight 共享 chunk） |
+| index.js (gzip) | 41.62 KB | 41.66 KB | +0.04 KB |
+| arrow-right.js (gzip) | — | 0.27 KB | 新增共享 chunk |
 
 ---
 

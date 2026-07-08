@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -211,6 +211,39 @@
 | Documentation Sync | ✅ 本节记录 |
 | typecheck | ✅ 通过 |
 | build | ✅ CSS gzip 2.55 KB（+0.19 KB vs 003.3），ProjectDetail 懒加载 gzip 6.25 KB |
+
+### 子任务 003.5 — Project 组件
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件（4 项，位于 `src/components/project/`）
+
+- `ProjectHeader.vue` — 项目头部（日期 + GitHub 链接 + 大标题 + 副标题 + 标签列表），响应式标题 text-3xl → text-5xl
+- `MetricCard.vue` — 指标卡片（大数值 + 标签），surface 背景 + border + hover 效果
+- `MarkdownContent.vue` — Markdown 渲染容器（v-html + scoped `:deep()` 样式覆盖 h2/h3/p/ul/ol/table/blockquote/hr/a/strong 等元素）
+- `ProjectNav.vue` — 项目间导航（上一个 / 下一个），双列布局 + 箭头图标 + hover 效果
+
+#### 设计决策
+
+1. **`src/components/project/` 目录** — 遵循 v1.2 §8 组件树规范，项目详情组件独立目录
+2. **MarkdownContent 用 `:deep()` scoped 样式** — v-html 内容不被 scoped 样式默认覆盖，用 `:deep()` 选择器穿透，保持样式与组件绑定
+3. **ProjectNav 本地 NavItem 接口** — 仅需 slug + title，不导入完整 ProjectSummary，YAGNI
+4. **MetricCard 独立组件** — 单指标卡片，可组合为网格，复用性强
+5. **ProjectHeader 响应式标题** — 移动端 text-3xl，桌面端 text-5xl，建立尺度对比层次
+6. **MarkdownContent h2 带底边框** — 编辑/杂志风格，分隔章节
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 4 组件职责清晰，Props 类型化 |
+| Duplicate Review | ✅ 无重复（ProjectNav 本地 NavItem，其他用 @/types/*） |
+| Architecture Review | ✅ 符合 v1.2 §8 组件树 |
+| Design Token Review | ✅ 全部使用设计令牌（--color-* / --space-* / --text-* / --radius-*） |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ 通过（组件未被消费，不影响 bundle，003.6 将接入） |
 
 ---
 

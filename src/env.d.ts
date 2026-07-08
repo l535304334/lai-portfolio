@@ -20,3 +20,8 @@ declare module 'virtual:interview-content' {
   import type { InterviewCategory } from '@/types/interview'
   export const interviewCategories: InterviewCategory[]
 }
+
+declare module 'virtual:ai-practice-content' {
+  import type { AiPracticeContent } from '@/types/ai-practice'
+  export const aiPractice: AiPracticeContent | null
+}

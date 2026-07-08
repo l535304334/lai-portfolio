@@ -6,6 +6,7 @@
  * - virtual:content — 轻量摘要数据（无 HTML），首页使用
  * - virtual:project-detail — 完整内容含渲染后 HTML，项目详情页懒加载使用
  * - virtual:interview-content — 面试问答分类（含渲染后 HTML），面试页懒加载使用
+ * - virtual:ai-practice-content — AI 工程实践内容（含渲染后 HTML），AI 实践页懒加载使用
  */
 
 import fs from 'node:fs'
@@ -15,6 +16,7 @@ import type { Plugin } from 'vite'
 import type { ProjectSummary, ProjectContent } from '../types/project'
 import type { DecisionContent } from '../types/decision'
 import type { InterviewCategory, InterviewQAPair } from '../types/interview'
+import type { AiPracticeContent } from '../types/ai-practice'
 import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
@@ -23,6 +25,8 @@ const VIRTUAL_PROJECT_DETAIL_ID = 'virtual:project-detail'
 const RESOLVED_PROJECT_DETAIL_ID = '\0' + VIRTUAL_PROJECT_DETAIL_ID
 const VIRTUAL_INTERVIEW_ID = 'virtual:interview-content'
 const RESOLVED_INTERVIEW_ID = '\0' + VIRTUAL_INTERVIEW_ID
+const VIRTUAL_AI_PRACTICE_ID = 'virtual:ai-practice-content'
+const RESOLVED_AI_PRACTICE_ID = '\0' + VIRTUAL_AI_PRACTICE_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -215,6 +219,31 @@ async function scanInterviews(root: string): Promise<InterviewCategory[]> {
   })
 }
 
+/** 扫描 ai-practice/index.md，渲染 HTML，返回 AiPracticeContent（单文件） */
+async function scanAiPractice(root: string): Promise<AiPracticeContent | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'ai-practice', 'index.md')
+  if (!fs.existsSync(filePath)) return null
+
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  if (!data.slug) {
+    throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+  }
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+  }
+
+  const html = await renderMarkdown(content)
+
+  return {
+    slug: String(data.slug),
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    html,
+  }
+}
+
 /** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
@@ -228,6 +257,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_INTERVIEW_ID) {
         return RESOLVED_INTERVIEW_ID
+      }
+      if (id === VIRTUAL_AI_PRACTICE_ID) {
+        return RESOLVED_AI_PRACTICE_ID
       }
     },
     async load(id) {
@@ -263,6 +295,16 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const interviewCategories = ${JSON.stringify(categories)}`
+      }
+      if (id === RESOLVED_AI_PRACTICE_ID) {
+        const root = process.cwd()
+        const aiPractice = await scanAiPractice(root)
+
+        for (const file of getContentFiles(root, 'ai-practice')) {
+          this.addWatchFile(file)
+        }
+
+        return `export const aiPractice = ${JSON.stringify(aiPractice)}`
       }
     },
   }

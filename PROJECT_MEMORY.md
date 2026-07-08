@@ -52,7 +52,7 @@
 |--------|------|------|
 | 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
 | 004.2 | Interview 组件 + 页面组装 | ✅ 完成 |
-| 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | 待开始 |
+| 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | ✅ 完成 |
 | 004.4 | 最终验证 + Release | 待开始 |
 
 ### 架构冲突记录（Rule 7 — 暴露冲突）
@@ -172,6 +172,56 @@
 | 初始加载 | 50.67 KB | 50.69 KB | +0.02 KB（ChevronRight 图标） |
 
 **评估：** 面试页懒加载 6.85 KB gzip 包含 4 个分类的 17 道问答（含 Shiki 渲染 HTML）+ 3 个组件，仅在访问 `/interview` 时加载。MarkdownContent 拆为共享 chunk，ProjectDetail 体积微降。初始加载几乎不变。
+
+### 子任务 004.3 — AI Practice 类型 + 虚拟模块 + 页面
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件
+
+- `src/types/ai-practice.ts` — `AiPracticeContent` 接口（slug + title + date + html，单文件内容）
+
+#### 修改文件
+
+- `src/utils/content.ts` — 新增 `virtual:ai-practice-content` 虚拟模块
+  - `scanAiPractice(root)` — 扫描 `ai-practice/index.md`（单文件），解析 frontmatter，渲染 HTML，返回 `AiPracticeContent | null`
+  - `resolveId` 钩子新增 `VIRTUAL_AI_PRACTICE_ID` 映射
+  - `load` 钩子新增 `RESOLVED_AI_PRACTICE_ID` 处理：调用 `scanAiPractice()` + HMR watch + 导出 `aiPractice`
+- `src/env.d.ts` — 新增 `virtual:ai-practice-content` 模块声明（`aiPractice: AiPracticeContent | null`）
+- `src/pages/AiPractice.vue` — 替换占位页面，导入 `aiPractice` from `virtual:ai-practice-content`，渲染标题 + MarkdownContent
+
+#### 设计决策
+
+1. **单文件返回 `AiPracticeContent | null`** — AI 实践只有 `index.md` 一个文件，返回单对象而非数组（YAGNI）。null 表示文件不存在，页面用 `v-if` 处理
+2. **`scanAiPractice` 直接检查 `index.md`** — 不扫描目录下所有 .md，直接 `path.resolve(dir, 'index.md')`，语义明确（架构文档 §8 确认单文件）
+3. **复用 MarkdownContent 组件** — AI 实践 Markdown 与项目/面试共用同一渲染容器，MarkdownContent 现为 ProjectDetail + Interview + AiPractice 三方共享 chunk
+4. **页面 hint 引用核心观点** — "不是'AI 帮我写代码'，是'我用 AI 加速了哪些环节，我独立完成了哪些决策'" — 直接引用内容文件核心原则，页面头部即点明主题
+5. **用全局 `.page__*` 类** — 不重新定义 eyebrow/title/hint（global.css 已定义），仅 scoped `.ai-practice__header` 自定义布局，与 Interview.vue 一致
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| Self Review | ✅ 类型简洁，null 处理完整，复用 MarkdownContent |
+| Duplicate Review | ✅ AiPracticeContent 与 DecisionContent 结构相似但域不同（可接受，类型可能分化）；MarkdownContent 三方共享 |
+| Architecture Review | ✅ 符合 v1.2 §5（页面结构）+ §8（AiPractice.vue）+ §3.3（虚拟模块） |
+| Design Token Review | ✅ 仅用 --space-12 / --space-8 / --color-border（全部已存在）+ 全局 .page__* 类 |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ 成功（1650 模块，2.27s） |
+| TODO/FIXME/console.log 扫描 | ✅ 0 处 |
+
+#### Bundle 影响
+
+| Chunk | 004.2 (gzip) | 004.3 (gzip) | 变化 |
+|-------|-------------|-------------|------|
+| index.js | 41.73 KB | 41.77 KB | +0.04 KB（虚拟模块注册） |
+| AiPractice.js | 0.34 KB | 2.14 KB | +1.80 KB（懒加载：单文件 HTML + 页面） |
+| AiPractice.css | 0 | 0.13 KB | +0.13 KB（scoped 样式） |
+| 初始加载 | 50.69 KB | 50.73 KB | +0.04 KB |
+
+**评估：** AI 实践页懒加载 2.14 KB gzip（单文件 Markdown 渲染 HTML + 页面组件），比面试页（6.85 KB）轻得多。MarkdownContent 共享 chunk 被三方复用，缓存效率高。初始加载几乎不变。
 
 ---
 

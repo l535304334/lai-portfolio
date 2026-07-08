@@ -18,14 +18,14 @@
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
-| Task 004 | 🔄 进行中（004.1 + 004.2 + 004.3 完成） |
-| Release Review | ✅ Task 001/002/003 全部通过 |
-| **Master Baseline** | Task 003 Release（Tag `v0.3.0`） |
-| **当前分支** | `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`） |
-| **Develop HEAD** | 与 master 同步（Task 003 已 FF 合并） |
-| **工作区状态** | 004.3 完成（AI 实践页），004.4 最终验证待开始 |
-| 验证 | ✅ build 成功（1650 模块）/ typecheck 通过 |
-| **当前进度** | Task 004 进行中，004.3 已完成 |
+| Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
+| Release Review | ✅ Task 001/002/003/004 全部通过 |
+| **Master Baseline** | Task 004 Release（Tag `v0.4.0`） |
+| **当前分支** | `master`（Task 004 已 FF 合并） |
+| **Develop HEAD** | 与 master 同步（Task 004 已 FF 合并） |
+| **工作区状态** | Task 004 完成，工作区干净，等待用户确认开始 Task 005 |
+| 验证 | ✅ build 成功（1650 模块，2.57s）/ typecheck 通过 |
+| **当前进度** | Task 004 完成，等待 Task 005 启动 |
 
 ---
 
@@ -112,61 +112,70 @@
 | 路径 | 文件 | 状态 |
 |------|------|------|
 | `/` | `src/pages/Home.vue` | ✅ 已实现（Task 002，4 个组件组合） |
-| `/projects/:slug` | `src/pages/ProjectDetail.vue` | 占位（Task 003 替换） |
+| `/projects/:slug` | `src/pages/ProjectDetail.vue` | ✅ 已实现（Task 003，5 个组件 + DecisionSection） |
 | `/skills` | `src/pages/Skills.vue` | 占位（Task 005 替换） |
-| `/interview` | `src/pages/Interview.vue` | 占位（Task 004 替换） |
-| `/ai-practice` | `src/pages/AiPractice.vue` | 占位（Task 004 替换） |
+| `/interview` | `src/pages/Interview.vue` | ✅ 已实现（Task 004，4 分类 17 题 + 折叠面板） |
+| `/ai-practice` | `src/pages/AiPractice.vue` | ✅ 已实现（Task 004，MarkdownContent 渲染） |
 | `/resume` | `src/pages/Resume.vue` | 占位（Task 005 替换） |
 | `/about` | `src/pages/About.vue` | 占位（Task 005 替换） |
 | 404 | `src/pages/NotFound.vue` | ✅ 最终版 |
 
 ---
 
-## 6. 当前阶段 — Task 004（🔄 进行中）
+## 6. 当前阶段 — Task 005（待开始）
 
 ### 目标
 
-面试准备页（`/interview`）+ AI 工程实践页（`/ai-practice`）开发。
+能力页（`/skills`）+ 简历页（`/resume`）+ 关于页（`/about`）开发。
 
-### Task 004 子任务进度
+### 上一任务 — Task 004（✅ 已完成）
 
-| 子任务 | 名称 | 状态 |
-|--------|------|------|
-| 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
-| 004.2 | Interview 组件 + 页面组装 | ✅ 完成 |
-| 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | ✅ 完成 |
-| 004.4 | 最终验证 + Release | 待开始 |
+**Master Baseline：** Tag `v0.4.0`
 
-### 004.1 交付物
+#### Task 004 Release Gate 结果
 
+- ✅ Playwright 端到端测试 33/33 通过
+- ✅ 面试页：4 分类 17 题 + 折叠面板交互 + Markdown 渲染
+- ✅ AI 实践页：h1 + h2 ≥ 5 + 表格 + 代码块 + 案例章节
+- ✅ 4 路由控制台 0 错误
+- ✅ 响应式桌面/平板/移动 3 断点无水平溢出
+- ✅ typecheck + build 通过
+- ✅ Bundle Size：初始加载 50.79 KB gzip（+0.12 KB vs Task 003），新增内容全部懒加载
+
+#### Task 004 交付物
+
+**004.1 — Interview 类型 + virtual:interview-content 模块**
 - `src/types/interview.ts` — InterviewQAPair + InterviewCategory 接口
-- `src/utils/content.ts` — 新增 `virtual:interview-content` 虚拟模块（`parseInterviewQA` + `scanInterviews` + resolveId/load 钩子 + HMR watch）
+- `src/utils/content.ts` — 新增 `virtual:interview-content`（`parseInterviewQA` + `scanInterviews` + resolveId/load + HMR）
 - `src/env.d.ts` — 新增 `virtual:interview-content` 模块声明
 
-### 004.2 交付物
-
-- `src/components/interview/InterviewQuestion.vue` — `<details>/<summary>` 原生折叠面板，ChevronRight 旋转 90°，复用 MarkdownContent
+**004.2 — Interview 组件 + 页面组装**
+- `src/components/interview/InterviewQuestion.vue` — `<details>/<summary>` 折叠面板，ChevronRight 旋转 90°，复用 MarkdownContent
 - `src/components/interview/InterviewCategory.vue` — 分类区段（eyebrow + 标题 + 题数 + Q&A 列表）
-- `src/pages/Interview.vue` — 替换占位页，接入 `virtual:interview-content`，4 分类 17 题懒加载（gzip 6.85 KB）
+- `src/pages/Interview.vue` — 替换占位页，4 分类 17 题懒加载（gzip 6.85 KB）
 
-### 004.3 交付物
-
-- `src/types/ai-practice.ts` — `AiPracticeContent` 接口（单文件内容）
-- `src/utils/content.ts` — 新增 `virtual:ai-practice-content`（`scanAiPractice` + resolveId/load + HMR watch）
+**004.3 — AI Practice 类型 + 虚拟模块 + 页面**
+- `src/types/ai-practice.ts` — `AiPracticeContent` 接口
+- `src/utils/content.ts` — 新增 `virtual:ai-practice-content`（`scanAiPractice` + resolveId/load + HMR）
 - `src/env.d.ts` — 新增 `virtual:ai-practice-content` 模块声明
-- `src/pages/AiPractice.vue` — 替换占位页，接入 `virtual:ai-practice-content`，MarkdownContent 渲染（gzip 2.14 KB）
+- `src/pages/AiPractice.vue` — 替换占位页，MarkdownContent 渲染（gzip 2.14 KB）
 
-### 架构冲突（Rule 7）
+**004.4 — 最终验证 + Release**
+- 全项目 typecheck + build 通过
+- Playwright 33/33 测试通过
+- Bundle Size 对比（Task 003 → Task 004）
+- Git 合并 feature → develop → master + Tag v0.4.0 + Push GitHub
+
+#### 架构冲突（Rule 7）
 
 架构文档 §3.3 规定"一个 `virtual:content` 导出所有内容"，但 Task 003 已批准 `virtual:project-detail` 懒加载分离模式。004.1/004.3 遵循既有模式新建 `virtual:interview-content` + `virtual:ai-practice-content`。详见 PROJECT_MEMORY.md「Task 004 — 架构冲突记录」。
 
-### 004.4 待开始
+### Task 005 待开始
 
-- 全项目 typecheck + build
-- Playwright 全量回归测试（含 /interview + /ai-practice）
-- Bundle Size 对比
-- 更新所有项目文档
-- Git 合并 + Tag v0.4.0 + Push GitHub
+- `/skills` — 技术能力页（SkillCategory + TimelineItem 组件，按 v1.2 §8 组件树）
+- `/resume` — 简历页（PDF 嵌入或链接，`public/resume.pdf`）
+- `/about` — 关于我页（`content/personal/about.md` 渲染）
+- 预期新增虚拟模块：`virtual:skills-content` + `virtual:personal-content`（遵循既有懒加载模式）
 
 ---
 

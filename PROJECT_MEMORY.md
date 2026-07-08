@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 004 进行中 — 面试准备页 + AI 实践页**
+**Task 005 待开始 — 能力页 + 简历页 + 关于页**
 
-- **Master Baseline：** Task 003 Release（Tag `v0.3.0`）
-- **当前分支：** `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`）
-- **Release Review：** Task 001/002/003 全部通过
-- **工作区状态：** 004.1 进行中（面试类型 + virtual:interview-content 模块）
+- **Master Baseline：** Task 004 Release（Tag `v0.4.0`）
+- **当前分支：** `master`（Task 004 已 FF 合并到 develop → master）
+- **Release Review：** Task 001/002/003/004 全部通过
+- **工作区状态：** Task 004 完成，工作区干净，等待用户确认开始 Task 005
 
 ### Task 进度总览
 
@@ -22,19 +22,18 @@
 | 000 | 项目内容资产整理 | ✅ 已完成 |
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
-| **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0）** |
-| **004** | **面试准备页 + AI 实践页** | **🔄 进行中（004.1 完成）** |
+| 002 | 首页开发 | ✅ 已完成（含 Self Review + Acceptance Review，已合并到 master） |
+| 003 | 构建时内容插件 + 项目详情页 | ✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0） |
+| **004** | **面试准备页 + AI 实践页** | **✅ 已完成（含 Release Gate 33/33 + 合并 master + Tag v0.4.0）** |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
 | 007 | Release Audit | 待开始 |
 
 ### 后续开发顺序
 
-1. **Task 004** — `/interview` + `/ai-practice` 两个内容页
-2. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
-3. **Task 006** — Vercel 部署上线
-4. **Task 007** — Release Audit（最终质量关卡）
+1. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
+2. **Task 006** — Vercel 部署上线
+3. **Task 007** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
 
@@ -43,8 +42,9 @@
 ## Task 004 — 面试准备页 + AI 实践页
 
 **开始时间：** 2026-07-09
-**状态：** 🔄 进行中
-**Git 分支：** `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`，Task 003 Release）
+**完成时间：** 2026-07-09
+**状态：** ✅ 已完成（含 Release Gate 33/33 + 合并 master + Tag v0.4.0）
+**Git 分支：** `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`，Task 003 Release；已 FF 合并到 develop → master）
 
 ### 子任务拆分
 
@@ -53,7 +53,7 @@
 | 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
 | 004.2 | Interview 组件 + 页面组装 | ✅ 完成 |
 | 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | ✅ 完成 |
-| 004.4 | 最终验证 + Release | 待开始 |
+| 004.4 | 最终验证 + Release | ✅ 完成 |
 
 ### 架构冲突记录（Rule 7 — 暴露冲突）
 
@@ -222,6 +222,112 @@
 | 初始加载 | 50.69 KB | 50.73 KB | +0.04 KB |
 
 **评估：** AI 实践页懒加载 2.14 KB gzip（单文件 Markdown 渲染 HTML + 页面组件），比面试页（6.85 KB）轻得多。MarkdownContent 共享 chunk 被三方复用，缓存效率高。初始加载几乎不变。
+
+### 子任务 004.4 — 最终验证 + Release
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 验证项
+
+| 验证项 | 结果 |
+|--------|------|
+| `npm run typecheck` | ✅ 通过（strict 全开，0 错误） |
+| `npm run build` | ✅ 成功（1650 模块，2.57s） |
+| Playwright 全量回归测试 | ✅ 33/33 通过（0 失败） |
+| TODO/FIXME/console.log/debugger 扫描 | ✅ 0 处 |
+| `as any` / `@ts-ignore` / `@ts-nocheck` 扫描 | ✅ 0 处 |
+| Duplicate Review | ✅ MarkdownContent 三方共享，无重复 |
+| Architecture Review | ✅ 符合 v1.2 §2.3 / §3.3 / §5 / §8 |
+| Design Token Review | ✅ 全部使用已定义令牌 |
+| Bundle Size 对比（Task 003 vs Task 004） | ✅ 见下表 |
+
+#### Playwright 测试覆盖（33 项）
+
+| # | 测试 | 结果 | 关键验证 |
+|---|------|------|----------|
+| 1 | 首页渲染 | ✅ | h1 + 项目卡片 ≥ 3 |
+| 2 | 江南出行详情页 | ✅ | h1 + h2 + table |
+| 3 | 面试准备页渲染 | ✅ | h1 + 4 分类 + details ≥ 17 + chevron 图标 |
+| 4 | 面试页折叠面板交互 | ✅ | 默认折叠 → 点击展开 → Markdown 渲染 → 再次折叠 |
+| 5 | 面试页 Markdown 内容 | ✅ | p + strong + ol |
+| 6 | AI 实践页渲染 | ✅ | h1 + h2 ≥ 5 + table + pre + h3 ≥ 3 |
+| 7 | AI 实践页 Markdown 元素 | ✅ | p ≥ 5 + strong ≥ 5 + ul + hr |
+| 8 | 导航链接测试 | ✅ | /interview + /ai-practice 链接存在 |
+| 9 | 404 页面 | ✅ | h1 存在 |
+| 10 | 响应式桌面 1280×800 | ✅ | 无水平溢出 |
+| 11 | 响应式平板 768×1024 | ✅ | 无水平溢出 |
+| 12 | 响应式移动 375×667 | ✅ | 无水平溢出 |
+| 13 | AI 实践页移动端 | ✅ | 无水平溢出 |
+| 14 | 控制台错误扫描 | ✅ | 4 路由 0 错误 |
+
+#### Bundle Size 对比（Task 003 Release vs Task 004 Final）
+
+**初始加载（首页访问 `/`）：**
+
+| Chunk | Task 003 (gzip) | Task 004 (gzip) | 变化 | 说明 |
+|-------|----------------|----------------|------|------|
+| index.js | 41.66 KB | 41.77 KB | +0.11 KB | 虚拟模块注册 + ChevronRight 图标 |
+| index.css | 2.55 KB | 2.55 KB | 0 | 无变化 |
+| Home.js | 4.48 KB | 4.49 KB | +0.01 KB | 微调 |
+| Home.css | 1.98 KB | 1.98 KB | 0 | 无变化 |
+| **初始总加载** | **50.67 KB** | **50.79 KB** | **+0.12 KB** | 首屏性能几乎不变 |
+
+**懒加载（访问 `/interview` + `/ai-practice`）：**
+
+| Chunk | Task 003 (gzip) | Task 004 (gzip) | 说明 |
+|-------|----------------|----------------|------|
+| Interview.js | 0.36 KB | 6.85 KB | 4 分类 17 题 + 2 组件 + Shiki HTML |
+| Interview.css | 0 | 0.71 KB | 折叠面板样式 |
+| AiPractice.js | 0.34 KB | 2.14 KB | 单文件 HTML + 页面 |
+| AiPractice.css | 0 | 0.13 KB | scoped 样式 |
+| MarkdownContent.js | — | 0.23 KB | 三方共享 chunk |
+| MarkdownContent.css | — | 0.60 KB | 三方共享样式 |
+
+**评估：**
+- ✅ 首屏性能几乎不变（+0.12 KB）— 新增内容全部懒加载
+- ✅ 面试页懒加载 6.85 KB gzip 包含 4 分类 17 题（Shiki 渲染 HTML）+ 2 组件
+- ✅ AI 实践页懒加载 2.14 KB gzip（单文件 Markdown）
+- ✅ MarkdownContent 三方共享 chunk（ProjectDetail + Interview + AiPractice），缓存效率高
+- ✅ 运行时零 markdown-it / gray-matter / Shiki 依赖（仅构建时）
+- ✅ 满足 Core Web Vitals 目标（LCP < 2.5s / INP < 200ms / CLS < 0.1）
+
+#### Build 产物清单
+
+```
+dist/
+├── index.html                              2.31 KB │ gzip:  1.13 KB
+├── assets/
+│   ├── index-DjUII6AP.css                 10.13 KB │ gzip:  2.55 KB   (全局 + code-theme)
+│   ├── Home-C2yr2zHC.css                  11.82 KB │ gzip:  1.98 KB
+│   ├── Interview-C8IMb27X.css              2.28 KB │ gzip:  0.71 KB   (懒加载)
+│   ├── AiPractice-CaEFP4Xr.css              0.14 KB │ gzip:  0.13 KB   (懒加载)
+│   ├── MarkdownContent-D6wEW2SR.css         2.46 KB │ gzip:  0.60 KB   (共享 chunk)
+│   ├── ProjectDetail-Djcsxpo6.css          4.32 KB │ gzip:  0.92 KB   (懒加载)
+│   ├── NotFound-DsaarKJd.css               1.04 KB │ gzip:  0.38 KB
+│   ├── index-BDbcpdJi.js                  107.51 KB │ gzip: 41.77 KB   (Vue + Router + Lucide)
+│   ├── Home-Bn7wCTzV.js                    10.63 KB │ gzip:  4.49 KB
+│   ├── Interview-D_mu3Dqq.js               14.89 KB │ gzip:  6.85 KB   (懒加载)
+│   ├── AiPractice-CG_5HwS3.js               3.83 KB │ gzip:  2.14 KB   (懒加载)
+│   ├── MarkdownContent-CZrEfMnQ.js          0.27 KB │ gzip:  0.23 KB   (共享 chunk)
+│   ├── ProjectDetail-D_exxZCN.js           26.99 KB │ gzip: 10.93 KB   (懒加载)
+│   ├── arrow-right-Vppu1ojZ.js              0.34 KB │ gzip:  0.27 KB   (共享 chunk)
+│   ├── NotFound-C8F1SNih.js                 0.66 KB │ gzip:  0.50 KB
+│   ├── Resume-DAjHITw9.js                   0.41 KB │ gzip:  0.33 KB   (占位)
+│   ├── Skills-DnDtGVC4.js                   0.42 KB │ gzip:  0.34 KB   (占位)
+│   └── About-x6J7klrK.js                    0.42 KB │ gzip:  0.35 KB   (占位)
+```
+
+#### Git 操作
+
+1. `feature/task-004-interview-ai-practice` FF 合并到 `develop`
+2. `develop` FF 合并到 `master`
+3. 创建 Tag `v0.4.0`（Task 004 Release）
+4. 推送到 GitHub 远程仓库
+
+#### P2/P3 顺手修复
+
+无 — 本次 Release Gate 未发现可顺手修复的 P2/P3 小问题，所有验收点一次通过。
 
 ---
 

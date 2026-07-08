@@ -9,6 +9,11 @@ defineProps<{
 </template>
 
 <style scoped>
+/* ===== 容器：防止宽表格/代码块溢出 ===== */
+.markdown {
+  overflow-x: auto;
+}
+
 /* ===== 标题 ===== */
 .markdown :deep(h2) {
   font-size: var(--text-2xl);

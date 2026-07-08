@@ -2,8 +2,8 @@
 
 > 本文件是项目上下文索引，任何 AI 接手本项目时应优先阅读此文件，而非重新分析整个项目。
 > 最后更新：2026-07-08
-> 当前阶段：Task 001 已完成 · 等待 Task 002 启动指令
-> 当前 Baseline：Git Commit `483a9e1`（master 分支，2026-07-08）
+> 当前阶段：Task 002 已完成 · 等待 Task 003 启动指令
+> 当前 Baseline：master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
 
 ---
 
@@ -122,8 +122,8 @@ src/content/
 | 000 | 项目内容资产整理 | ✅ 已完成（14 个 Markdown 文件） |
 | 000.5 | 架构图与展示素材 | ✅ 已完成（7 套 SVG + Mermaid 源码） |
 | **001** | **项目初始化与基础设施** | **✅ 已完成（2026-07-08）** |
-| **002** | **首页开发** | **⏸️ 待开始（下一阶段）** |
-| 003 | 构建时内容插件 + 项目详情页 | 待开始 |
+| **002** | **首页开发** | **✅ 已完成（2026-07-08）** |
+| **003** | **构建时内容插件 + 项目详情页** | **⏸️ 待开始（下一阶段）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线 | 待开始 |
@@ -196,7 +196,7 @@ src/content/
 - ✅ 移动端汉堡菜单可用（768px 断点）
 - ✅ Release Review 已执行（修复 1 CRITICAL + 5 WARNING）
 
-### Task 002（⏸️ 下一阶段 — 等待启动指令）
+### Task 002（✅ 已完成 — 2026-07-08）
 
 **目标：** 首页全部区域开发
 
@@ -206,7 +206,35 @@ src/content/
 - 技术成长时间线
 - 联系方式
 
-**依赖确认：** Task 002 不需要新增依赖（首页纯展示，用现有 Vue + Lucide + CSS）。
+**交付内容：**
+- 4 个首页组件：`src/components/home/HeroSection.vue` / `ProjectCard.vue` / `TimelineSection.vue` / `ContactSection.vue`
+- 1 个页面更新：`src/pages/Home.vue`（组合上述组件，替换占位）
+- Bento 网格布局，精选项目卡片 `grid-row: span 2` 建立层次
+- 非对称 Hero（7fr/5fr 网格）避免通用居中 hero 模板
+- Timeline 用 `<ol>` + CSS `::before` 实现（按 v1.2 §2.3）
+- Contact 用 `<dl>` 语义化键值对
+- 类型化静态数据（Home.vue 持有，Task 003 替换为 virtual:content）
+
+**验收结果：**
+- ✅ `npm run typecheck` 通过（strict 全开）
+- ✅ `npm run build` 成功（gzip Home 4.46 KB，总 ~48KB）
+- ✅ Self Review 修复 1 项响应式问题（ContactSection computed）
+- ✅ 无 TODO / 无 FIXME / 无 console.log
+- ✅ 未新增依赖
+- ✅ 未修改架构
+
+### Task 003（⏸️ 下一阶段 — 等待启动指令）
+
+**目标：** 构建时内容插件 + 项目详情页
+
+**范围：**
+- Vite 构建时 Markdown 转换插件（virtual:content 虚拟模块）
+- 项目详情页模板（`ProjectDetail.vue` 替换占位）
+- 3 个项目 Markdown 渲染
+- Shiki 代码高亮（仅构建时）
+- markdown-it + gray-matter（仅构建时）
+
+**依赖确认：** Task 003 将引入 markdown-it / gray-matter / Shiki（仅构建时依赖，不进入运行时 bundle）。
 
 ---
 
@@ -219,13 +247,14 @@ src/content/
 - ✅ Git 已配置
 - ✅ `.gitignore` 已正确配置（node_modules / dist / .env / .ai-backups）
 
-### 工程骨架（Task 001 已完成）
+### 工程骨架（Task 001 + Task 002 已完成）
 
-- ✅ `package.json` — 3 运行时依赖 + 5 开发依赖
-- ✅ `src/` 完整代码骨架（20 个文件）
+- ✅ `package.json` — 3 运行时依赖 + 5 开发依赖（未新增）
+- ✅ `src/` 完整代码骨架（25 个文件，Task 002 新增 4 个组件）
 - ✅ `public/` 目录 + favicon.svg
 - ✅ 路由、布局、主题系统、占位页面全部就绪
-- ✅ Release Review 通过（Self Review + Release Audit）
+- ✅ 首页 4 区域组件已实现（Hero / ProjectCard / Timeline / Contact）
+- ✅ Release Review 通过（Task 001：Self Review + Release Audit；Task 002：Self Review + Release Review）
 
 **当前依赖清单：**
 
@@ -242,7 +271,7 @@ src/content/
 
 **禁止引入：** Element Plus / Tailwind / Pinia / 后端 / 数据库 / 运行时 Markdown 解析 / 未经确认的新依赖。
 
-### 待补资产（不阻塞 Task 002）
+### 待补资产（不阻塞 Task 003）
 
 - ❌ `public/resume.pdf` 简历 PDF 终稿（Task 005 需要）
 - ❌ `docs/assets/screenshots/` 项目运行截图（Task 003 需要）

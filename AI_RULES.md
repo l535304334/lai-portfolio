@@ -3,7 +3,7 @@
 > 本文件是本项目所有 AI（Trae / Claude Code / Codex / ChatGPT 等）的统一协作规范。
 > 所有开发默认遵守本文件。如本文件与《架构确认文档-v1.2.md》冲突，以 v1.2 为准并立即报告冲突。
 > 最后更新：2026-07-08
-> 当前 Baseline：Git Commit `483a9e1`（master 分支，2026-07-08）
+> 当前 Baseline：master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
 
 ---
 
@@ -194,8 +194,8 @@
 | 000 | 项目内容资产整理 | ✅ 已完成 |
 | 000.5 | 架构图、流程图、展示素材 | ✅ 已完成 |
 | **001** | **项目初始化与基础设施** | **✅ 已完成（2026-07-08）** |
-| **002** | **首页开发（Hero + 项目卡片 + 时间线 + 联系方式）** | **⏸️ 待开始（下一阶段）** |
-| 003 | 构建时内容插件 + 项目详情页 + Markdown 内容 | 待开始 |
+| **002** | **首页开发（Hero + 项目卡片 + 时间线 + 联系方式）** | **✅ 已完成（2026-07-08）** |
+| **003** | **构建时内容插件 + 项目详情页 + Markdown 内容** | **⏸️ 待开始（下一阶段）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -207,11 +207,11 @@
 - 每个 Task 完成后暂停，等待下一条指令
 - **不得提前开发后续 Task 的内容**
 
-### 当前已实现页面（Task 001）
+### 当前已实现页面（Task 001 + Task 002）
 
 | 路径 | 文件 | 状态 |
 |------|------|------|
-| `/` | [src/pages/Home.vue](src/pages/Home.vue) | 占位（Task 002 替换） |
+| `/` | [src/pages/Home.vue](src/pages/Home.vue) | ✅ 已实现（Task 002） |
 | `/projects/:slug` | [src/pages/ProjectDetail.vue](src/pages/ProjectDetail.vue) | 占位（Task 003 替换） |
 | `/skills` | [src/pages/Skills.vue](src/pages/Skills.vue) | 占位（Task 005 替换） |
 | `/interview` | [src/pages/Interview.vue](src/pages/Interview.vue) | 占位（Task 004 替换） |
@@ -224,7 +224,7 @@
 
 ## 8. 各 Task 范围边界
 
-### Task 001（当前）
+### Task 001
 - Vite + Vue 3 + TS 工程骨架
 - 路由（7 条 + 404，空白占位页）
 - 样式系统（设计令牌 + 全局样式）
@@ -234,10 +234,10 @@
 
 **不实现：** Markdown 解析、项目详情渲染、面试题、AI Practice 内容、技术图表、搜索、动画优化、内容填充。
 
-### Task 002
+### Task 002（已完成）
 首页全部区域：Hero + 3 张项目卡片 + 技术成长时间线 + 联系方式。
 
-### Task 003
+### Task 003（当前）
 Vite 构建时 Markdown 转换插件（virtual:content 虚拟模块）+ 项目详情页模板 + 3 个项目 Markdown 渲染。
 
 ### Task 004
@@ -329,9 +329,9 @@ Vercel 部署、SPA rewrites 验证、HTTPS、所有路由刷新不 404。
 
 ---
 
-## 13. 已知问题（Task 001 遗留）
+## 13. 已知问题（Task 001 + Task 002 遗留）
 
-以下问题不阻塞 Task 002，但需在后续 Task 关注：
+以下问题不阻塞 Task 003，但需在后续 Task 关注：
 
 | # | 问题 | 风险等级 | 处置 Task |
 |---|------|---------|----------|

@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 001 已完成 · 等待 Task 002 启动指令**
+**Task 002 已完成 · 等待 Task 003 启动指令**
 
-- **当前 Baseline：** Git Commit `483a9e1`（master 分支，2026-07-08）
-- **Release Review：** 已通过（Self Review 修复 1 CRITICAL + 5 WARNING）
-- **Git Baseline：** 已建立（78 files, 8356 insertions）
-- **工作区状态：** clean
+- **当前 Baseline：** master `2c57d64` · feature/task-002-homepage `df83559`（2026-07-08）
+- **Git 工作流：** master → develop → feature/task-002-homepage（未合并，等待用户确认）
+- **Release Review：** 已通过（Self Review 修复 1 项响应式问题）
+- **工作区状态：** 本地有文档更新待提交（AI_RULES.md / PROJECT_CONTEXT.md / PROJECT_MEMORY.md / HANDOFF.md）
 
 ### Task 进度总览
 
@@ -22,8 +22,8 @@
 | 000 | 项目内容资产整理 | ✅ 已完成 |
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
-| **002** | **首页开发** | **⏸️ 待开始（下一阶段）** |
-| 003 | 构建时内容插件 + 项目详情页 | 待开始 |
+| **002** | **首页开发** | **✅ 已完成（含 Self Review）** |
+| **003** | **构建时内容插件 + 项目详情页** | **⏸️ 待开始（下一阶段）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -31,14 +31,172 @@
 
 ### 后续开发顺序
 
-1. **Task 002** — 首页开发（Hero + ProjectCard + Timeline + Contact + Home.vue）
-2. **Task 003** — Vite 构建时 Markdown 转换插件 + 项目详情页
-3. **Task 004** — `/interview` + `/ai-practice` 两个内容页
-4. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
-5. **Task 006** — Vercel 部署上线
-6. **Task 007** — Release Audit（最终质量关卡）
+1. **Task 003** — Vite 构建时 Markdown 转换插件 + 项目详情页
+2. **Task 004** — `/interview` + `/ai-practice` 两个内容页
+3. **Task 005** — `/skills` + `/resume` + `/about` 三个剩余页面
+4. **Task 006** — Vercel 部署上线
+5. **Task 007** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
+## Task 002 — 首页开发
+
+**完成时间：** 2026-07-08
+**状态：** ✅ 已完成（含 Self Review + Release Review）
+**Git Commit：** `df83559`（feature/task-002-homepage 分支，未合并）
+
+### 本次修改内容
+
+#### 新增文件（4 项）
+
+**首页组件（4 项，位于 `src/components/home/`）**
+- `src/components/home/HeroSection.vue` — Hero 区域（非对称 7fr/5fr 网格，含 4 项统计指标 + 2 个 CTA）
+- `src/components/home/ProjectCard.vue` — 项目卡片（支持 featured/normal 两种展示模式）
+- `src/components/home/TimelineSection.vue` — 技术成长时间线（`<ol>` + CSS `::before` 圆点）
+- `src/components/home/ContactSection.vue` — 联系方式（`<dl>` 语义化键值对）
+
+#### 修改文件（1 项）
+
+- `src/pages/Home.vue` — 替换 Task 001 占位页，组合 4 个组件，持有类型化静态数据（projects / timelineStages / contact）
+
+#### Git 工作流建立
+
+- 从 master `2c57d64` 创建 `develop` 分支
+- 从 `develop` 创建 `feature/task-002-homepage` 分支
+- 所有 Task 002 开发均在 feature 分支完成
+- **未合并回 develop，未切换 master，等待用户确认**
+
+### 设计决策
+
+#### 1. 非对称 Hero 布局 — 避免通用居中 hero 模板
+
+**决策：** Hero 采用 7fr/5fr 双列网格（桌面端），左侧大标题 + 描述 + CTA，右侧统计指标面板。
+
+**原因：** AI_RULES.md §5.6 与 design-quality.md 均禁止"通用 hero section（居中标题 + 渐变 blob + 通用 CTA）"。非对称布局建立视觉层次，统计指标面板用 surface 背景 + border + shadow 形成深度。
+
+**实现：** `min-height: calc(100vh - var(--nav-height))` 确保首屏占满；移动端单列堆叠。
+
+#### 2. Bento 网格 + 精选卡片跨行 — 建立层次
+
+**决策：** 项目卡片用 `grid-template-columns: 1.4fr 1fr`，精选项目（江南出行，order=1）设 `grid-row: span 2`，展示完整 4 项指标；其他项目只展示前 2 项指标。
+
+**原因：** 满足 design-quality.md「通过尺度对比建立清晰层次」和「网格破坏型编辑/便当布局」要求。精选项目是核心叙事，需要更多视觉权重。
+
+**实现：** `ProjectCard` 接收 `featured` prop（boolean），根据 featured 切换布局密度、标题大小、指标数量。通过 `v-for` + `:featured="project.order === 1"` 避免数组索引 + 非空断言。
+
+#### 3. 展示型组件 + Props 类型化 — 数据归父组件持有
+
+**决策：** 4 个组件均为展示型（presentational），通过 `defineProps<T>()` 接收类型化数据，不持有自己的状态。所有数据（projects / timelineStages / contact）定义在 Home.vue。
+
+**原因：**
+- 遵循 v1.2 §8 组件树定义（home/ 下为展示组件）
+- 数据集中便于 Task 003 替换为 `virtual:content` 虚拟模块
+- 组件可独立测试和复用
+
+**实现：** 每个组件内部 `interface` 定义自己的 Props 类型（HeroStat / ProjectSummary / TimelineStage / ContactInfo），Home.vue 导入并使用。
+
+#### 4. 静态数据放 Home.vue 而非 `src/data/` — 避免架构变更
+
+**决策：** Task 002 的项目/时间线/联系数据以类型化常量定义在 Home.vue 的 `<script setup>` 中，不创建 `src/data/` 目录。
+
+**原因：**
+- v1.2 §1 目录结构未定义 `src/data/`，新建目录属于"修改架构"（AI_RULES.md §6.4 需确认）
+- 数据来源是 Markdown frontmatter，Task 003 将通过 virtual:content 提供
+- 当前静态数据是临时占位，YAGNI 原则下不为单次使用创建目录
+
+**权衡：** Home.vue 文件稍长（~180 行），但数据集中可见，便于 Task 003 一次性替换。Task 003 实现后，这些常量将被 `import { projects } from 'virtual:content'` 替代。
+
+#### 5. Timeline 用 `<ol>` + CSS `::before` — 遵循 v1.2 替代原则
+
+**决策：** 时间线用 `<ol>` 有序列表 + CSS `::before` 伪元素实现圆点，不引入任何 UI 库。
+
+**原因：** AI_RULES.md §4 替代原则明确：「时间线 → el-timeline → `<ol>` + CSS `::before`」。v1.2 §2.3 同样规定。
+
+**实现：**
+- `<ol>` 设 `border-left` 形成垂直线
+- 每个 `<li>` `position: relative`，`::before` 绝对定位圆点（`left: calc(-1 * var(--space-8) - 5px)`）
+- 已完成阶段：实心圆点（accent 背景）；未来阶段：空心圆点（border only）
+- 高亮列表用 `<li>` + `::before` 横线标记（非默认 bullet）
+
+#### 6. Contact 用 `<dl>` 语义化键值对
+
+**决策：** 联系方式用 `<dl>` 定义列表，每项 `<div class="contact__method">` 包含 `<dt>`（key）和 `<dd>`（value）。
+
+**原因：** `<dl>` 语义化表达"术语-定义"关系，比 `<div>` + class 更符合无障碍标准。GitHub 用户名用 mono 字体 + ArrowUpRight 图标，Email 待补充时显示 `// 待补充`（mono 灰色）。
+
+#### 7. 日期顺序而非倒序 — 时间线叙事连贯
+
+**决策：** Timeline 按日期正序排列（05 → 06 → 07 → 下一步），非倒序。
+
+**原因：** 网站定位是"技术成长档案"（AI_RULES.md §2），正序展示成长轨迹更符合"档案"叙事。倒序适合新闻/博客，不适合成长记录。
+
+### 遇到的问题与解决
+
+#### 问题 1：ContactSection.vue 响应式缺失（Self Review 发现）
+
+**现象：** `githubHandle` 和 `emailAvailable` 直接从 `props.contact` 计算赋值，未包裹 `computed()`。虽然当前 props 是静态的不会变化，但违反 Vue 响应式最佳实践——如果未来 props 变化，这两个值不会更新。
+
+**严重程度：** 🟡 WARNING
+
+**解决：**
+- 将 `githubHandle` 和 `emailAvailable` 改为 `computed()`
+- 添加 `import { computed } from 'vue'`
+
+**验证：** 修复后 `npm run typecheck` 通过。
+
+#### 问题 2：Git commit heredoc 在 PowerShell 不支持
+
+**现象：** 尝试用 `git commit -m "$(cat <<'EOF'...EOF)"` heredoc 语法提交多行 commit message，PowerShell 报多个 parser error。
+
+**解决：** 改用多个 `-m` 标志：`git commit -m "subject" -m "body"`，PowerShell 正确处理。
+
+**验证：** Commit 成功，hash `df83559`。
+
+#### 问题 3：Dev server 端口冲突
+
+**现象：** Vite dev server 启动时端口 5173 被占用（疑似之前 dev server 未完全停止）。
+
+**解决：** Vite 自动切换到 5174 端口。无需手动干预。
+
+**影响：** 无功能影响，仅 dev server 端口变化。
+
+### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| `npm run typecheck` | ✅ 通过（strict 全开） |
+| `npm run build` | ✅ 成功（gzip Home 4.46 KB，总 ~48 KB） |
+| `npm run dev` | ✅ 启动正常（localhost:5174） |
+| Self Review | ✅ 修复 1 项响应式问题（ContactSection computed） |
+| Release Review | ✅ 通过 |
+| 无 TODO / FIXME / console.log | ✅ 已验证 |
+| 未新增依赖 | ✅ package.json 未改动 |
+| 未修改架构 | ✅ 目录结构与 v1.2 一致 |
+| 设计质量 | ✅ 满足 7/8 项 design-quality 标准（缺"质感纹理氛围"） |
+
+### 依赖清单
+
+**未新增任何依赖。** Task 002 使用现有依赖：
+- vue@^3.5.13（Composition API + `<script setup>`）
+- lucide-vue-next@^0.460.0（ArrowRight / ArrowDown / Github / ArrowUpRight 等图标）
+- CSS Custom Properties（设计令牌系统）
+
+**Task 003 将引入（仅构建时）：** markdown-it / gray-matter / Shiki — 不进入运行时 bundle。
+
+### 设计质量自评
+
+| design-quality.md 标准 | 满足 | 说明 |
+|----------------------|------|------|
+| 1. 尺度对比建立层次 | ✅ | Hero 大标题 vs 统计指标；精选卡片 vs 普通卡片 |
+| 2. 有意的节奏间距 | ✅ | 非均匀 padding：Hero `--space-20` / Timeline `--space-16` / Contact `--space-20` |
+| 3. 重叠/阴影/表面/动效建立深度 | ✅ | 统计面板 surface + shadow-sm；卡片 hover translateY + shadow-lg |
+| 4. 有特点的排版和配对 | ✅ | Inter（正文）+ JetBrains Mono（技术术语/数字/代码注释风格 eyebrow） |
+| 5. 色彩用于语义 | ✅ | Amber 强调色仅用于 eyebrow / CTA / 链接 hover / 关键数字 |
+| 6. hover/focus/active 状态有设计感 | ✅ | 卡片 hover translateY + border 变色；链接 hover 颜色过渡；CTA hover 阴影增强 |
+| 7. 网格破坏型编辑/便当布局 | ✅ | Bento 网格精选卡片 `grid-row: span 2` |
+| 8. 质感、纹理、氛围 | ⚠️ | 当前无纹理/质感装饰，纯色块为主。Task 007 可评估是否添加 |
 
 ---
 
@@ -213,7 +371,7 @@ v1.2 未要求 ESLint / Prettier。
 
 `src/content/personal/about.md` 联系方式中 Email 标注为 `[待补充]`。
 
-**处置：** Task 005 前补充真实 Email。不阻塞 Task 002（首页 Contact 区域先用 GitHub 链接占位）。
+**处置：** Task 005 前补充真实 Email。Task 002 已用 GitHub 链接占位（Contact 区域 Email 显示 `// 待补充`），不阻塞 Task 003。
 
 ### 验证结果
 

@@ -16,12 +16,13 @@
 | 项 | 值 |
 |----|-----|
 | Task 001 | ✅ 已完成 |
-| Release Review | ✅ 已通过（Self Review 修复 1 CRITICAL + 5 WARNING） |
-| Git Baseline | ✅ 已建立 |
-| **Git Commit** | `483a9e1` |
-| **当前分支** | `master` |
-| **工作区状态** | clean |
-| 验证 | ✅ build 成功（gzip ~45KB）/ typecheck 通过 / 无 TODO / 无 FIXME / 无 console.log |
+| Task 002 | ✅ 已完成 |
+| Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：1 WARNING） |
+| **Git Commit** | master `2c57d64` · feature/task-002-homepage `df83559` |
+| **当前分支** | `feature/task-002-homepage`（未合并回 develop，等待用户确认） |
+| **工作区状态** | 本地有文档更新待提交 |
+| 验证 | ✅ build 成功（gzip ~48KB）/ typecheck 通过 / 无 TODO / 无 FIXME / 无 console.log |
+| **待用户操作** | 确认后合并 feature/task-002-homepage → develop → master |
 
 ---
 
@@ -98,7 +99,7 @@
 
 | 路径 | 文件 | 状态 |
 |------|------|------|
-| `/` | `src/pages/Home.vue` | 占位（Task 002 替换） |
+| `/` | `src/pages/Home.vue` | ✅ 已实现（Task 002，4 个组件组合） |
 | `/projects/:slug` | `src/pages/ProjectDetail.vue` | 占位（Task 003 替换） |
 | `/skills` | `src/pages/Skills.vue` | 占位（Task 005 替换） |
 | `/interview` | `src/pages/Interview.vue` | 占位（Task 004 替换） |
@@ -109,33 +110,57 @@
 
 ---
 
-## 6. 下一阶段 — Task 002
+## 6. 下一阶段 — Task 003
 
 ### 目标
 
-首页全部区域开发。
+构建时内容插件 + 项目详情页开发。
 
 ### 需要开发的组件与文件
 
 | 类型 | 文件 | 说明 |
 |------|------|------|
-| 组件 | `src/components/home/HeroSection.vue` | 首屏 + CTA |
-| 组件 | `src/components/home/ProjectCard.vue` | 精选项目卡片（3 张） |
-| 组件 | `src/components/home/TimelineSection.vue` | 技术成长时间线 |
-| 组件 | `src/components/home/ContactSection.vue` | 联系方式 |
-| 页面 | `src/pages/Home.vue` | 组合上述组件（替换占位页） |
+| 插件 | `src/utils/content.ts`（或按 v1.2 决定位置） | Vite 虚拟模块 `virtual:content`，构建时解析 Markdown |
+| 类型 | `src/env.d.ts` 扩展或新建声明文件 | `virtual:content` 模块类型声明 |
+| 页面 | `src/pages/ProjectDetail.vue` | 项目详情页模板（替换占位） |
+| 配置 | `vite.config.ts` | 注册 Markdown 插件 |
 
-### 可直接使用的内容
+### Task 003 范围
 
-- `src/content/projects/*.md`（3 个项目的 frontmatter：title / subtitle / tags / metrics / github）
-- `src/content/growth/timeline.md`（3 阶段 + 下一步）
-- `src/content/personal/about.md`（GitHub 链接；Email 待补充，先用 GitHub 占位）
-- `docs/assets/architecture/*.svg`（如需在卡片中展示架构缩略图）
+- Vite 构建时 Markdown 转换插件（virtual:content 虚拟模块）
+- 项目详情页模板（`ProjectDetail.vue` 替换占位）
+- 3 个项目 Markdown 渲染（江南出行 / 两地书 / 题库）
+- Shiki 代码高亮（仅构建时，深色主题不随主题切换）
+- markdown-it + gray-matter（仅构建时依赖）
 
-### Task 002 边界
+### Task 003 将引入的依赖（仅构建时）
 
-✅ **允许：** Hero / ProjectCard / Timeline / Contact / Home.vue 开发
-❌ **禁止：** 提前实现 Task 003 内容（Markdown 解析插件、virtual:content、项目详情页渲染、Shiki 代码高亮）
+| 类型 | 包名 | 用途 |
+|------|------|------|
+| 构建时 | markdown-it | Markdown → HTML |
+| 构建时 | gray-matter | Frontmatter 解析 |
+| 构建时 | Shiki | 代码高亮（v1.2 §2.7 规定） |
+
+**这些依赖仅在构建时使用，不进入运行时 bundle。**
+
+### Task 003 边界
+
+✅ **允许：** virtual:content 插件 / ProjectDetail.vue / Shiki / markdown-it / gray-matter
+❌ **禁止：** 提前实现 Task 004 内容（`/interview` + `/ai-practice` 页面）
+
+### Task 002 完成回顾
+
+Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/task-002-homepage）：
+
+| 类型 | 文件 | 说明 |
+|------|------|------|
+| 组件 | `src/components/home/HeroSection.vue` | 非对称 7fr/5fr 网格 Hero |
+| 组件 | `src/components/home/ProjectCard.vue` | Bento 卡片（featured/normal 两态） |
+| 组件 | `src/components/home/TimelineSection.vue` | `<ol>` + CSS `::before` 时间线 |
+| 组件 | `src/components/home/ContactSection.vue` | `<dl>` 语义化联系方式 |
+| 页面 | `src/pages/Home.vue` | 组合 4 组件，持有类型化静态数据 |
+
+**注意：** Home.vue 当前持有静态数据（projects / timelineStages / contact），Task 003 实现后应替换为 `import { projects } from 'virtual:content'`。
 
 ---
 
@@ -150,7 +175,7 @@
 - ❌ GSAP / 任何动画库（CSS transition 够用）
 - ❌ 后端服务 / 数据库 / 服务器
 - ❌ 运行时 Markdown 解析（必须构建时处理，Task 003）
-- ❌ **未经确认的新依赖**（Task 002 不需要新增任何依赖）
+- ❌ **未经确认的新依赖**（Task 003 需引入 markdown-it / gray-matter / Shiki，须经用户确认）
 
 ### 禁止行为
 
@@ -181,7 +206,7 @@
    - [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — 项目上下文索引
    - [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
    - 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
-3. **直接从 Task 002 开始** — 当前 Baseline `483a9e1` 已稳定
+3. **直接从 Task 003 开始** — 当前 Baseline `df83559` 已稳定（feature/task-002-homepage 分支，等待用户确认合并）
 
 ### 接手后第一步
 
@@ -190,34 +215,35 @@
 node --version   # 需 ≥18（当前 v22.19.0）
 npm --version    # 需 ≥9（当前 v11.18.0）
 
-# 2. 确认 Baseline
-git log -1 --oneline   # 应显示 483a9e1
-git status             # 应为 clean
+# 2. 确认 Baseline（视用户是否已合并 feature 分支而定）
+git branch --show-current   # 可能是 master / develop / feature/task-002-homepage
+git log --oneline -3        # 应显示 df83559 (Task 002) + 2c57d64 (Task 001 handoff)
+git status                  # 确认工作区状态
 
 # 3. 验证可运行
 npm install            # 恢复依赖
 npm run typecheck      # 应通过
-npm run build          # 应成功
-npm run dev            # 启动 localhost:5173
+npm run build          # 应成功（gzip ~48KB）
+npm run dev            # 启动 localhost:5173 或 5174
 ```
 
 ### 关键约束
 
 - **每个 Task 完成后暂停**，输出报告，等待用户确认，不得自动进入下一 Task
-- **不得提前开发后续 Task 内容**（Task 002 不实现 Markdown 解析）
+- **不得提前开发后续 Task 内容**（Task 003 不实现 `/interview` + `/ai-practice`）
 - **重大修改需先报告并等待确认**（技术栈 / 页面结构 / 目录结构 / 设计原则 / 新增依赖 / .gitignore / Git 工作流）
 - **冲突必须暴露，不自行折中** — 发现文档冲突或代码矛盾时，暂停并报告
 
-### 已知问题（不阻塞 Task 002）
+### 已知问题（不阻塞 Task 003）
 
 详见 [AI_RULES.md §13](AI_RULES.md) 与 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」章节。核心 6 项：
 
 1. 文档版本号不一致（v1.0 文件名 / v1.1 内容）— 以 v1.2 为准
-2. tokens.css 预定义未使用令牌 — Task 003 使用
-3. 空目录未进 Git — Task 003/004 自然解决
-4. Google Fonts CDN 国内访问 — Task 007 评估
-5. 未配置 ESLint / Prettier — Task 007 可选
-6. about.md 中 Email 待补充 — Task 005 前补充
+2. tokens.css 预定义未使用令牌（`--color-java` 等、`--code-*` 高亮令牌）— Task 003 使用
+3. 空目录 `src/assets/` 与 `src/utils/` 未进 Git — Task 003/004 添加首文件时自然解决
+4. Google Fonts CDN 国内访问 — Task 007 评估是否自托管字体子集
+5. 未配置 ESLint / Prettier — Task 007 可选添加
+6. `src/content/personal/about.md` 中 Email 待补充 — Task 005 前补充
 
 ---
 

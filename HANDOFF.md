@@ -17,13 +17,13 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
-| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅） |
+| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅） |
 | Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
 | **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
 | **Develop HEAD** | `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master） |
-| **工作区状态** | Task 003 开发中（003.1-003.3 已完成，进行 003.4） |
-| 验证 | ✅ build 成功（gzip ~52KB）/ typecheck 通过 |
-| **当前进度** | Task 003.3 完成（Home.vue 已消费 virtual:content），继续 003.4 Markdown 渲染 |
+| **工作区状态** | Task 003 开发中（003.1-003.4 已完成，进行 003.5） |
+| 验证 | ✅ build 成功（gzip ~52KB + ProjectDetail 懒加载 6.25KB）/ typecheck 通过 |
+| **当前进度** | Task 003.4 完成（virtual:project-detail + Shiki 渲染就绪），继续 003.5 Project 组件 |
 
 ---
 
@@ -132,8 +132,8 @@
 | 003.1 | 类型设计 + 依赖安装 | ✅ 完成 |
 | 003.2 | virtual:content 插件实现 | ✅ 完成 |
 | 003.3 | Home.vue 改造 + 验证 virtual:content | ✅ 完成 |
-| 003.4 | Markdown 渲染 + Shiki（virtual:project-detail） | 🚧 进行中 |
-| 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | 待开始 |
+| 003.4 | Markdown 渲染 + Shiki（virtual:project-detail） | ✅ 完成 |
+| 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | 🚧 进行中 |
 | 003.6 | ProjectDetail 组装 | 待开始 |
 | 003.7 | Decision 展示（DecisionSection.vue） | 待开始 |
 | 003.8 | 最终验证 + Release Report | 待开始 |

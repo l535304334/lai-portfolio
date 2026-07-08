@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -165,6 +165,52 @@
 | Documentation Sync | ✅ 本节记录 |
 | typecheck | ✅ 通过 |
 | build | ✅ Home.js gzip 4.50 KB（+0.04 KB vs Task 002），总 gzip ~52 KB |
+
+### 子任务 003.4 — Markdown 渲染 + Shiki（virtual:project-detail）
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件
+
+- `src/utils/markdown.ts` — markdown-it + Shiki 渲染管线，导出 `renderMarkdown(content: string): Promise<string>`
+- `src/styles/code-theme.css` — 代码块样式（Shiki 高亮 + 无语言代码块 + 行内代码），始终深色不随主题切换
+
+#### 修改文件
+
+- `src/utils/content.ts` — 新增 `virtual:project-detail` 虚拟模块（async load，调用 renderMarkdown 渲染 HTML）
+- `src/env.d.ts` — 新增 `virtual:project-detail` 模块类型声明
+- `src/main.ts` — 新增 `code-theme.css` 导入
+
+#### 设计决策
+
+1. **Shiki `github-dark` 主题** — 与设计令牌 `--code-bg: #1e293b` / `--code-text: #e2e8f0` 接近，始终深色不随主题切换（v1.2 §2.7）
+2. **8 种语言** — javascript / typescript / java / python / bash / json / sql / yaml，覆盖项目技术栈；未加载语言回退到默认转义（try/catch）
+3. **背景色覆盖用 `!important`** — Shiki 输出内联 `background-color`，用 `!important` 强制使用 `--code-bg` 令牌，保证设计系统一致性
+4. **行号用 CSS counter** — `.shiki .line::before` + `counter-increment: line`，零 JS 开销
+5. **无语言代码块单独样式** — `pre:not(.shiki)` 选择器，确保 ASCII 架构图也使用深色背景
+6. **markdown-it `html: false`** — 禁止 raw HTML，防止 XSS
+7. **单例 highlighter** — `getHighlighter()` 缓存 Shiki 实例，避免重复初始化
+
+#### 验证方法
+
+临时在 ProjectDetail.vue 导入 `virtual:project-detail` 并运行 build：
+- ✅ Shiki 成功初始化（createHighlighter）
+- ✅ 3 个项目 Markdown 成功渲染为 HTML
+- ✅ ProjectDetail.js gzip 6.25 KB（包含 3 项目渲染后 HTML）
+- ✅ 验证后已回退临时代码
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| Self Review | ✅ 渲染管线清晰，单例缓存 + 错误回退 |
+| Duplicate Review | ✅ 新功能无重复 |
+| Architecture Review | ✅ 符合 v1.2 §3.3 + Execution Plan v2 双虚拟模块设计 |
+| Design Token Review | ✅ 使用 `--code-bg` / `--code-text` / `--code-line-number` 令牌 |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过 |
+| build | ✅ CSS gzip 2.55 KB（+0.19 KB vs 003.3），ProjectDetail 懒加载 gzip 6.25 KB |
 
 ---
 

@@ -1,0 +1,63 @@
+/**
+ * 代码块样式 — Shiki 渲染结果 + 无语言代码块
+ * 始终深色，不随主题切换（v1.2 §2.7）
+ */
+
+/* ===== Shiki 高亮代码块 ===== */
+.shiki {
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-code);
+  /* 覆盖 Shiki 内联背景色，使用设计令牌 */
+  background-color: var(--code-bg) !important;
+}
+
+.shiki code {
+  display: block;
+  counter-reset: line;
+}
+
+.shiki .line {
+  counter-increment: line;
+}
+
+.shiki .line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 2rem;
+  margin-right: var(--space-3);
+  color: var(--code-line-number);
+  text-align: right;
+  user-select: none;
+}
+
+/* ===== 无语言代码块（ASCII 图等） ===== */
+pre:not(.shiki) {
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-code);
+}
+
+pre:not(.shiki) code {
+  color: var(--code-text);
+}
+
+/* ===== 行内代码 ===== */
+:not(pre) > code {
+  padding: 2px var(--space-2);
+  background-color: var(--color-bg);
+  color: var(--color-accent-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}

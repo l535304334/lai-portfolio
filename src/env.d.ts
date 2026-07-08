@@ -10,3 +10,8 @@ declare module 'virtual:content' {
   import type { ProjectSummary } from '@/types/project'
   export const projectSummaries: ProjectSummary[]
 }
+
+declare module 'virtual:project-detail' {
+  import type { ProjectContent } from '@/types/project'
+  export const projectDetails: ProjectContent[]
+}

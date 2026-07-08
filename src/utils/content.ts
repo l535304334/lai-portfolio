@@ -4,17 +4,20 @@
  *
  * 虚拟模块：
  * - virtual:content — 轻量摘要数据（无 HTML），首页使用
- * - virtual:project-detail — 完整内容含 HTML（003.4 实现），项目详情页懒加载使用
+ * - virtual:project-detail — 完整内容含渲染后 HTML，项目详情页懒加载使用
  */
 
 import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
 import type { Plugin } from 'vite'
-import type { ProjectSummary } from '../types/project'
+import type { ProjectSummary, ProjectContent } from '../types/project'
+import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
 const RESOLVED_CONTENT_ID = '\0' + VIRTUAL_CONTENT_ID
+const VIRTUAL_PROJECT_DETAIL_ID = 'virtual:project-detail'
+const RESOLVED_PROJECT_DETAIL_ID = '\0' + VIRTUAL_PROJECT_DETAIL_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -56,6 +59,49 @@ function scanProjectSummaries(root: string): ProjectSummary[] {
   return summaries.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
 }
 
+/** 扫描项目 Markdown，渲染 HTML，返回 ProjectContent[] */
+async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
+  const dir = path.resolve(root, CONTENT_BASE, 'projects')
+  if (!fs.existsSync(dir)) {
+    return []
+  }
+
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.md'))
+
+  const details = await Promise.all(
+    files.map(async (file) => {
+      const filePath = path.resolve(dir, file)
+      const raw = fs.readFileSync(filePath, 'utf-8')
+      const { data, content } = matter(raw)
+
+      if (!data.slug) {
+        throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+      }
+      if (!data.title) {
+        throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+      }
+
+      const html = await renderMarkdown(content)
+
+      const detail: ProjectContent = {
+        slug: String(data.slug),
+        title: String(data.title),
+        subtitle: data.subtitle ? String(data.subtitle) : undefined,
+        date: String(data.date ?? ''),
+        tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+        metrics: Array.isArray(data.metrics) ? data.metrics : [],
+        featured: Boolean(data.featured),
+        order: typeof data.order === 'number' ? data.order : undefined,
+        github: data.github ? String(data.github) : undefined,
+        html,
+      }
+      return detail
+    }),
+  )
+
+  return details.sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+}
+
 /** 获取内容目录下所有 .md 文件绝对路径（用于 HMR watch） */
 function getContentFiles(root: string, subdir: string): string[] {
   const dir = path.resolve(root, CONTENT_BASE, subdir)
@@ -66,7 +112,7 @@ function getContentFiles(root: string, subdir: string): string[] {
     .map((f) => path.resolve(dir, f))
 }
 
-/** Vite 构建时内容插件 — 导出 virtual:content 虚拟模块 */
+/** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
     name: 'content-plugin',
@@ -74,8 +120,11 @@ export function contentPlugin(): Plugin {
       if (id === VIRTUAL_CONTENT_ID) {
         return RESOLVED_CONTENT_ID
       }
+      if (id === VIRTUAL_PROJECT_DETAIL_ID) {
+        return RESOLVED_PROJECT_DETAIL_ID
+      }
     },
-    load(id) {
+    async load(id) {
       if (id === RESOLVED_CONTENT_ID) {
         const root = process.cwd()
         const summaries = scanProjectSummaries(root)
@@ -85,6 +134,16 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const projectSummaries = ${JSON.stringify(summaries)}`
+      }
+      if (id === RESOLVED_PROJECT_DETAIL_ID) {
+        const root = process.cwd()
+        const details = await scanProjectDetails(root)
+
+        for (const file of getContentFiles(root, 'projects')) {
+          this.addWatchFile(file)
+        }
+
+        return `export const projectDetails = ${JSON.stringify(details)}`
       }
     },
   }

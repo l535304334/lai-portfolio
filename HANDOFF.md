@@ -17,13 +17,13 @@
 |----|-----|
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
-| Task 003 | 🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅ 003.7 ✅） |
-| Release Review | ✅ 已通过（Task 001：1 CRITICAL + 5 WARNING；Task 002：Self Review 1 WARNING + Acceptance Review 1 P1 + 1 P2） |
+| Task 003 | 🟡 功能完成，等待用户验收（003.1-003.8 全部 ✅） |
+| Release Review | ✅ Task 001/002 已通过；Task 003 等待验收 |
 | **Master Baseline** | `a805869`（Task 002 Release）— Release Baseline 以 master 为准 |
-| **Develop HEAD** | `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master） |
-| **工作区状态** | Task 003 开发中（003.1-003.7 已完成，进行 003.8 最终验证） |
-| 验证 | ✅ build 成功（gzip ~52KB + ProjectDetail 懒加载 10.97KB）/ typecheck 通过 |
-| **当前进度** | Task 003.7 完成（DecisionSection 已集成），继续 003.8 最终验证 + Release Report |
+| **Develop HEAD** | `ed957a6` on `feature/task-003-content-plugin`（领先 master 8 commits） |
+| **工作区状态** | Task 003 全部子任务完成，等待用户确认是否合并到 master |
+| 验证 | ✅ build 成功（1640 模块，初始 50.67 KB + ProjectDetail 懒加载 12.27 KB）/ typecheck 通过 |
+| **当前进度** | Task 003 功能完成，等待用户验收。验收通过后 FF 合并 develop → master（Task 003 Release Baseline） |
 
 ---
 
@@ -137,7 +137,7 @@
 | 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | ✅ 完成 |
 | 003.6 | ProjectDetail 组装 | ✅ 完成 |
 | 003.7 | Decision 展示（DecisionSection.vue） | ✅ 完成 |
-| 003.8 | 最终验证 + Release Report | 🚧 进行中 |
+| 003.8 | 最终验证 + Release Report | ✅ 完成 |
 
 ### Task 003 范围
 

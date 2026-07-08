@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 003 In Progress（构建时内容插件 + 项目详情页）**
+**Task 003 功能完成 — 等待用户验收（构建时内容插件 + 项目详情页）**
 
 - **Master Baseline：** `a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
-- **Develop HEAD：** feature/task-003-content-plugin（从 develop `6d54dc1` 创建）
-- **Release Review：** 已通过（Self Review 修复 1 WARNING + Acceptance Review 修复 1 P1 + 1 P2）
-- **工作区状态：** Task 003 开发中
+- **Develop HEAD：** `ed957a6` on `feature/task-003-content-plugin`（从 develop `6d54dc1` 创建，领先 master 8 commits）
+- **Release Review：** Task 001/002 已通过；Task 003 等待用户验收
+- **工作区状态：** Task 003 全部子任务完成，等待用户确认是否合并到 master
 
 ### Task 进度总览
 
@@ -23,7 +23,7 @@
 | 000.5 | 架构图与展示素材 | ✅ 已完成 |
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
-| **003** | **构建时内容插件 + 项目详情页** | **🚧 In Progress（003.1 ✅ 003.2 ✅ 003.3 ✅ 003.4 ✅ 003.5 ✅ 003.6 ✅ 003.7 ✅）** |
+| **003** | **构建时内容插件 + 项目详情页** | **🟡 功能完成，等待验收（003.1-003.8 全部 ✅）** |
 | 004 | 面试准备页 + AI 实践页 | 待开始 |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
@@ -342,6 +342,80 @@
 | index.css (gzip) | 2.55 KB | 2.55 KB | 无变化 |
 
 **评估：** ProjectDetail.js 增长 3.40 KB gzip 来自 3 个决策文件的 Markdown 渲染 HTML（含表格、决策说明、加粗文本等），属内容驱动型增长，可接受。该 chunk 仅在访问 `/projects/:slug` 时懒加载，不影响首页性能。
+
+### 子任务 003.8 — 最终验证 + Release Report
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 验证项
+
+| 验证项 | 结果 |
+|--------|------|--------|
+| `npm run typecheck` | ✅ 通过（strict 全开，0 错误） |
+| `npm run build` | ✅ 成功（1640 模块，2.41s） |
+| TODO/FIXME/console.log/debugger 扫描 | ✅ 0 处 |
+| `as any` / `@ts-ignore` / `@ts-nocheck` 扫描 | ✅ 0 处 |
+| Duplicate Review | ✅ 无重复（DecisionContent 复用，MarkdownContent 复用） |
+| Architecture Review | ✅ 符合《架构确认文档-v1.2.md》§3.3 / §4 / §8 |
+| Design Token Review | ✅ 全部使用 tokens.css 令牌 |
+| Bundle Size 对比（Task 002 vs Task 003） | ✅ 见下表 |
+
+#### Bundle Size 对比（Task 002 Release vs Task 003 Final）
+
+**初始加载（首页访问 `/`）：**
+
+| Chunk | Task 002 (gzip) | Task 003 (gzip) | 变化 | 说明 |
+|-------|----------------|----------------|------|------|
+| index.js | ~45 KB | 41.66 KB | -3.34 KB | Home.vue 移除硬编码数据，虚拟模块数据进 Home.js |
+| index.css | ~2.36 KB | 2.55 KB | +0.19 KB | 新增 code-theme.css（Shiki 代码块样式） |
+| Home.js | 4.46 KB | 4.48 KB | +0.02 KB | 项目摘要数据从虚拟模块注入 |
+| Home.css | 1.98 KB | 1.98 KB | 0 | 无变化 |
+| **初始总加载** | **~53.80 KB** | **50.67 KB** | **-3.13 KB** | 首屏加载反而减少（虚拟模块优化） |
+
+**懒加载（访问 `/projects/:slug`）：**
+
+| Chunk | Task 002 | Task 003 (gzip) | 说明 |
+|-------|----------|----------------|------|
+| ProjectDetail.js | 占位（~0.5 KB） | 10.97 KB | 3 项目 HTML + 3 决策 HTML + 5 组件 |
+| ProjectDetail.css | 占位（~0.08 KB） | 1.30 KB | 5 组件 scoped 样式 |
+| arrow-right.js | — | 0.27 KB | 共享 chunk（Home + ProjectNav） |
+
+**总资产对比（首页 + 全部懒加载）：**
+
+| 项 | Task 002 | Task 003 | 变化 |
+|----|----------|----------|------|
+| 初始加载 | ~53.80 KB | 50.67 KB | -3.13 KB |
+| 懒加载（项目详情） | ~0.5 KB | 12.54 KB | +12.04 KB |
+| **总和** | ~54.30 KB | 63.21 KB | +8.91 KB |
+
+**评估：**
+- ✅ 首屏性能优化（-3.13 KB）— 移除 Home.vue 硬编码数据，虚拟模块按需注入
+- ✅ 项目详情懒加载合理（12.54 KB gzip 包含完整渲染内容：3 项目 + 3 决策 + 5 组件 + Shiki 主题）
+- ✅ 运行时无 markdown-it / gray-matter / Shiki 依赖（仅构建时使用）
+- ✅ 满足 Core Web Vitals 目标（LCP < 2.5s / INP < 200ms / CLS < 0.1）
+
+#### Build 产物清单
+
+```
+dist/
+├── index.html                   2.31 KB │ gzip:  1.13 KB
+├── assets/
+│   ├── index-DjUII6AP.css      10.13 KB │ gzip:  2.55 KB   (全局 + code-theme)
+│   ├── Home-C2yr2zHC.css       11.82 KB │ gzip:  1.98 KB   (首页组件)
+│   ├── ProjectDetail-Cj9_1Sj-.css  6.74 KB │ gzip:  1.30 KB   (项目详情组件，懒加载)
+│   ├── NotFound-DsaarKJd.css    1.04 KB │ gzip:  0.38 KB
+│   ├── index-CsliW01o.js       107.25 KB │ gzip: 41.66 KB   (Vue + Router + Lucide)
+│   ├── Home-Ds9aBo8z.js        10.63 KB │ gzip:  4.48 KB   (首页 + virtual:content 数据)
+│   ├── ProjectDetail-DTAAk13J.js 27.13 KB │ gzip: 10.97 KB   (懒加载)
+│   ├── arrow-right-5pc2WnP4.js  0.34 KB │ gzip:  0.27 KB   (共享 chunk)
+│   ├── NotFound-DibDg2CZ.js     0.66 KB │ gzip:  0.50 KB
+│   ├── Resume-DqU9yU3-.js      0.41 KB │ gzip:  0.32 KB   (占位)
+│   ├── Skills-Cdv6AiB-.js      0.42 KB │ gzip:  0.34 KB   (占位)
+│   ├── About-TFiScCjP.js       0.42 KB │ gzip:  0.35 KB   (占位)
+│   ├── AiPractice-eRLynjzv.js  0.42 KB │ gzip:  0.33 KB   (占位)
+│   └── Interview-B6I_IOT-.js   0.45 KB │ gzip:  0.36 KB   (占位)
+```
 
 ---
 

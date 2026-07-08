@@ -15,3 +15,8 @@ declare module 'virtual:project-detail' {
   import type { ProjectContent } from '@/types/project'
   export const projectDetails: ProjectContent[]
 }
+
+declare module 'virtual:interview-content' {
+  import type { InterviewCategory } from '@/types/interview'
+  export const interviewCategories: InterviewCategory[]
+}

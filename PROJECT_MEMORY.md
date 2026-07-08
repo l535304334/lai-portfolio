@@ -8,12 +8,12 @@
 
 ## 当前阶段
 
-**Task 003 ✅ 已完成（含 Release Gate 验收 + 合并到 master + Tag v0.3.0）**
+**Task 004 进行中 — 面试准备页 + AI 实践页**
 
 - **Master Baseline：** Task 003 Release（Tag `v0.3.0`）
-- **Develop HEAD：** 与 master 同步（Task 003 已 FF 合并）
+- **当前分支：** `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`）
 - **Release Review：** Task 001/002/003 全部通过
-- **工作区状态：** Task 003 Release Gate 全部通过（14/14 Playwright 测试），已合并到 master 并打 Tag
+- **工作区状态：** 004.1 进行中（面试类型 + virtual:interview-content 模块）
 
 ### Task 进度总览
 
@@ -24,7 +24,7 @@
 | 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
 | **002** | **首页开发** | **✅ 已完成（含 Self Review + Acceptance Review，已合并到 master）** |
 | **003** | **构建时内容插件 + 项目详情页** | **✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0）** |
-| 004 | 面试准备页 + AI 实践页 | 待开始 |
+| **004** | **面试准备页 + AI 实践页** | **🔄 进行中（004.1 完成）** |
 | 005 | 能力页 + 简历页 + 关于页 | 待开始 |
 | 006 | 部署与上线（Vercel） | 待开始 |
 | 007 | Release Audit | 待开始 |
@@ -37,6 +37,78 @@
 4. **Task 007** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
+## Task 004 — 面试准备页 + AI 实践页
+
+**开始时间：** 2026-07-09
+**状态：** 🔄 进行中
+**Git 分支：** `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`，Task 003 Release）
+
+### 子任务拆分
+
+| 子任务 | 名称 | 状态 |
+|--------|------|------|
+| 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
+| 004.2 | Interview 组件 + 页面组装 | 待开始 |
+| 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | 待开始 |
+| 004.4 | 最终验证 + Release | 待开始 |
+
+### 架构冲突记录（Rule 7 — 暴露冲突）
+
+**冲突点：** 架构文档 §3.3（line 205）规定"一个虚拟模块 `virtual:content` 导出所有内容，按 `type` 字段分組"。但 Task 003 已批准的 `virtual:project-detail`（懒加载重内容分离）与此矛盾。
+
+**Task 004.1 处置：** 遵循 Task 003 已确立的分离模式，新建 `virtual:interview-content` 作为懒加载模块（面试问答 HTML 较重，按 Shiki 渲染）。非新增架构偏离——是既有模式的延续。架构文档 §3.3 待统一更新（文档任务，非架构变更）。
+
+### 子任务 004.1 — Interview 类型 + virtual:interview-content 模块
+
+**完成时间：** 2026-07-09
+**状态：** ✅ 完成
+
+#### 新增文件
+
+- `src/types/interview.ts` — 面试域类型：`InterviewQAPair`（单问答对）+ `InterviewCategory`（分类文件）
+
+#### 修改文件
+
+- `src/utils/content.ts` — 新增 `virtual:interview-content` 虚拟模块
+  - `parseInterviewQA(content)` — 正则 `/^### (Q\d+: .+)$/gm` 匹配问题标题，按位置切分，每个回答 body 调用 `renderMarkdown()` 渲染 HTML
+  - `scanInterviews(root)` — 扫描 `interview/*.md`，解析 frontmatter（slug/title/project/date），调用 `parseInterviewQA()`，按 `INTERVIEW_ORDER` 排序
+  - `resolveId` 钩子新增 `VIRTUAL_INTERVIEW_ID` 映射
+  - `load` 钩子新增 `RESOLVED_INTERVIEW_ID` 处理：调用 `scanInterviews()` + HMR watch + 导出 `interviewCategories`
+- `src/env.d.ts` — 新增 `virtual:interview-content` 模块类型声明
+
+#### 设计决策
+
+1. **独立懒加载模块 `virtual:interview-content`** — 面试问答含 Shiki 渲染的 HTML（4 文件 17 题），重内容懒加载，避免进首页 `virtual:content` chunk。遵循 Task 003 `virtual:project-detail` 既有模式
+2. **`parseInterviewQA()` 用正则按 `### Q{n}:` 标题切分** — 面试 Markdown 格式统一（`### Q1: 问题` + 考察点 + 回答思路 + 关键词 + `---` 分隔），正则切分比 markdown-it 解析 AST 更简单直接（KISS）
+3. **`INTERVIEW_ORDER` 常量定义排序优先级** — `jiangnan-travel` → `love-letter` → `exam-system` → `general`（项目相关在前，通用在后），与内容文件夹自然顺序一致
+4. **`InterviewCategory.project` 字段非可选** — 即使通用题无关联项目也用空字符串，保持类型一致性（frontmatter `project` 字段可能缺失，`String(data.project ?? '')` 兜底）
+5. **`noUncheckedIndexedAccess` 合规** — `match[1]` 用 guard `if (!question) continue` 处理 `string | undefined`，`matches[i]!` 用非空断言（循环内索引必有效）
+
+#### RC 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| Self Review | ✅ 函数职责清晰，正则切分逻辑正确，HMR 支持 |
+| Duplicate Review | ✅ 无重复（`scanInterviews` 遵循 `scanProjectDetails` 模式但逻辑独立；`parseInterviewQA` 无同类函数） |
+| Architecture Review | ⚠️ 架构文档 §3.3 与既有 `virtual:project-detail` 模式冲突已记录（见上） |
+| Design Token Review | ✅ N/A（无 CSS） |
+| Documentation Sync | ✅ 本节记录 |
+| typecheck | ✅ 通过（strict 全开，0 错误） |
+| build | ✅ 成功（1640 模块，2.71s） |
+| TODO/FIXME/console.log 扫描 | ✅ 0 处 |
+
+#### Bundle 影响
+
+| Chunk | Task 003 (gzip) | 004.1 (gzip) | 变化 |
+|-------|----------------|-------------|------|
+| index.js | 41.66 KB | 41.66 KB | 0（虚拟模块未被消费） |
+| Interview.js | 0.36 KB | 0.36 KB | 0（仍为占位页，004.2 接入） |
+| 初始加载 | 50.67 KB | 50.67 KB | 0 |
+
+**评估：** 虚拟模块已注册但未被任何页面消费，对运行时 bundle 零影响。004.2 接入 Interview.vue 后将生成懒加载 chunk。
 
 ---
 

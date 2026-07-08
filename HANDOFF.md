@@ -18,12 +18,14 @@
 | Task 001 | ✅ 已完成 |
 | Task 002 | ✅ 已完成 |
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
+| Task 004 | 🔄 进行中（004.1 完成） |
 | Release Review | ✅ Task 001/002/003 全部通过 |
 | **Master Baseline** | Task 003 Release（Tag `v0.3.0`） |
+| **当前分支** | `feature/task-004-interview-ai-practice`（基于 develop `a0402c1`） |
 | **Develop HEAD** | 与 master 同步（Task 003 已 FF 合并） |
-| **工作区状态** | Task 003 Release Gate 全部通过，已合并 master + 打 Tag + 推送 GitHub |
-| 验证 | ✅ build 成功（1640 模块，初始 50.67 KB + ProjectDetail 懒加载 12.54 KB）/ typecheck 通过 / Playwright 14/14 |
-| **当前进度** | Task 003 已完成。等待用户批准开始 Task 004 |
+| **工作区状态** | 004.1 完成（面试类型 + virtual:interview-content 模块），004.2 待开始 |
+| 验证 | ✅ build 成功（1640 模块）/ typecheck 通过 |
+| **当前进度** | Task 004 进行中，004.1 已完成 |
 
 ---
 
@@ -120,27 +122,44 @@
 
 ---
 
-## 6. 当前阶段 — Task 003（✅ 已完成）
+## 6. 当前阶段 — Task 004（🔄 进行中）
 
 ### 目标
 
-构建时内容插件 + 项目详情页开发。
+面试准备页（`/interview`）+ AI 工程实践页（`/ai-practice`）开发。
 
-### Execution Plan v2 子任务进度
+### Task 004 子任务进度
 
 | 子任务 | 名称 | 状态 |
 |--------|------|------|
-| 003.1 | 类型设计 + 依赖安装 | ✅ 完成 |
-| 003.2 | virtual:content 插件实现 | ✅ 完成 |
-| 003.3 | Home.vue 改造 + 验证 virtual:content | ✅ 完成 |
-| 003.4 | Markdown 渲染 + Shiki（virtual:project-detail） | ✅ 完成 |
-| 003.5 | Project 组件（ProjectHeader / MetricCard / MarkdownContent / ProjectNav） | ✅ 完成 |
-| 003.6 | ProjectDetail 组装 | ✅ 完成 |
-| 003.7 | Decision 展示（DecisionSection.vue） | ✅ 完成 |
-| 003.8 | 最终验证 + Release Report | ✅ 完成 |
-| 003.RG | Release Gate 验收（Playwright 14/14） | ✅ 完成 |
+| 004.1 | Interview 类型 + virtual:interview-content 模块 | ✅ 完成 |
+| 004.2 | Interview 组件 + 页面组装 | 待开始 |
+| 004.3 | AI Practice 类型 + 虚拟模块 + 页面 | 待开始 |
+| 004.4 | 最终验证 + Release | 待开始 |
 
-### Task 003 Release Gate 结果
+### 004.1 交付物
+
+- `src/types/interview.ts` — InterviewQAPair + InterviewCategory 接口
+- `src/utils/content.ts` — 新增 `virtual:interview-content` 虚拟模块（`parseInterviewQA` + `scanInterviews` + resolveId/load 钩子 + HMR watch）
+- `src/env.d.ts` — 新增 `virtual:interview-content` 模块声明
+
+### 架构冲突（Rule 7）
+
+架构文档 §3.3 规定"一个 `virtual:content` 导出所有内容"，但 Task 003 已批准 `virtual:project-detail` 懒加载分离模式。004.1 遵循既有模式新建 `virtual:interview-content`。详见 PROJECT_MEMORY.md「Task 004 — 架构冲突记录」。
+
+### 004.2 待开始
+
+- 创建 `src/components/interview/InterviewQuestion.vue`（`<details>/<summary>` 折叠 Q&A）
+- 创建 `src/components/interview/InterviewCategory.vue`（分类标题 + Q&A 列表）
+- 替换 `src/pages/Interview.vue` 占位页面
+
+---
+
+### 上一任务 — Task 003（✅ 已完成）
+
+**Master Baseline：** Tag `v0.3.0`
+
+#### Task 003 Release Gate 结果
 
 - ✅ Playwright 端到端测试 14/14 通过
 - ✅ 3 个项目详情页 + Markdown + Shiki + DecisionSection + 导航 + 404 + 响应式 全部验收

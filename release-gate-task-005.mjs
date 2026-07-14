@@ -177,24 +177,22 @@ try {
   await page.waitForTimeout(500)
 
   const resumeH1 = await page.locator('h1').count()
-  check('Resume 页 h1 存在', resumeH1 >= 1)
+  check('Resume 页 h1 唯一', resumeH1 === 1, `h1 count: ${resumeH1}`)
 
   const resumeTitle = await page.locator('h1').textContent()
-  check('Resume 页 h1 文本 = 简历下载', resumeTitle?.trim() === '简历下载', `actual: ${resumeTitle}`)
+  check('Resume 页 h1 文本 = 赖睿轩 · 简历', resumeTitle?.trim() === '赖睿轩 · 简历', `actual: ${resumeTitle}`)
 
-  // 占位卡片存在
-  const placeholder = await page.locator('.resume__placeholder').count()
-  check('Resume 页占位卡片存在', placeholder >= 1)
+  // Markdown 内容渲染
+  const resumeContent = await page.locator('.resume__content .markdown').count()
+  check('Resume 页 Markdown 内容存在', resumeContent >= 1)
 
-  const placeholderText = await page.locator('.resume__placeholder-text').count()
-  check('Resume 页占位文案存在', placeholderText >= 1)
+  // 下载 PDF 按钮存在
+  const resumeDownloadBtn = await page.locator('.resume__download-btn').count()
+  check('Resume 页下载按钮存在', resumeDownloadBtn === 1, `download buttons: ${resumeDownloadBtn}`)
 
-  // 验证未引入 iframe / 下载按钮（Plan v2 简化要求）
+  // 验证未引入 iframe
   const resumeIframe = await page.locator('iframe').count()
-  check('Resume 页无 iframe（Plan v2 简化）', resumeIframe === 0, `iframes: ${resumeIframe}`)
-
-  const resumeDownloadBtn = await page.locator('a[download], button[type="submit"]').count()
-  check('Resume 页无下载按钮（Plan v2 简化）', resumeDownloadBtn === 0, `download buttons: ${resumeDownloadBtn}`)
+  check('Resume 页无 iframe', resumeIframe === 0, `iframes: ${resumeIframe}`)
 
   await screenshot(page, '07-resume')
 

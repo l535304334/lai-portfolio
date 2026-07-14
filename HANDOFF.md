@@ -21,15 +21,18 @@
 | Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
 | Task 005 | ✅ 已完成（含 Release Gate 50/50 Playwright 测试 + 合并 master + Tag v0.5.0） |
 | Task 006 | ✅ 已完成（含 GitHub MCP 核对 + 4 Markdown 同步 + Playwright 50/50 + 仓库清理） |
-| Release Review | ✅ Task 001/002/003/004/005/006 全部通过 |
-| **Master Baseline** | Commit `f5563ac`（Task 006 项目同步） |
-| **Tag** | `v0.5.0`（Task 005 Release，未移动 — Task 006 仅内容同步无代码变更） |
-| **远程 Baseline** | 待推送（Task 005 + Task 006 共 5 个 commit + Tag v0.5.0） |
+| Task 007 | ✅ 已完成（Final Portfolio Review，7 部分评审 + 4 类事实修正，Commit `5c58f58`） |
+| Task 008 | ✅ 已完成（Resume 系统完善，第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49） |
+| Release Review | ✅ Task 001~008 全部通过 |
+| **Master Baseline** | Task 008 commit（master，待推送） |
+| **Tag** | `v0.5.0`（Task 005 Release，未移动） |
+| **远程 Baseline** | 待推送（Task 005 + 006 + 007 + 008 共多个 commit + Tag v0.5.0） |
 | **当前分支** | `master` |
 | **Develop HEAD** | 与 master 同步 |
-| **工作区状态** | Task 006 已 commit（`f5563ac`），待推送，工作区干净 |
-| 验证 | ✅ build 成功（1654 模块，2.39s）/ typecheck 通过 / Playwright 50/50 / 人工 18/18 |
-| **当前进度** | Task 006 完成，等待 Task 007 启动（Vercel 部署） |
+| **工作区状态** | Task 008 待 commit，不 push（含隐私内容，详见下方警告） |
+| 验证 | ✅ build 成功（1657 模块，2.29s）/ typecheck 通过 / Playwright 49/49 / 人工 8/8 |
+| **当前进度** | Task 008 完成，等待 Task 009 启动（Vercel 部署） |
+| **⚠️ 隐私警告** | 简历 Markdown（`src/content/resume/index.md`）含电话号码 18279755182，GitHub 仓库 `l535304334/lai-portfolio` 为**公开仓库**。**禁止 push 到远程**，除非先脱敏电话号码或将仓库转为私有。 |
 
 ---
 
@@ -104,21 +107,23 @@
     │   ├── interview.ts           # InterviewQAPair / InterviewCategory（Task 004）
     │   ├── ai-practice.ts         # AiPracticeContent（Task 004）
     │   └── personal.ts            # PersonalContent（Task 005，4 行）
-    ├── content/                   # 14 个 Markdown 内容文件（Task 003 渲染）
+    │   └── resume.ts              # ResumeContent（Task 008，4 行）
+    ├── content/                   # 15 个 Markdown 内容文件（Task 003 + 008 渲染）
     │   ├── personal/  projects/  decisions/
-    │   ├── interview/  skills/  growth/  ai-practice/
+    │   ├── interview/  skills/  growth/  ai-practice/  resume/
     ├── assets/                    # 空（Task 004 SVG 图表）
     └── utils/
-        └── content.ts             # Vite 虚拟模块插件（6 虚拟模块，Task 003~005 累积）
+        └── content.ts             # Vite 虚拟模块插件（7 虚拟模块，Task 003~005 + 008 累积）
 ```
 
-**虚拟模块清单（6 个，src/utils/content.ts）：**
+**虚拟模块清单（7 个，src/utils/content.ts）：**
 - `virtual:content` — 项目摘要（Task 003）
 - `virtual:project-detail` — 项目详情 HTML（Task 003）
 - `virtual:interview-content` — 面试问答 HTML（Task 004）
 - `virtual:ai-practice-content` — AI 实践 HTML（Task 004）
 - `virtual:skills-content` — 技能页 HTML（Task 005.1）
 - `virtual:personal-content` — 关于我 HTML（Task 005.3）
+- `virtual:resume-content` — 简历页 HTML（Task 008）
 
 ---
 
@@ -131,7 +136,7 @@
 | `/skills` | `src/pages/Skills.vue` | ✅ 已实现（Task 005，virtual:skills-content + MarkdownContent） |
 | `/interview` | `src/pages/Interview.vue` | ✅ 已实现（Task 004，4 分类 17 题 + 折叠面板） |
 | `/ai-practice` | `src/pages/AiPractice.vue` | ✅ 已实现（Task 004，MarkdownContent 渲染） |
-| `/resume` | `src/pages/Resume.vue` | ✅ 已实现（Task 005，静态占位卡片，无 PDF） |
+| `/resume` | `src/pages/Resume.vue` | ✅ 已实现（Task 008，virtual:resume-content + MarkdownContent + window.print PDF） |
 | `/about` | `src/pages/About.vue` | ✅ 已实现（Task 005，virtual:personal-content + MarkdownContent） |
 | 404 | `src/pages/NotFound.vue` | ✅ 最终版 |
 
@@ -191,7 +196,7 @@
 
 - ✅ Playwright 全量回归测试 50/50 通过（17 测试组，覆盖 Task 001~005 全部功能）
 - ✅ Skills 页：virtual:skills-content + MarkdownContent 全文渲染
-- ✅ Resume 页：静态占位卡片（无 iframe / 无 PDF 检测 / 无下载按钮，遵循 Plan v2 简化）
+- ✅ Resume 页：静态占位卡片（Task 005 阶段，**Task 008 已升级为正式简历页**）
 - ✅ About 页：virtual:personal-content + MarkdownContent 全文渲染
 - ✅ 导航栏 7 个链接全部存在（首页 / 项目 / 能力 / 面试 / AI 实践 / 简历 / 关于）
 - ✅ 7 路由控制台 0 运行时错误
@@ -207,8 +212,8 @@
 - `src/env.d.ts` — 新增 `virtual:skills-content` 模块声明
 - `src/pages/Skills.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.32 KB）
 
-**005.2 — Resume 页面（静态占位）**
-- `src/pages/Resume.vue` — 静态占位卡片（gzip 0.44 KB，无 PDF / iframe）
+**005.2 — Resume 页面（静态占位，Task 008 已升级为正式简历页）**
+- `src/pages/Resume.vue` — 静态占位卡片（gzip 0.44 KB）→ **Task 008 重写为 virtual:resume-content + MarkdownContent + window.print PDF**
 
 **005.3 — About 页面**
 - `src/types/personal.ts` — `PersonalContent` 接口（4 行）
@@ -228,9 +233,13 @@
 
 #### Task 005 架构冲突（Rule 7）
 
-架构文档 §8 指定 Skills 页使用 `SkillCategory.vue` + `TimelineItem.vue` 自定义组件，Resume 页使用 iframe + PDF 检测。Plan v2 经用户批准偏离 §8，遵循 §2.3（原生 HTML 优先 + KISS/YAGNI）。3 页全部使用 MarkdownContent 全文渲染，Resume 为静态占位。详见 PROJECT_MEMORY.md「Task 005 — 架构冲突记录」。
+架构文档 §8 指定 Skills 页使用 `SkillCategory.vue` + `TimelineItem.vue` 自定义组件，Resume 页使用 iframe + PDF 检测。Plan v2 经用户批准偏离 §8，遵循 §2.3（原生 HTML 优先 + KISS/YAGNI）。3 页全部使用 MarkdownContent 全文渲染，Resume 在 Task 005 为静态占位（**Task 008 已升级为正式简历页**）。详见 PROJECT_MEMORY.md「Task 005 — 架构冲突记录」。
 
-### Task 006 待开始
+### Task 006~008 已完成
+
+- Task 006：项目同步 + 仓库清理（Commit `f5563ac`）
+- Task 007：Final Portfolio Review（Commit `5c58f58`）
+- Task 008：Resume 系统完善（第 7 虚拟模块 + PDF 打印 + Playwright 49/49，待 commit）
 
 - Vercel 部署上线
 - 生产环境配置（`vercel.json` 已存在 SPA rewrites）

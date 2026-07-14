@@ -20,6 +20,7 @@ import type { DecisionContent } from '../types/decision'
 import type { InterviewCategory, InterviewQAPair } from '../types/interview'
 import type { AiPracticeContent } from '../types/ai-practice'
 import type { PersonalContent } from '../types/personal'
+import type { ResumeContent } from '../types/resume'
 import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
@@ -34,6 +35,8 @@ const VIRTUAL_SKILLS_ID = 'virtual:skills-content'
 const RESOLVED_SKILLS_ID = '\0' + VIRTUAL_SKILLS_ID
 const VIRTUAL_PERSONAL_ID = 'virtual:personal-content'
 const RESOLVED_PERSONAL_ID = '\0' + VIRTUAL_PERSONAL_ID
+const VIRTUAL_RESUME_ID = 'virtual:resume-content'
+const RESOLVED_RESUME_ID = '\0' + VIRTUAL_RESUME_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -301,6 +304,31 @@ async function scanPersonal(root: string): Promise<PersonalContent | null> {
   }
 }
 
+/** 扫描 resume/index.md，渲染 HTML，返回简历页内容（单文件） */
+async function scanResume(root: string): Promise<ResumeContent | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'resume', 'index.md')
+  if (!fs.existsSync(filePath)) return null
+
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  if (!data.slug) {
+    throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+  }
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+  }
+
+  const html = await renderMarkdown(content)
+
+  return {
+    slug: String(data.slug),
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    html,
+  }
+}
+
 /** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
@@ -323,6 +351,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_PERSONAL_ID) {
         return RESOLVED_PERSONAL_ID
+      }
+      if (id === VIRTUAL_RESUME_ID) {
+        return RESOLVED_RESUME_ID
       }
     },
     async load(id) {
@@ -388,6 +419,16 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const personal = ${JSON.stringify(personal)}`
+      }
+      if (id === RESOLVED_RESUME_ID) {
+        const root = process.cwd()
+        const resume = await scanResume(root)
+
+        for (const file of getContentFiles(root, 'resume')) {
+          this.addWatchFile(file)
+        }
+
+        return `export const resume = ${JSON.stringify(resume)}`
       }
     },
   }

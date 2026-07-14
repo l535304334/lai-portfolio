@@ -34,3 +34,8 @@ declare module 'virtual:personal-content' {
   import type { PersonalContent } from '@/types/personal'
   export const personal: PersonalContent | null
 }
+
+declare module 'virtual:resume-content' {
+  import type { ResumeContent } from '@/types/resume'
+  export const resume: ResumeContent | null
+}

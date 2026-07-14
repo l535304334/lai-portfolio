@@ -8,14 +8,15 @@
 
 ## 当前阶段
 
-**Task 006 已完成 — 项目同步 + 最终仓库清理**
+**Task 008 已完成 — Resume 系统完善**
 
-- **Master Baseline：** Commit `f5563ac`（Task 006 项目同步）
-- **Tag：** `v0.5.0`（Task 005 Release，未移动 — Task 006 仅为内容同步，无代码功能变更）
+- **Master Baseline：** Task 008 commit（master，待推送）
+- **Tag：** `v0.5.0`（Task 005 Release，未移动）
 - **当前分支：** `master`
-- **Release Review：** Task 001/002/003/004/005/006 全部通过
-- **工作区状态：** master 已 commit，待推送（Task 005 + Task 006 共 5 个 commit + Tag v0.5.0）
-- **核心交付物：** 4 个 Markdown 文件更新（jiangnan-travel.md / love-letter.md / exam-system.md / timeline.md），3 个项目 GitHub 链接 + 发布状态同步，17 张项目截图入库，.gitignore 完善，Playwright 50/50 + 人工 18/18 验证通过
+- **Release Review：** Task 001~008 全部通过
+- **工作区状态：** Task 008 已 commit，待推送（含 Task 007 作品集评审修正 + Task 008 Resume 系统完善）
+- **核心交付物（Task 008）：** 第 7 个虚拟模块 `virtual:resume-content`、Resume.vue 从占位页重写为正式简历页（Markdown 渲染 + window.print() PDF 导出 + @media print A4 打印样式）、Playwright 49/49 验证通过
+- **⚠️ 隐私提醒：** 简历 Markdown（`src/content/resume/index.md`）含电话号码 18279755182，个人网站 GitHub 仓库 `l535304334/lai-portfolio` 为公开仓库。**禁止 push 到远程**，除非先脱敏电话号码或将仓库转为私有。
 
 ### Task 进度总览
 
@@ -28,16 +29,117 @@
 | 003 | 构建时内容插件 + 项目详情页 | ✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0） |
 | 004 | 面试准备页 + AI 实践页 | ✅ 已完成（含 Release Gate 33/33 + 合并 master + Tag v0.4.0） |
 | 005 | 能力页 + 简历页 + 关于页 | ✅ 已完成（含 Release Gate 50/50 + 合并 master + Tag v0.5.0） |
-| **006** | **项目同步 + 最终仓库清理** | **✅ 已完成（含 GitHub MCP 核对 + 内容同步 + Playwright 50/50 验证 + 仓库清理）** |
-| 007 | Vercel 部署与上线 | 待开始 |
-| 008 | Release Audit | 待开始 |
+| 006 | 项目同步 + 最终仓库清理 | ✅ 已完成（含 GitHub MCP 核对 + 内容同步 + Playwright 50/50 验证 + 仓库清理） |
+| 007 | Final Portfolio Review（最终作品集评审） | ✅ 已完成（含内容真实性审查 + 导师/面试官视角评审 + 全站一致性检查 + 4 类事实修正，Commit `5c58f58`） |
+| **008** | **Resume 系统完善** | **✅ 已完成（含第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49）** |
+| 009 | Vercel 部署与上线 | 待开始 |
+| 010 | Release Audit（最终质量关卡） | 待开始 |
 
 ### 后续开发顺序
 
-1. **Task 007** — Vercel 部署上线
-2. **Task 008** — Release Audit（最终质量关卡）
+1. **Task 009** — Vercel 部署上线
+2. **Task 010** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
+## Task 008 — Resume 系统完善
+
+**开始时间：** 2026-07-15
+**完成时间：** 2026-07-15
+**状态：** ✅ 已完成（交互式信息收集 + 第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49）
+**Git Commit：** 待 commit（master，不 push）
+
+### 用户指令核心约束
+
+1. 不要猜测任何内容，不编造经历、数据、奖项、证书或技能
+2. 采用交互式信息收集（信息收集 → 用户回答 → 继续提问 → 完成简历）
+3. 每次只提当前最需要补充的问题
+4. 最终生成正式中文简历 + 网站展示 Markdown + 可导出 PDF（A4 一页优先，两页上限）
+5. Resume 页面下载按钮改为下载最终生成的 PDF
+6. 保持网站现有设计风格，不新增页面、不修改整体 UI
+7. 完成后更新文档 + 验证 + 自动 commit（不 push）
+
+### 信息收集过程（6 轮交互）
+
+| 轮次 | 收集内容 |
+|------|---------|
+| 1 | 姓名（赖睿轩）、出生年月（2005.08）、政治面貌（共青团员）、电话、邮箱、预计毕业（2027.06）、无求职意向 |
+| 2 | GPA 不写（3.0 较低）、CET-4 516、无奖学金、无竞赛 |
+| 3 | 无社团干部、无证书、实习为个人独立完成、3 个项目描述为已完成 |
+| 4 | **关键冲突：** 用户坦诚"都是通过 AI 完成的，我本人一窍不通" — 按 Rule 7 暴露冲突，提出 3 种诚实写法方案 |
+| 5 | 用户选择方案 A：工程能力 + 项目使用技术栈（不写语言/框架熟练度等级） |
+| 6 | 自我评价全选（ABCD：工程严谨性 + AI 协作 + 独立交付 + 诚实反思）+ PDF 生成方式 A+C（window.print） |
+
+### 交付物
+
+**新增文件：**
+- `src/content/resume/index.md` — 简历 Markdown 内容（教育/实习/项目/工程能力/技术栈/个人特质）
+- `src/types/resume.ts` — ResumeContent 类型定义
+
+**修改文件：**
+- `src/utils/content.ts` — 添加第 7 个虚拟模块 `virtual:resume-content`（scanResume + resolveId + load）
+- `src/env.d.ts` — 添加 `virtual:resume-content` 类型声明
+- `src/pages/Resume.vue` — 从占位页重写为正式简历页（Markdown 渲染 + window.print() PDF 导出 + @media print A4 打印样式）
+- `release-gate-task-005.mjs` — Test 7 更新为匹配新版 Resume 页
+
+### 技术决策
+
+| 决策 | 选择 | 理由 |
+|------|------|------|
+| PDF 导出方式 | window.print() + @media print | 无需引入额外依赖（jsPDF/html2pdf），利用浏览器原生打印能力，用户可选择"保存为 PDF" |
+| 简历内容来源 | 第 7 个虚拟模块 `virtual:resume-content` | 与 About/Skills 页保持一致的 Markdown → HTML 构建时渲染架构 |
+| 页面 h1 唯一性 | 移除 Markdown 中的 `# 赖睿轩`，保留 Resume.vue 的 page__title 作为唯一 h1 | 避免 Playwright strict mode violation + 语义正确（页面仅一个 h1） |
+| 打印时姓名显示 | 打印 CSS 不隐藏 `.resume__header .page__title`，仅隐藏 eyebrow/hint/button | PDF 中保留姓名标题，A4 紧凑排版 |
+| 技能描述方式 | 工程能力 + 项目使用技术栈（不写"熟练/精通"等级） | 用户坦诚通过 AI 完成，不编造熟练度等级，但可诚实描述项目实际使用的技术和工程方法论 |
+
+### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| typecheck | ✅ 通过 |
+| build | ✅ 1657 模块，2.29s |
+| Playwright | ✅ 49/49 通过（Test 7 更新为 5 项检查：h1 唯一 + h1 文本 + Markdown 内容 + 下载按钮 + 无 iframe） |
+| 人工验证 | ✅ 8/8 PASS（页面渲染、按钮、内容、Console、Markdown、打印、导航） |
+
+### 遗留事项
+
+- **⚠️ 隐私：** 简历 Markdown 含电话号码 18279755182，GitHub 仓库为公开仓库。已 commit 到本地，**禁止 push** 直到脱敏或转私有仓库。
+- 打印 PDF 页数未验证（取决于浏览器打印设置），建议用户手动验证 A4 页数。
+
+---
+
+## Task 007 — Final Portfolio Review（最终作品集评审）
+
+**开始时间：** 2026-07-15
+**完成时间：** 2026-07-15
+**状态：** ✅ 已完成（7 部分评审 + 4 类事实修正 + 全站一致性检查）
+**Git Commit：** `5c58f58`（master，待推送）
+
+### 用户指令核心约束
+
+仅允许修改 Markdown/frontmatter/文字描述/删除重复/修正事实错误；禁止修改 Vue 页面/组件/布局/样式/新增页面/新增功能/重构代码。
+
+### 评审结果
+
+| 部分 | 结果 |
+|------|------|
+| 1. 内容真实性审查 | ✅ 逐页核对 + GitHub MCP 交叉验证 |
+| 2. 导师视角评审 | ✅ 通过 |
+| 3. 企业技术面试官视角 | ✅ 通过 |
+| 4. 全站一致性检查 | ✅ 通过（修复 1 处不一致：Home.vue 硬编码 "23 页面" → "17 页面"） |
+| 5. 修改范围 | ✅ 严格遵守（仅 Markdown + Home.vue 用户特批） |
+| 6. 验证 | ✅ typecheck + build + Playwright 50/50 + 人工 18/18 |
+| 7. 最终报告 | ✅ 总分 92/100 |
+
+### 修正内容
+
+1. **隐私脱敏：** 公司名 → [已脱敏]网约车出行公司
+2. **技术栈修正：** 删除 ECharts 6，新增高德地图 JS API 2.0 + WebSocket
+3. **核心功能新增：** 支付系统 / 计费系统 / VIP 会员体系
+4. **测试描述修正：** "155 个 API 测试用例" → "155 个前端测试用例"
+5. **数据一致性：** Love 项目 23 页面 → 17 页面（timeline.md + Home.vue）
 
 ---
 

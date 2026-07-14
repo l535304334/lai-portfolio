@@ -1,7 +1,7 @@
 # 项目交接文档（HANDOFF.md）
 
 > 本文件是 AI 接手入口。任何 AI（Trae / GLM / Claude Code / Codex / ChatGPT 等）接手本项目时，**优先阅读本文件**，无需重新分析整个项目。
-> 最后更新：2026-07-09
+> 最后更新：2026-07-15
 
 ---
 
@@ -19,14 +19,15 @@
 | Task 002 | ✅ 已完成 |
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
 | Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
-| Release Review | ✅ Task 001/002/003/004 全部通过 |
-| **Master Baseline** | Task 004 Release（Tag `v0.4.0`，Commit `eb25da3`） |
-| **远程 Baseline** | `origin/master` = `origin/develop` = `eb25da3`（已同步） |
-| **当前分支** | `master`（Task 004 已 FF 合并 + 远程推送完成） |
-| **Develop HEAD** | 与 master 同步（`eb25da3`） |
-| **工作区状态** | Task 004 远程 Baseline 已建立，工作区干净（仅 untracked 临时文件），等待用户确认开始 Task 005 |
-| 验证 | ✅ build 成功（1650 模块，2.57s）/ typecheck 通过 |
-| **当前进度** | Task 004 完成，等待 Task 005 启动 |
+| Task 005 | ✅ 已完成（含 Release Gate 50/50 Playwright 测试 + 合并 master + Tag v0.5.0） |
+| Release Review | ✅ Task 001/002/003/004/005 全部通过 |
+| **Master Baseline** | Task 005 Release（Tag `v0.5.0`） |
+| **远程 Baseline** | 待推送（含 4 个 commit + Tag v0.5.0） |
+| **当前分支** | `master`（Task 005 已 FF 合并完成） |
+| **Develop HEAD** | 与 master 同步 |
+| **工作区状态** | Task 005 远程 Baseline 待推送（master / develop / Tag v0.5.0），工作区干净（仅 untracked 临时文件），等待用户确认开始 Task 006 |
+| 验证 | ✅ build 成功（1654 模块，2.39s）/ typecheck 通过 |
+| **当前进度** | Task 005 完成，等待 Task 006 启动 |
 
 ---
 
@@ -92,19 +93,30 @@
     ├── styles/
     │   ├── tokens.css             # v1.2 §2.2 全量设计令牌
     │   └── global.css             # reset + .page 全局样式 + 工具类
-    ├── types/                     # Task 003 类型定义（按域拆分）
+    ├── types/                     # 类型定义（按域拆分，5 文件 + personal.ts）
     │   ├── content.ts             # ContentMeta / Metric
     │   ├── project.ts             # ProjectSummary / ProjectContent
     │   ├── decision.ts            # DecisionContent
     │   ├── timeline.ts            # TimelineStage
-    │   └── contact.ts             # ContactInfo
+    │   ├── contact.ts             # ContactInfo
+    │   ├── interview.ts           # InterviewQAPair / InterviewCategory（Task 004）
+    │   ├── ai-practice.ts         # AiPracticeContent（Task 004）
+    │   └── personal.ts            # PersonalContent（Task 005，4 行）
     ├── content/                   # 14 个 Markdown 内容文件（Task 003 渲染）
     │   ├── personal/  projects/  decisions/
     │   ├── interview/  skills/  growth/  ai-practice/
     ├── assets/                    # 空（Task 004 SVG 图表）
     └── utils/
-        └── content.ts             # Task 003 Vite 虚拟模块插件（virtual:content）
+        └── content.ts             # Vite 虚拟模块插件（6 虚拟模块，Task 003~005 累积）
 ```
+
+**虚拟模块清单（6 个，src/utils/content.ts）：**
+- `virtual:content` — 项目摘要（Task 003）
+- `virtual:project-detail` — 项目详情 HTML（Task 003）
+- `virtual:interview-content` — 面试问答 HTML（Task 004）
+- `virtual:ai-practice-content` — AI 实践 HTML（Task 004）
+- `virtual:skills-content` — 技能页 HTML（Task 005.1）
+- `virtual:personal-content` — 关于我 HTML（Task 005.3）
 
 ---
 
@@ -114,69 +126,74 @@
 |------|------|------|
 | `/` | `src/pages/Home.vue` | ✅ 已实现（Task 002，4 个组件组合） |
 | `/projects/:slug` | `src/pages/ProjectDetail.vue` | ✅ 已实现（Task 003，5 个组件 + DecisionSection） |
-| `/skills` | `src/pages/Skills.vue` | 占位（Task 005 替换） |
+| `/skills` | `src/pages/Skills.vue` | ✅ 已实现（Task 005，virtual:skills-content + MarkdownContent） |
 | `/interview` | `src/pages/Interview.vue` | ✅ 已实现（Task 004，4 分类 17 题 + 折叠面板） |
 | `/ai-practice` | `src/pages/AiPractice.vue` | ✅ 已实现（Task 004，MarkdownContent 渲染） |
-| `/resume` | `src/pages/Resume.vue` | 占位（Task 005 替换） |
-| `/about` | `src/pages/About.vue` | 占位（Task 005 替换） |
+| `/resume` | `src/pages/Resume.vue` | ✅ 已实现（Task 005，静态占位卡片，无 PDF） |
+| `/about` | `src/pages/About.vue` | ✅ 已实现（Task 005，virtual:personal-content + MarkdownContent） |
 | 404 | `src/pages/NotFound.vue` | ✅ 最终版 |
 
 ---
 
-## 6. 当前阶段 — Task 005（待开始）
+## 6. 当前阶段 — Task 006（待开始）
 
 ### 目标
 
-能力页（`/skills`）+ 简历页（`/resume`）+ 关于页（`/about`）开发。
+部署与上线（Vercel）— 将本地构建产物部署到 Vercel，配置生产环境。
 
-### 上一任务 — Task 004（✅ 已完成）
+### 上一任务 — Task 005（✅ 已完成）
 
-**Master Baseline：** Tag `v0.4.0`
+**Master Baseline：** Tag `v0.5.0`
 
-#### Task 004 Release Gate 结果
+#### Task 005 Release Gate 结果
 
-- ✅ Playwright 端到端测试 33/33 通过
-- ✅ 面试页：4 分类 17 题 + 折叠面板交互 + Markdown 渲染
-- ✅ AI 实践页：h1 + h2 ≥ 5 + 表格 + 代码块 + 案例章节
-- ✅ 4 路由控制台 0 错误
+- ✅ Playwright 全量回归测试 50/50 通过（17 测试组，覆盖 Task 001~005 全部功能）
+- ✅ Skills 页：virtual:skills-content + MarkdownContent 全文渲染
+- ✅ Resume 页：静态占位卡片（无 iframe / 无 PDF 检测 / 无下载按钮，遵循 Plan v2 简化）
+- ✅ About 页：virtual:personal-content + MarkdownContent 全文渲染
+- ✅ 导航栏 7 个链接全部存在（首页 / 项目 / 能力 / 面试 / AI 实践 / 简历 / 关于）
+- ✅ 7 路由控制台 0 运行时错误
 - ✅ 响应式桌面/平板/移动 3 断点无水平溢出
-- ✅ typecheck + build 通过
-- ✅ Bundle Size：初始加载 50.79 KB gzip（+0.12 KB vs Task 003），新增内容全部懒加载
+- ✅ 主题切换（Task 002 回归）
+- ✅ typecheck + build 通过（1654 模块，2.39s）
+- ✅ Bundle Size：初始加载 51.18 KB gzip（+0.39 KB vs Task 004），新增内容全部懒加载
 
-#### Task 004 交付物
+#### Task 005 交付物
 
-**004.1 — Interview 类型 + virtual:interview-content 模块**
-- `src/types/interview.ts` — InterviewQAPair + InterviewCategory 接口
-- `src/utils/content.ts` — 新增 `virtual:interview-content`（`parseInterviewQA` + `scanInterviews` + resolveId/load + HMR）
-- `src/env.d.ts` — 新增 `virtual:interview-content` 模块声明
+**005.1 — Skills 页面**
+- `src/utils/content.ts` — 新增 `virtual:skills-content`（`scanSkills` + resolveId/load + HMR）
+- `src/env.d.ts` — 新增 `virtual:skills-content` 模块声明
+- `src/pages/Skills.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.32 KB）
 
-**004.2 — Interview 组件 + 页面组装**
-- `src/components/interview/InterviewQuestion.vue` — `<details>/<summary>` 折叠面板，ChevronRight 旋转 90°，复用 MarkdownContent
-- `src/components/interview/InterviewCategory.vue` — 分类区段（eyebrow + 标题 + 题数 + Q&A 列表）
-- `src/pages/Interview.vue` — 替换占位页，4 分类 17 题懒加载（gzip 6.85 KB）
+**005.2 — Resume 页面（静态占位）**
+- `src/pages/Resume.vue` — 静态占位卡片（gzip 0.44 KB，无 PDF / iframe）
 
-**004.3 — AI Practice 类型 + 虚拟模块 + 页面**
-- `src/types/ai-practice.ts` — `AiPracticeContent` 接口
-- `src/utils/content.ts` — 新增 `virtual:ai-practice-content`（`scanAiPractice` + resolveId/load + HMR）
-- `src/env.d.ts` — 新增 `virtual:ai-practice-content` 模块声明
-- `src/pages/AiPractice.vue` — 替换占位页，MarkdownContent 渲染（gzip 2.14 KB）
+**005.3 — About 页面**
+- `src/types/personal.ts` — `PersonalContent` 接口（4 行）
+- `src/utils/content.ts` — 新增 `virtual:personal-content`（`scanPersonal` + resolveId/load + HMR）
+- `src/env.d.ts` — 新增 `virtual:personal-content` 模块声明
+- `src/pages/About.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.25 KB）
 
-**004.4 — 最终验证 + Release**
-- 全项目 typecheck + build 通过
-- Playwright 33/33 测试通过
-- Bundle Size 对比（Task 003 → Task 004）
-- Git 合并 feature → develop → master + Tag v0.4.0 + Push GitHub
+**005.7 — Playwright 全量回归测试**
+- `release-gate-task-005.mjs` — 50 测试用例（17 测试组，覆盖 7 路由 + 3 新页 + 导航 + 响应式 + 主题切换 + 控制台错误扫描）
 
-#### 架构冲突（Rule 7）
+**005.8 — Release Gate**
+- typecheck + build 通过
+- Bundle Size 对比（Task 004 → Task 005）
+- FF 合并 feature → develop → master
+- Tag `v0.5.0` 创建
+- 文档更新（PROJECT_MEMORY.md / HANDOFF.md / RELEASE_REVIEW_REPORT.md）
 
-架构文档 §3.3 规定"一个 `virtual:content` 导出所有内容"，但 Task 003 已批准 `virtual:project-detail` 懒加载分离模式。004.1/004.3 遵循既有模式新建 `virtual:interview-content` + `virtual:ai-practice-content`。详见 PROJECT_MEMORY.md「Task 004 — 架构冲突记录」。
+#### Task 005 架构冲突（Rule 7）
 
-### Task 005 待开始
+架构文档 §8 指定 Skills 页使用 `SkillCategory.vue` + `TimelineItem.vue` 自定义组件，Resume 页使用 iframe + PDF 检测。Plan v2 经用户批准偏离 §8，遵循 §2.3（原生 HTML 优先 + KISS/YAGNI）。3 页全部使用 MarkdownContent 全文渲染，Resume 为静态占位。详见 PROJECT_MEMORY.md「Task 005 — 架构冲突记录」。
 
-- `/skills` — 技术能力页（SkillCategory + TimelineItem 组件，按 v1.2 §8 组件树）
-- `/resume` — 简历页（PDF 嵌入或链接，`public/resume.pdf`）
-- `/about` — 关于我页（`content/personal/about.md` 渲染）
-- 预期新增虚拟模块：`virtual:skills-content` + `virtual:personal-content`（遵循既有懒加载模式）
+### Task 006 待开始
+
+- Vercel 部署上线
+- 生产环境配置（`vercel.json` 已存在 SPA rewrites）
+- 域名配置（可选）
+- 首次部署验证
 
 ---
 

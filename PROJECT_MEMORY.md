@@ -115,7 +115,7 @@
 **设计决策：**
 1. **`PersonalContent` 独立类型文件** — 与 AiPracticeContent 结构相同但语义不同（"关于我" vs "AI 实践"），独立类型便于后续分化（如未来 About 可能增加头像字段）。仅 4 行，YAGNI 不冲突。
 2. **`scanPersonal` 直接检查 `about.md`** — 与 `scanAiPractice` 平行模式，直接 `path.resolve(dir, 'about.md')`，语义明确。
-3. **复用 MarkdownContent 组件** — About 页 Markdown 与项目/面试/AI 实践共用同一渲染容器，MarkdownContent 现为 ProjectDetail + Interview + AiPractice + About 四方共享 chunk。
+3. **复用 MarkdownContent 组件** — About 页 Markdown 与项目/面试/AI 实践/技能共用同一渲染容器，MarkdownContent 现为 ProjectDetail + Interview + AiPractice + Skills + About 五方共享 chunk。
 4. **页面 hint "// 软件工程学生 · 赖睿轩"** — 简洁身份说明。
 
 ### Content Plugin 扩展（005.1 + 005.3）
@@ -186,7 +186,7 @@
 | Skills.css（新增） | — | 0.13 KB | scoped 样式 |
 | Resume.js（新增，原占位 0.33 KB） | 0.33 KB | 0.44 KB | 占位卡片样式 |
 | Resume.css（新增） | — | 0.24 KB | 占位卡片样式 |
-| About.js（新增，原占位 0.35 KB） | 0.35 KB | 1.25 KB | 单文件 HTML + 页面组件 |
+| About.js（新增，原占位 0.35 KB） | 0.35 KB | 1.26 KB | 单文件 HTML + 页面组件 |
 | About.css（新增） | — | 0.12 KB | scoped 样式 |
 
 **懒加载保持不变：** Interview / AiPractice / ProjectDetail / MarkdownContent chunks 与 Task 004 一致。
@@ -194,9 +194,9 @@
 **评估：**
 - ✅ 首屏性能几乎不变（+0.39 KB）— 新内容全部懒加载
 - ✅ Skills 懒加载 1.32 KB gzip（单文件 Markdown，4 个分类 + 学习路线 + 当前学习）
-- ✅ About 懒加载 1.25 KB gzip（单文件 Markdown，4 个 h2 章节 + 联系方式）
+- ✅ About 懒加载 1.26 KB gzip（单文件 Markdown，5 个 h2 章节：个人简介/教育/方向/联系方式/关于本站）
 - ✅ Resume 懒加载 0.44 KB gzip（静态占位卡片，无逻辑依赖）
-- ✅ MarkdownContent 现为 4 方共享 chunk（ProjectDetail + Interview + AiPractice + About），缓存效率进一步提升
+- ✅ MarkdownContent 现为 5 方共享 chunk（ProjectDetail + Interview + AiPractice + Skills + About），缓存效率进一步提升
 - ✅ 运行时零 markdown-it / gray-matter / Shiki 依赖（仅构建时）
 - ✅ 满足 Core Web Vitals 目标（LCP < 2.5s / INP < 200ms / CLS < 0.1）
 

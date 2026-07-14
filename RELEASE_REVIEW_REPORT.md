@@ -19,7 +19,7 @@ Task 005 delivers the final three placeholder pages: Skills (`/skills`), Resume 
 | Type System | 1 new type file: `personal.ts` (PersonalContent, 4 lines) |
 | Pages | `Skills.vue` (MarkdownContent full-render) + `Resume.vue` (static placeholder) + `About.vue` (MarkdownContent full-render) |
 | Content | `src/content/skills/index.md` (learning route format adjustment — code block → `### YYYY.MM` headers) |
-| Shared Chunk | `MarkdownContent` now shared by 4 pages: ProjectDetail + Interview + AiPractice + About |
+| Shared Chunk | `MarkdownContent` now shared by 5 pages: ProjectDetail + Interview + AiPractice + Skills + About |
 | Runtime Dependencies | 0 new (build-time only, virtual modules inject pre-rendered HTML) |
 | Test Suite | `release-gate-task-005.mjs` — 50 test cases covering 7 routes + 3 new pages + navigation + responsive + theme toggle + console error scan |
 
@@ -117,10 +117,10 @@ Task 005 delivers the final three placeholder pages: Skills (`/skills`), Resume 
 | Skills.css | 0.14 KB | 0.13 KB | Lazy (/skills) — NEW |
 | Resume.js | 0.70 KB | 0.44 KB | Lazy (/resume) — NEW |
 | Resume.css | 0.48 KB | 0.24 KB | Lazy (/resume) — NEW |
-| About.js | 1.77 KB | 1.25 KB | Lazy (/about) — NEW |
+| About.js | 1.77 KB | 1.26 KB | Lazy (/about) — NEW |
 | About.css | 0.14 KB | 0.12 KB | Lazy (/about) — NEW |
-| MarkdownContent.js | 0.27 KB | 0.23 KB | Lazy (shared by 4 pages) |
-| MarkdownContent.css | 2.46 KB | 0.60 KB | Lazy (shared by 4 pages) |
+| MarkdownContent.js | 0.27 KB | 0.23 KB | Lazy (shared by 5 pages) |
+| MarkdownContent.css | 2.46 KB | 0.60 KB | Lazy (shared by 5 pages) |
 
 ### 4.2 Comparison: Task 004 → Task 005
 
@@ -129,15 +129,15 @@ Task 005 delivers the final three placeholder pages: Skills (`/skills`), Resume 
 | Initial load (gzip) | 50.79 KB | 51.18 KB | +0.39 KB |
 | Lazy: Skills (gzip) | — | 1.32 KB | +1.32 KB (new page) |
 | Lazy: Resume (gzip) | 0.33 KB | 0.44 KB | +0.11 KB (placeholder → card) |
-| Lazy: About (gzip) | 0.35 KB | 1.25 KB | +0.90 KB (placeholder → MarkdownContent) |
-| Shared: MarkdownContent (gzip) | 0.83 KB | 0.83 KB | 0 (now shared by 4 pages, cache efficiency improved) |
+| Lazy: About (gzip) | 0.35 KB | 1.26 KB | +0.91 KB (placeholder → MarkdownContent) |
+| Shared: MarkdownContent (gzip) | 0.83 KB | 0.83 KB | 0 (now shared by 5 pages, cache efficiency improved) |
 
 **Assessment:**
 - ✅ First paint performance nearly unchanged (+0.39 KB) — all new content is lazy-loaded
 - ✅ Skills page 1.32 KB gzip (single-file Markdown: 技术栈 + 学习路线 + 当前学习)
-- ✅ About page 1.25 KB gzip (single-file Markdown: 个人简介 + 教育 + 方向 + 关于本站)
+- ✅ About page 1.26 KB gzip (single-file Markdown: 个人简介 + 教育 + 方向 + 联系方式 + 关于本站)
 - ✅ Resume page 0.44 KB gzip (static placeholder card, no logic dependencies)
-- ✅ MarkdownContent now shared by 4 pages (ProjectDetail + Interview + AiPractice + About) — cache efficiency improved further
+- ✅ MarkdownContent now shared by 5 pages (ProjectDetail + Interview + AiPractice + Skills + About) — cache efficiency improved further
 - ✅ Zero runtime markdown-it / gray-matter / Shiki dependencies (build-time only)
 - ✅ Meets Core Web Vitals targets (LCP < 2.5s / INP < 200ms / CLS < 0.1)
 

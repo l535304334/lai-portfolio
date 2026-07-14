@@ -172,7 +172,7 @@
 - `src/types/personal.ts` — `PersonalContent` 接口（4 行）
 - `src/utils/content.ts` — 新增 `virtual:personal-content`（`scanPersonal` + resolveId/load + HMR）
 - `src/env.d.ts` — 新增 `virtual:personal-content` 模块声明
-- `src/pages/About.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.25 KB）
+- `src/pages/About.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.26 KB）
 
 **005.7 — Playwright 全量回归测试**
 - `release-gate-task-005.mjs` — 50 测试用例（17 测试组，覆盖 7 路由 + 3 新页 + 导航 + 响应式 + 主题切换 + 控制台错误扫描）

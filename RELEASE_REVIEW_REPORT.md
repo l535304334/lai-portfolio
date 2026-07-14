@@ -234,3 +234,59 @@ All acceptance criteria met:
 - No blocking issues remain
 
 **Next: Task 006 — Vercel deployment (awaiting user approval)**
+
+---
+
+## 10. Post Release Audit（2026-07-15）
+
+> 本节由独立 Release Audit 流程产生，验证 Release Report 的真实性。
+> 所有 PASS 结论均经过重新验证，不相信先前报告。
+
+### 10.1 Audit 发现与修正
+
+审计发现 3 处文档与实际代码不一致，已全部修正（commit `0254514`，仅文档变更）：
+
+| # | 问题 | 修正前 | 修正后 | 根因 |
+|---|------|--------|--------|------|
+| 1 | MarkdownContent 共享页数 | 4 页（遗漏 Skills） | 5 页（+ Skills） | Skills.vue 也导入 MarkdownContent，但 Release Report 遗漏 |
+| 2 | About.js gzip 大小 | 1.25 KB | 1.26 KB | 四舍五入误差（build 输出 1.26 KB） |
+| 3 | About 页 h2 章节描述 | 4 个（遗漏"联系方式"） | 5 个（+ 联系方式） | about.md 实际有 5 个 `##` 标题 |
+
+**修正范围：** 仅 3 个 .md 文档（PROJECT_MEMORY.md / HANDOFF.md / RELEASE_REVIEW_REPORT.md），无代码、无构建产物、无测试结果变化。
+
+### 10.2 Tag v0.5.0 决策
+
+**结论：不移动 Tag v0.5.0**
+
+- Tag v0.5.0 → `b297791`（Task 005 首次正式发布 Commit）
+- 审计修正 commit `0254514` 仅涉及文档，不影响代码功能
+- 保持 Release Tag 对应首次正式发布 Commit，文档修正视为后续维护
+
+### 10.3 ProjectDetail 404 根因
+
+**结论：非代码 Bug，非测试 Bug — Task 005.5 手动验证使用错误 slug**
+
+- Task 005.5 子代理验证时访问 `/projects/ai-practice`
+- 但实际项目 slug 只有 3 个：`exam-system` / `jiangnan-travel` / `love-letter`
+- `ai-practice` 是 AI 实践页的路由（`/ai-practice`），不是项目 slug
+- 路由 `/projects/:slug` 正确返回 404（行为正确）
+- 官方 Playwright 50/50 测试使用正确 slug `/projects/jiangnan-travel`，全部通过
+
+### 10.4 重新验证结果
+
+| 验证项 | 结果 | 方法 |
+|--------|------|------|
+| typecheck | ✅ 0 错误 | `npm run typecheck` 重新执行 |
+| build | ✅ 1654 模块 2.39s | `npm run build` 重新执行 |
+| Playwright | ✅ 50/50 PASS | `node release-gate-task-005.mjs` 重新执行 |
+| 人工页面验证 | ✅ 10/10 PASS | 3 个 ProjectDetail + 7 路由，0 console errors |
+| Git 同步 | ✅ master=develop=0254514 | `git rev-parse` 验证 |
+| GitHub 远程 | ✅ origin/master=0254514 | `git push` 成功 |
+| 代码质量 | ✅ 0 TODO/console.log/as any | Grep 全项目扫描 |
+| 文档一致性 | ✅ 已修正（commit 0254514） | 3 处不准确已修正 |
+
+### 10.5 Audit 结论
+
+**✅ PASS — Task 005 已真正完成**
+
+所有阻塞性问题已修正，代码无 bug，50/50 Playwright 通过，文档已修正并推送。

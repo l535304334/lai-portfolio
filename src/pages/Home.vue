@@ -24,7 +24,7 @@ const timelineStages: TimelineStage[] = [
     title: '两地书 Love',
     stack: 'React · TypeScript · Taro · 微信云开发 · DeepSeek · Serverless',
     highlights: [
-      '23 页面 + 26 云函数 + 22 数据库集合',
+      '17 页面 + 26 云函数 + 22 数据库集合',
       '9 个 AI 功能模块的工程化落地',
       '安全架构（OPENID 推导、字段白名单、创建者校验）',
       '微信平台合规整改（游客模式、隐私协议）',

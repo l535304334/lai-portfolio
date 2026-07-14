@@ -21,7 +21,7 @@ github: https://github.com/l535304334/jiangnan-travel
 
 ## 项目背景
 
-南昌大学软件工程 2307 班毕业实习项目。在江南出行运输服务有限公司完成了为期 4 周的全栈开发实习，从零搭建了一个面向江西省的网约车智慧出行平台。
+软件工程专业毕业实习项目。在 [已脱敏] 网约车公司完成了为期 4 周的全栈开发实习，从零搭建了一个面向江西省的网约车智慧出行平台。
 
 **当前状态：** Release 1.0 已于 2026-07-08 正式发布（[l535304334/jiangnan-travel](https://github.com/l535304334/jiangnan-travel)），并完成 v1.0-v1.5 六轮调度系统增强。
 
@@ -45,7 +45,7 @@ github: https://github.com/l535304334/jiangnan-travel
                                              DeepSeek API (AI 客服)
 ```
 
-**技术栈：** Java 17 · Spring Boot 3.2.6 · MyBatis-Plus 3.5.7 · MySQL 8.0 · Redis + Redisson 3.32.0 · JWT · Vue 3.4 · Vite 5 · Element Plus · ECharts 6 · Docker Compose · GitHub Actions
+**技术栈：** Java 17 · Spring Boot 3.2.6 · MyBatis-Plus 3.5.7 · MySQL 8.0 · Redis + Redisson 3.32.0 · JWT · Vue 3.4 · Vite 5 · Element Plus · 高德地图 JS API 2.0 · WebSocket · Docker Compose · GitHub Actions
 
 ## 核心功能
 
@@ -54,14 +54,17 @@ github: https://github.com/l535304334/jiangnan-travel
 - **订单状态机**：10 状态 + 15+ 合法路径，枚举集中管理，18 个单元测试全覆盖
 - **事件溯源审计**：12 种事件类型，一条 SQL 回溯全生命周期
 - **三层可观测性**：指标层 / 健康层（S/A/B/C/D 评级）/ 异常检测层
+- **支付系统**：状态机（pending→paid/failed/refunded）+ 幂等键防重复支付 + payment_trace 追踪日志
+- **计费系统**：距离费 + 时长费 + 高峰加价（7-9/17-19 点）+ 过路费 - 优惠券，订单完成时自动生成账单
+- **VIP 会员体系**：多档会员等级 + 成长值 + 积分权益 + 续费优惠
 - **AI 客服**：DeepSeek 集成，SSE 流式打字机效果，动态注入旅游知识库
 - **WebSocket 实时通信**：位置推送 + 订单状态 + 通知
-- **风控系统**：下单频率 / 深夜跨城 / 疲劳驾驶检测
+- **风控系统**：下单频率 / 深夜跨城 / 疲劳驾驶检测，三级告警分类
 
 ## 测试策略
 
 - 81 个后端单元/集成测试（含 18 个状态机测试覆盖全部合法/非法路径）
-- 155 个 API 测试用例（核心流程 + 安全边界 + 并发压力）
+- 155 个前端测试用例（核心流程 + 安全边界 + 并发压力）
 - Playwright E2E 测试
 - 100 订单 × 20 司机并发压测验证
 

@@ -27,15 +27,17 @@ DeepSeek API · Prompt Engineering · AI 辅助开发 (Claude Code / Trae) · SS
 
 ## 学习路线
 
-```
-2026.05  Vanilla JS + CSS 设计令牌
-           ↓
-2026.06  React + TypeScript + Taro + 微信云开发 + AI 工程化
-           ↓
-2026.07  Spring Boot + Java 17 + Redis + Docker + 分布式系统
-           ↓
-现在     分布式系统深入 + 计算机基础 + 考研准备
-```
+### 2026.05 — 基础入门
+Vanilla JS + CSS 设计令牌
+
+### 2026.06 — 前端工程化
+React + TypeScript + Taro + 微信云开发 + AI 工程化
+
+### 2026.07 — 后端与分布式
+Spring Boot + Java 17 + Redis + Docker + 分布式系统
+
+### 现在 — 深入与备考
+分布式系统深入 + 计算机基础 + 考研准备
 
 ## 当前学习
 

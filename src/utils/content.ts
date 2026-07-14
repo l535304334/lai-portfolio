@@ -7,6 +7,7 @@
  * - virtual:project-detail — 完整内容含渲染后 HTML，项目详情页懒加载使用
  * - virtual:interview-content — 面试问答分类（含渲染后 HTML），面试页懒加载使用
  * - virtual:ai-practice-content — AI 工程实践内容（含渲染后 HTML），AI 实践页懒加载使用
+ * - virtual:skills-content — 技术能力内容（含渲染后 HTML），技能页懒加载使用
  */
 
 import fs from 'node:fs'
@@ -27,6 +28,8 @@ const VIRTUAL_INTERVIEW_ID = 'virtual:interview-content'
 const RESOLVED_INTERVIEW_ID = '\0' + VIRTUAL_INTERVIEW_ID
 const VIRTUAL_AI_PRACTICE_ID = 'virtual:ai-practice-content'
 const RESOLVED_AI_PRACTICE_ID = '\0' + VIRTUAL_AI_PRACTICE_ID
+const VIRTUAL_SKILLS_ID = 'virtual:skills-content'
+const RESOLVED_SKILLS_ID = '\0' + VIRTUAL_SKILLS_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -244,6 +247,31 @@ async function scanAiPractice(root: string): Promise<AiPracticeContent | null> {
   }
 }
 
+/** 扫描 skills/index.md，渲染 HTML，返回技能页内容（单文件） */
+async function scanSkills(root: string): Promise<{ slug: string; title: string; date: string; html: string } | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'skills', 'index.md')
+  if (!fs.existsSync(filePath)) return null
+
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  if (!data.slug) {
+    throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+  }
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+  }
+
+  const html = await renderMarkdown(content)
+
+  return {
+    slug: String(data.slug),
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    html,
+  }
+}
+
 /** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
@@ -260,6 +288,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_AI_PRACTICE_ID) {
         return RESOLVED_AI_PRACTICE_ID
+      }
+      if (id === VIRTUAL_SKILLS_ID) {
+        return RESOLVED_SKILLS_ID
       }
     },
     async load(id) {
@@ -305,6 +336,16 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const aiPractice = ${JSON.stringify(aiPractice)}`
+      }
+      if (id === RESOLVED_SKILLS_ID) {
+        const root = process.cwd()
+        const skills = await scanSkills(root)
+
+        for (const file of getContentFiles(root, 'skills')) {
+          this.addWatchFile(file)
+        }
+
+        return `export const skills = ${JSON.stringify(skills)}`
       }
     },
   }

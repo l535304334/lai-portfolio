@@ -1,13 +1,26 @@
 <script setup lang="ts">
-// Task 005 将实现：技术栈分类 + 学习路线 + 当前学习
+import { skills } from 'virtual:skills-content'
+import MarkdownContent from '@/components/project/MarkdownContent.vue'
 </script>
 
 <template>
-  <div class="page">
+  <div v-if="skills" class="page">
     <div class="container container--narrow">
-      <p class="page__eyebrow mono">技术能力</p>
-      <h1 class="page__title">技术栈与学习路线</h1>
-      <p class="page__hint mono">// Task 005 将渲染此页内容</p>
+      <header class="skills__header">
+        <p class="page__eyebrow mono">技术能力</p>
+        <h1 class="page__title">{{ skills.title }}</h1>
+        <p class="page__hint mono">// 技术栈 · 学习路线 · 持续学习中</p>
+      </header>
+
+      <MarkdownContent :html="skills.html" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.skills__header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--color-border);
+}
+</style>

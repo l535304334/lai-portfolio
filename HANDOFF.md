@@ -20,14 +20,16 @@
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
 | Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
 | Task 005 | ✅ 已完成（含 Release Gate 50/50 Playwright 测试 + 合并 master + Tag v0.5.0） |
-| Release Review | ✅ Task 001/002/003/004/005 全部通过 |
-| **Master Baseline** | Task 005 Release（Tag `v0.5.0`） |
-| **远程 Baseline** | 待推送（含 4 个 commit + Tag v0.5.0） |
-| **当前分支** | `master`（Task 005 已 FF 合并完成） |
+| Task 006 | ✅ 已完成（含 GitHub MCP 核对 + 4 Markdown 同步 + Playwright 50/50 + 仓库清理） |
+| Release Review | ✅ Task 001/002/003/004/005/006 全部通过 |
+| **Master Baseline** | Commit `f5563ac`（Task 006 项目同步） |
+| **Tag** | `v0.5.0`（Task 005 Release，未移动 — Task 006 仅内容同步无代码变更） |
+| **远程 Baseline** | 待推送（Task 005 + Task 006 共 5 个 commit + Tag v0.5.0） |
+| **当前分支** | `master` |
 | **Develop HEAD** | 与 master 同步 |
-| **工作区状态** | Task 005 远程 Baseline 待推送（master / develop / Tag v0.5.0），工作区干净（仅 untracked 临时文件），等待用户确认开始 Task 006 |
-| 验证 | ✅ build 成功（1654 模块，2.39s）/ typecheck 通过 |
-| **当前进度** | Task 005 完成，等待 Task 006 启动 |
+| **工作区状态** | Task 006 已 commit（`f5563ac`），待推送，工作区干净 |
+| 验证 | ✅ build 成功（1654 模块，2.39s）/ typecheck 通过 / Playwright 50/50 / 人工 18/18 |
+| **当前进度** | Task 006 完成，等待 Task 007 启动（Vercel 部署） |
 
 ---
 
@@ -135,11 +137,51 @@
 
 ---
 
-## 6. 当前阶段 — Task 006（待开始）
+## 6. 当前阶段 — Task 007（待开始）
 
 ### 目标
 
 部署与上线（Vercel）— 将本地构建产物部署到 Vercel，配置生产环境。
+
+### 上一任务 — Task 006（✅ 已完成）
+
+**Master Baseline：** Commit `f5563ac`（Task 006 项目同步）
+**Tag：** `v0.5.0`（未移动，Task 006 仅内容同步无代码功能变更）
+
+#### Task 006 完成内容
+
+- ✅ 使用 GitHub MCP 核对 3 个项目 GitHub 仓库（jiangnan-travel / Love / interactive-quiz-system）
+- ✅ 更新 4 个 Markdown 文件（jiangnan-travel.md / love-letter.md / exam-system.md / timeline.md）
+  - 添加 3 个项目的 GitHub 链接（frontmatter `github` 字段）
+  - 添加 3 个项目的发布状态（Release 1.0 / v1.0.0）
+  - 修正 jiangnan-travel.md 测试数据（18→81）和 RELEASE 路径
+  - timeline.md 添加 3 个项目发布状态时间戳
+- ✅ typecheck + build 通过（1654 模块，2.39s）
+- ✅ Playwright 50/50 PASS（端口 4180）
+- ✅ 人工页面验证 18/18 PASS（3 个 GitHub 链接 + 0 console error + Markdown 渲染正常）
+- ✅ Repository Cleanup：.gitignore 添加 debug.log + release-gate-test.mjs
+- ✅ 17 张项目截图入库（8 题库 + 9 两地书）
+- ✅ 文档同步更新（PROJECT_MEMORY.md / HANDOFF.md / RELEASE_REVIEW_REPORT.md）
+
+#### Task 006 验证结果
+
+| 验证项 | 结果 |
+|--------|------|------|
+| `npm run typecheck` | ✅ 通过（0 错误） |
+| `npm run build` | ✅ 成功（1654 模块，2.39s） |
+| Playwright 全量回归 | ✅ 50/50 PASS（17 测试组） |
+| 人工页面验证 | ✅ 18/18 PASS |
+| 隐私扫描 | ✅ 0 匹配 |
+| Git commit | ✅ `f5563ac`（24 files, +285 -5） |
+
+**等待推送：** Task 006 commit `f5563ac` 待推送到 origin/master
+
+### Task 007 待开始
+
+- Vercel 部署上线
+- 生产环境配置（`vercel.json` 已存在 SPA rewrites）
+- 域名配置（可选）
+- 首次部署验证
 
 ### 上一任务 — Task 005（✅ 已完成）
 

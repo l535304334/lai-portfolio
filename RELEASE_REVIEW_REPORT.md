@@ -290,3 +290,104 @@ All acceptance criteria met:
 **✅ PASS — Task 005 已真正完成**
 
 所有阻塞性问题已修正，代码无 bug，50/50 Playwright 通过，文档已修正并推送。
+
+---
+
+## 11. Task 006 Synchronization Audit（2026-07-15）
+
+> 本节记录 Task 006（Project Synchronization + Final Repository Cleanup）的审计结果。
+> Task 006 不是 Release Task（无代码功能变更），而是内容同步与仓库清理任务。
+
+### 11.1 Task 006 范围
+
+**用户指令：** "Task 006：Project Synchronization + Final Repository Cleanup。不要新增任何页面，不要新增任何功能，不要修改设计风格，不要重构。"
+
+4 个子任务：
+1. **P1** — 同步三个项目（本地 + GitHub MCP 分析对比）
+2. **P2** — 更新个人网站相关内容
+3. **P3** — 完整验证（typecheck + build + Playwright + 人工）
+4. **P4** — Final Repository Cleanup + 文档同步
+
+### 11.2 GitHub MCP 核对结果
+
+使用 GitHub MCP 工具（`search_repositories` + `get_file_contents` + `list_commits`）核对三个项目 GitHub 仓库：
+
+| 项目 | 仓库 | 公开性 | 默认分支 | 最新 Commit | 发布状态 |
+|------|------|--------|----------|-------------|----------|
+| 江南出行 | [l535304334/jiangnan-travel](https://github.com/l535304334/jiangnan-travel) | Public | main | 2026-07-14 | Release 1.0 + v1.0-v1.5 六轮增强 |
+| 两地书 | [l535304334/Love](https://github.com/l535304334/Love) | Private | main | 2026-07-14 | v1.0.0（2026-07-04） |
+| 题库 | [l535304334/interactive-quiz-system](https://github.com/l535304334/interactive-quiz-system) | Public | main | 2026-07-08 | v1.0.0（7 轮 RC 修复） |
+
+### 11.3 内容同步清单
+
+**修改 4 个 Markdown 文件（23 处变更，commit `f5563ac`）：**
+
+| 文件 | 变更 |
+|------|------|
+| `src/content/projects/jiangnan-travel.md` | + GitHub 链接 + Release 1.0 状态 + 测试数据修正（18→81）+ RELEASE 路径修正 |
+| `src/content/projects/love-letter.md` | + GitHub 链接 + v1.0.0 发布状态 |
+| `src/content/projects/exam-system.md` | + GitHub 链接 + v1.0.0 发布状态 + 复盘修正 |
+| `src/content/growth/timeline.md` | + 3 个项目发布状态时间戳 |
+
+**核对一致（无需修改）：**
+- `src/components/home/ProjectCard.vue` — github 渲染已存在（Task 002）
+- `src/components/project/ProjectHeader.vue` — github 渲染已存在（Task 003）
+- `src/utils/content.ts` — github 字段处理已存在（line 73, 114）
+- `src/types/project.ts` — github? 字段已存在
+
+### 11.4 验证结果
+
+| 验证项 | 结果 | 方法 |
+|--------|------|------|
+| `npm run typecheck` | ✅ 0 错误 | strict + noUncheckedIndexedAccess |
+| `npm run build` | ✅ 1654 模块 2.39s | exit code 0 |
+| Playwright 全量回归 | ✅ 50/50 PASS | 17 测试组（release-gate-task-005.mjs） |
+| 人工页面验证 | ✅ 18/18 PASS | 3 个 GitHub 链接 + 0 console error + Markdown 渲染 + 0 dead link |
+| 隐私扫描 | ✅ 0 匹配 | `git diff --cached \| findstr /I "password secret api_key token apiKey private_key .env"` 无匹配 |
+
+### 11.5 Repository Cleanup 结果
+
+**.gitignore 新增：**
+- `debug.log` — 调试日志
+- `release-gate-test.mjs` — 早期临时测试脚本
+
+**文件入库：**
+- 17 张项目截图（8 张题库 + 9 张两地书）— 后续可用资产
+- `release-gate-task-004.mjs` — Task 004 测试脚本
+- 4 个修改的 Markdown + .gitignore
+
+**未删除任何文件** — 所有现有文件均仍有价值或已被引用。
+
+### 11.6 Tag 决策
+
+**不创建新 Tag，不移动 v0.5.0：**
+
+- Task 006 仅为内容同步，无代码功能变更
+- Tag `v0.5.0` 保持指向 `b297791`（Task 005 首次正式发布）
+- Task 006 commit `f5563ac` 视为 Task 005 后的内容维护
+
+### 11.7 文档同步
+
+- `PROJECT_MEMORY.md` — 追加 Task 006 完整章节（含 P1~P4 子任务记录）
+- `HANDOFF.md` — 更新 §2 当前状态为 Task 006 完成，§6 当前阶段为 Task 007 待开始
+- `RELEASE_REVIEW_REPORT.md` — 追加本节 §11 Task 006 Synchronization Audit
+
+**未更新的过时文档（遗留技术债）：**
+- `PROJECT_CONTEXT.md` — 仍停留在 Task 002 阶段
+- `AI_RULES.md` — 仍停留在 Task 002 阶段
+- `docs/架构确认文档-v1.2.md` — §3.3/§5/§8 与实际架构偏离
+
+### 11.8 Task 006 Audit 结论
+
+**✅ PASS — Task 006 项目同步与仓库清理已真正完成**
+
+- 3 个项目 GitHub 状态已通过 GitHub MCP 核对（非仅依赖本地）
+- 4 个 Markdown 文件已与项目真实状态同步
+- typecheck + build + Playwright 50/50 + 人工 18/18 全部通过
+- 17 张项目截图入库，无文件被删除
+- .gitignore 完善
+- 文档已同步更新（PROJECT_MEMORY / HANDOFF / RELEASE_REVIEW_REPORT）
+
+**等待用户确认后推送 master 到远程仓库。**
+
+**下一任务：** Task 007 — Vercel 部署与上线（等待用户启动）

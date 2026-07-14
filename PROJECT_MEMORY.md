@@ -8,14 +8,14 @@
 
 ## 当前阶段
 
-**Task 005 已完成 — 能力页 + 简历页 + 关于页（剩余页面收尾）**
+**Task 006 已完成 — 项目同步 + 最终仓库清理**
 
-- **Master Baseline：** Task 005 Release（Tag `v0.5.0`）
-- **远程 Baseline：** `origin/master` = `origin/develop`（待推送）
-- **当前分支：** `master`（Task 005 已 FF 合并完成）
-- **Release Review：** Task 001/002/003/004/005 全部通过
-- **工作区状态：** Task 005 远程 Baseline 待推送（含 4 个 commit + Tag v0.5.0）
-- **核心交付物：** 3 个剩余占位页（Skills/Resume/About）全部实现，2 个新虚拟模块（virtual:skills-content + virtual:personal-content），1 个新类型文件（personal.ts 4 行），50/50 Playwright 全量回归测试通过
+- **Master Baseline：** Commit `f5563ac`（Task 006 项目同步）
+- **Tag：** `v0.5.0`（Task 005 Release，未移动 — Task 006 仅为内容同步，无代码功能变更）
+- **当前分支：** `master`
+- **Release Review：** Task 001/002/003/004/005/006 全部通过
+- **工作区状态：** master 已 commit，待推送（Task 005 + Task 006 共 5 个 commit + Tag v0.5.0）
+- **核心交付物：** 4 个 Markdown 文件更新（jiangnan-travel.md / love-letter.md / exam-system.md / timeline.md），3 个项目 GitHub 链接 + 发布状态同步，17 张项目截图入库，.gitignore 完善，Playwright 50/50 + 人工 18/18 验证通过
 
 ### Task 进度总览
 
@@ -27,16 +27,168 @@
 | 002 | 首页开发 | ✅ 已完成（含 Self Review + Acceptance Review，已合并到 master） |
 | 003 | 构建时内容插件 + 项目详情页 | ✅ 已完成（含 Release Gate + 合并 master + Tag v0.3.0） |
 | 004 | 面试准备页 + AI 实践页 | ✅ 已完成（含 Release Gate 33/33 + 合并 master + Tag v0.4.0） |
-| **005** | **能力页 + 简历页 + 关于页** | **✅ 已完成（含 Release Gate 50/50 + 合并 master + Tag v0.5.0）** |
-| 006 | 部署与上线（Vercel） | 待开始 |
-| 007 | Release Audit | 待开始 |
+| 005 | 能力页 + 简历页 + 关于页 | ✅ 已完成（含 Release Gate 50/50 + 合并 master + Tag v0.5.0） |
+| **006** | **项目同步 + 最终仓库清理** | **✅ 已完成（含 GitHub MCP 核对 + 内容同步 + Playwright 50/50 验证 + 仓库清理）** |
+| 007 | Vercel 部署与上线 | 待开始 |
+| 008 | Release Audit | 待开始 |
 
 ### 后续开发顺序
 
-1. **Task 006** — Vercel 部署上线
-2. **Task 007** — Release Audit（最终质量关卡）
+1. **Task 007** — Vercel 部署上线
+2. **Task 008** — Release Audit（最终质量关卡）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
+
+---
+
+## Task 006 — 项目同步 + 最终仓库清理
+
+**开始时间：** 2026-07-15
+**完成时间：** 2026-07-15
+**状态：** ✅ 已完成（GitHub MCP 核对 + 内容同步 + Playwright 50/50 + 仓库清理）
+**Git Commit：** `f5563ac`（master，待推送）
+**Tag 决策：** 不创建新 Tag — Task 006 仅为内容同步，无代码功能变更，v0.5.0 保持不变
+
+### 用户指令核心约束
+
+- ❌ 不新增任何页面
+- ❌ 不新增任何功能
+- ❌ 不修改设计风格
+- ❌ 不重构
+- ✅ 仅同步三个项目内容 + 最终仓库清理
+
+### 4 个子任务拆分
+
+| 子任务 | 名称 | 状态 |
+|--------|------|------|
+| P1 | 同步三个项目（本地 + GitHub MCP 分析对比） | ✅ 完成 |
+| P2 | 更新个人网站相关内容 | ✅ 完成 |
+| P3 | 完整验证（typecheck + build + Playwright + 人工） | ✅ 完成 |
+| P4 | Final Repository Cleanup + 文档同步 | ✅ 完成 |
+
+### P1 — 三个项目同步分析
+
+使用 **GitHub MCP 工具**（`search_repositories` + `get_file_contents` + `list_commits`）核对三个项目 GitHub 仓库的真实状态，对比个人网站内容。
+
+#### 三个项目真实状态汇总
+
+| 项目 | GitHub 仓库 | 公开性 | 默认分支 | 最新 Commit | 发布状态 |
+|------|-------------|--------|----------|-------------|----------|
+| 江南出行智慧服务平台 | [l535304334/jiangnan-travel](https://github.com/l535304334/jiangnan-travel) | Public | main | 2026-07-14 | Release 1.0（2026-07-08）+ v1.0-v1.5 六轮调度增强 |
+| 两地书 Love | [l535304334/Love](https://github.com/l535304334/Love) | Private | main | 2026-07-14 | v1.0.0（2026-07-04） |
+| 医学刷题系统 | [l535304334/interactive-quiz-system](https://github.com/l535304334/interactive-quiz-system) | Public | main | 2026-07-08 | v1.0.0（2026-07-08，7 轮 RC 修复） |
+
+#### 识别出的 4 类过时信息
+
+1. **GitHub 链接缺失** — 3 个项目 frontmatter 均无 `github` 字段（首页 ProjectCard 和详情页 ProjectHeader 已支持 github 渲染，但数据未填）
+2. **发布状态缺失** — 3 个项目均未在项目背景中标注当前发布状态
+3. **测试数据过时** — jiangnan-travel.md 仍写"18 个 JUnit 测试"，实际为 81 个后端单元/集成测试
+4. **RELEASE 路径错误** — jiangnan-travel.md 复盘写"RELEASE.md 记录了 4 个已知限制"，实际为 docs/RELEASE_REVIEW_REPORT.md 记录 5 项已接受风险
+
+### P2 — 个人网站内容更新
+
+**修改 4 个 Markdown 文件（共 23 处变更）：**
+
+#### `src/content/projects/jiangnan-travel.md`
+- frontmatter 新增 `github: https://github.com/l535304334/jiangnan-travel`
+- 项目背景新增"当前状态：Release 1.0 已于 2026-07-08 正式发布"
+- 测试策略修正："18 个 JUnit" → "81 个后端单元/集成测试（含 18 个状态机测试覆盖全部合法/非法路径）"
+- 复盘修正："RELEASE.md 记录了 4 个已知限制" → "docs/RELEASE_REVIEW_REPORT.md 记录了 5 项已接受风险"
+
+#### `src/content/projects/love-letter.md`
+- frontmatter 新增 `github: https://github.com/l535304334/Love`
+- 项目背景新增"当前状态：v1.0.0 已于 2026-07-04 正式发布（私有仓库），进入维护模式"
+
+#### `src/content/projects/exam-system.md`
+- frontmatter 新增 `github: https://github.com/l535304334/interactive-quiz-system`
+- 项目背景新增"当前状态：v1.0.0 已于 2026-07-08 正式发布到 GitHub，经过 7 轮 RC 扫描修复"
+- 复盘修正："无版本控制" → "v1.0.0 已发布但仅单次 commit，未来迭代需建立持续集成流程"
+
+#### `src/content/growth/timeline.md`
+- 标题修正："医学考试刷题系统 V9" → "医学考试刷题系统 V9 → v1.0.0"
+- 三个项目均添加发布状态时间戳
+
+**未修改的文件（核对一致）：**
+- `src/components/home/ProjectCard.vue` — 已支持 `project.github` 渲染（Task 002 实现）
+- `src/components/project/ProjectHeader.vue` — 已支持 `project.github` 渲染（Task 003 实现）
+- `src/utils/content.ts` — 已处理 `github` 字段（line 73 和 114）
+- `src/types/project.ts` — `ProjectSummary.github?` 和 `ProjectContent.github?` 字段已存在
+
+### P3 — 完整验证
+
+| 验证项 | 结果 | 备注 |
+|--------|------|------|
+| `npm run typecheck` | ✅ 通过 | 0 错误（strict + noUncheckedIndexedAccess） |
+| `npm run build` | ✅ 成功 | 1654 模块，2.39s，exit code 0 |
+| Playwright 全量回归 | ✅ 50/50 PASS | 17 测试组（release-gate-task-005.mjs，端口 4180） |
+| 人工页面验证 | ✅ 18/18 PASS | 3 个 GitHub 链接显示正确，0 console error，0 console warning，Markdown 渲染正常，0 dead link |
+
+#### Playwright 端口修复记录
+
+**问题：** `release-gate-task-005.mjs` 中 `const BASE = 'http://localhost:4180'`，但 `npm run preview` 默认在 4173 启动。
+**修复：** 停止 4173 preview server，使用 `npm run preview -- --port 4180` 重启。
+**结果：** 50/50 测试通过。
+
+### P4 — Final Repository Cleanup
+
+#### .gitignore 更新
+
+新增 2 项忽略规则：
+- `debug.log` — 调试日志（本地生成，不提交）
+- `release-gate-test.mjs` — 早期临时测试脚本（已被 release-gate-task-00X.mjs 替代）
+
+#### 文件入库决策
+
+| 文件类型 | 数量 | 决策 | 理由 |
+|----------|------|------|------|
+| 项目截图（题库 + 两地书） | 17 张 | ✅ 加入 Git | 后续计划使用的项目资产，按用户"保留所有仍有价值的项目资产"要求保留 |
+| release-gate-task-004.mjs | 1 个 | ✅ 加入 Git | Task 004 测试脚本，应作为测试资产保留 |
+| 4 个修改的 Markdown | 4 个 | ✅ 加入 Git | 内容更新 |
+| .gitignore | 1 个 | ✅ 加入 Git | 忽略规则完善 |
+| debug.log | — | ⏭️ 已被 .gitignore 排除 | 本地调试日志 |
+| release-gate-test.mjs | — | ⏭️ 已被 .gitignore 排除 | 早期临时脚本已被替代 |
+
+**未删除任何文件** — 所有现有文件均仍有价值或已被引用。
+
+### Git 操作
+
+- `git add` 23 个文件（5 modified + 18 new）
+- `git commit -m "docs(task-006): synchronize project content with GitHub repositories"` — commit `f5563ac`
+- 24 files changed, 285 insertions(+), 5 deletions(-)
+- **未推送** — 按用户工作流，commit 后等待用户确认再 push
+
+### 文档同步更新
+
+- `PROJECT_MEMORY.md` — 追加 Task 006 章节（本节）
+- `HANDOFF.md` — 更新当前状态为 Task 006 完成
+- `RELEASE_REVIEW_REPORT.md` — 追加 §11 Task 006 Synchronization Audit
+
+### 遗留技术债（按优先级）
+
+| 优先级 | 项 | 说明 |
+|--------|-----|------|
+| P1 | PROJECT_CONTEXT.md 过时 | 停留在 Task 002 阶段，未反映 Task 003~006 的虚拟模块/页面/类型扩展 |
+| P1 | AI_RULES.md 过时 | 停留在 Task 002 阶段，未反映 Task 003~006 的实际架构 |
+| P2 | 架构文档 §3.3/§5/§8 不一致 | §3.3 仍写"单 virtual:content"，实际为 6 虚拟模块；§8 仍指定 SkillCategory/iframe，实际已偏离 |
+| P2 | Shiki singleton 警告 | `[Shiki] 10 instances have been created` 构建时警告，非运行时错误 |
+| P2 | Google Fonts CDN | Task 007 评估自托管字体子集 |
+| P2 | ESLint 未配置 | Task 007 可选添加 |
+| P2 | about.md Email 待补充 | `Email: [待补充]`，等待用户提供 |
+| P3 | jiangnan-travel.md 暴露"江南出行运输服务有限公司" | 项目背景必要信息，README 已脱敏，内容保留 |
+| P3 | about.md 暴露"南昌大学" | 个人简介必要信息，README 已脱敏，内容保留 |
+
+### Task 006 结论
+
+**✅ PASS — Task 006 项目同步与仓库清理已真正完成**
+
+- 3 个项目 GitHub 状态已通过 GitHub MCP 核对
+- 4 个 Markdown 文件已与项目真实状态同步
+- typecheck + build + Playwright 50/50 + 人工 18/18 全部通过
+- 17 张项目截图入库，无文件被删除
+- .gitignore 完善
+- 文档已同步更新
+
+**等待用户确认后推送 master 到远程仓库。**
 
 ---
 

@@ -429,11 +429,26 @@ All acceptance criteria met:
 
 简历 Markdown `src/content/resume/index.md` 含电话号码 18279755182，GitHub 仓库 `l535304334/lai-portfolio` 为公开仓库。Commit `5285b1f` **仅在本地，未 push**。在脱敏或转私有前禁止 push。
 
-### 12.4 文档一致性修正（本次审计）
+### 12.4 隐私修正（Final Privacy Fix）
+
+**操作：** 删除简历 Markdown 中联系方式行的手机号，保留邮箱和 GitHub 链接。
+
+**修正前：** `535304334@qq.com · 18279755182 · github.com/l535304334`
+**修正后：** `535304334@qq.com · github.com/l535304334`
+
+**验证：**
+- typecheck ✅
+- build ✅（1657 模块，2.31s）
+- Playwright 49/49 ✅
+- 隐私扫描 ✅（全 src/ 零手机号匹配）
+
+**风险等级变化：** P1 → ✅ 已解除
+
+### 12.5 文档一致性修正（本次审计）
 
 本次 Final Release Audit 修正了以下过时文档：
 - **PROJECT_CONTEXT.md** — 从 Task 002 阶段更新到 Task 008（头部、任务表、页面结构、待补资产）
 - **AI_RULES.md** — 从 Task 002 阶段更新到 Task 008（头部、任务表、页面状态表）
 - **RELEASE_REVIEW_REPORT.md** — 追加本节 Task 007/008 审计记录
 
-**下一任务：** Task 009 — Vercel 部署与上线（等待用户启动，需先解决隐私问题）
+**下一任务：** Task 009 — Vercel 部署与上线（隐私问题已解决，可执行 push / Release / 部署）

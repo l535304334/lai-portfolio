@@ -8,6 +8,7 @@
  * - virtual:interview-content — 面试问答分类（含渲染后 HTML），面试页懒加载使用
  * - virtual:ai-practice-content — AI 工程实践内容（含渲染后 HTML），AI 实践页懒加载使用
  * - virtual:skills-content — 技术能力内容（含渲染后 HTML），技能页懒加载使用
+ * - virtual:personal-content — 关于我内容（含渲染后 HTML），关于页懒加载使用
  */
 
 import fs from 'node:fs'
@@ -18,6 +19,7 @@ import type { ProjectSummary, ProjectContent } from '../types/project'
 import type { DecisionContent } from '../types/decision'
 import type { InterviewCategory, InterviewQAPair } from '../types/interview'
 import type { AiPracticeContent } from '../types/ai-practice'
+import type { PersonalContent } from '../types/personal'
 import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
@@ -30,6 +32,8 @@ const VIRTUAL_AI_PRACTICE_ID = 'virtual:ai-practice-content'
 const RESOLVED_AI_PRACTICE_ID = '\0' + VIRTUAL_AI_PRACTICE_ID
 const VIRTUAL_SKILLS_ID = 'virtual:skills-content'
 const RESOLVED_SKILLS_ID = '\0' + VIRTUAL_SKILLS_ID
+const VIRTUAL_PERSONAL_ID = 'virtual:personal-content'
+const RESOLVED_PERSONAL_ID = '\0' + VIRTUAL_PERSONAL_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -272,6 +276,31 @@ async function scanSkills(root: string): Promise<{ slug: string; title: string; 
   }
 }
 
+/** 扫描 personal/about.md，渲染 HTML，返回关于页内容（单文件） */
+async function scanPersonal(root: string): Promise<PersonalContent | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'personal', 'about.md')
+  if (!fs.existsSync(filePath)) return null
+
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  if (!data.slug) {
+    throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+  }
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+  }
+
+  const html = await renderMarkdown(content)
+
+  return {
+    slug: String(data.slug),
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    html,
+  }
+}
+
 /** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
@@ -291,6 +320,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_SKILLS_ID) {
         return RESOLVED_SKILLS_ID
+      }
+      if (id === VIRTUAL_PERSONAL_ID) {
+        return RESOLVED_PERSONAL_ID
       }
     },
     async load(id) {
@@ -346,6 +378,16 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const skills = ${JSON.stringify(skills)}`
+      }
+      if (id === RESOLVED_PERSONAL_ID) {
+        const root = process.cwd()
+        const personal = await scanPersonal(root)
+
+        for (const file of getContentFiles(root, 'personal')) {
+          this.addWatchFile(file)
+        }
+
+        return `export const personal = ${JSON.stringify(personal)}`
       }
     },
   }

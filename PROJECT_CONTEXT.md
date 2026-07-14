@@ -1,10 +1,10 @@
 # 项目上下文说明（PROJECT_CONTEXT.md）
 
 > 本文件是项目上下文索引，任何 AI 接手本项目时应优先阅读此文件，而非重新分析整个项目。
-> 最后更新：2026-07-09
-> 当前阶段：Task 003 Planning（Task 002 已合并到 master）
-> Master Baseline：`a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
-> Develop HEAD：`6d54dc1`（可领先 master）· 默认开发分支：`develop`
+> 最后更新：2026-07-15
+> 当前阶段：Task 008 已完成（Resume 系统完善）— 等待 Task 009 Vercel 部署
+> Master Baseline：`5285b1f`（Task 008, 2026-07-15）— Release Baseline 以 master 为准
+> 当前分支：`master`（develop 已合并，与 master 同步）
 
 ---
 
@@ -68,7 +68,7 @@
 | `/skills` | 技术能力 | `content/skills/index.md` | P0 |
 | `/interview` | 面试准备 | `content/interview/*.md` | P0 |
 | `/ai-practice` | AI 工程实践 | `content/ai-practice/index.md` | P0 |
-| `/resume` | 简历 | `public/resume.pdf` | P0 |
+| `/resume` | 简历 | `content/resume/index.md` → `virtual:resume-content`（Task 008） | P0 |
 | `/about` | 关于我 | `content/personal/about.md` | P0 |
 | 404 | 未找到 | — | P0 |
 
@@ -120,15 +120,18 @@ src/content/
 
 | Task | 名称 | 状态 |
 |------|------|------|
-| 000 | 项目内容资产整理 | ✅ 已完成（14 个 Markdown 文件） |
-| 000.5 | 架构图与展示素材 | ✅ 已完成（7 套 SVG + Mermaid 源码） |
-| **001** | **项目初始化与基础设施** | **✅ 已完成（2026-07-08）** |
-| **002** | **首页开发** | **✅ 已完成（2026-07-08）** |
-| **003** | **构建时内容插件 + 项目详情页** | **⏸️ Task 003 Ready** |
-| 004 | 面试准备页 + AI 实践页 | 待开始 |
-| 005 | 能力页 + 简历页 + 关于页 | 待开始 |
-| 006 | 部署与上线 | 待开始 |
-| 007 | Release Audit | 待开始 |
+| 000 | 项目内容资产整理 | ✅ 已完成 |
+| 000.5 | 架构图与展示素材 | ✅ 已完成 |
+| 001 | 项目初始化与基础设施 | ✅ 已完成（含 Release Review） |
+| 002 | 首页开发 | ✅ 已完成 |
+| 003 | 构建时内容插件 + 项目详情页 | ✅ 已完成（Tag v0.3.0） |
+| 004 | 面试准备页 + AI 实践页 | ✅ 已完成（Tag v0.4.0） |
+| 005 | 能力页 + 简历页 + 关于页 | ✅ 已完成（Tag v0.5.0） |
+| 006 | 项目同步 + 最终仓库清理 | ✅ 已完成 |
+| 007 | Final Portfolio Review | ✅ 已完成（Commit `5c58f58`） |
+| 008 | Resume 系统完善 | ✅ 已完成（Commit `5285b1f`，第 7 虚拟模块） |
+| 009 | Vercel 部署与上线 | 待开始 |
+| 010 | Release Audit | 待开始 |
 
 ---
 
@@ -272,11 +275,11 @@ src/content/
 
 **禁止引入：** Element Plus / Tailwind / Pinia / 后端 / 数据库 / 运行时 Markdown 解析 / 未经确认的新依赖。
 
-### 待补资产（不阻塞 Task 003）
+### 待补资产（Task 008 后状态）
 
-- ❌ `public/resume.pdf` 简历 PDF 终稿（Task 005 需要）
-- ❌ `docs/assets/screenshots/` 项目运行截图（Task 003 需要）
-- ❌ `src/content/personal/about.md` 中 Email 待补充
+- ✅ 简历内容已通过 `virtual:resume-content` 实现（Task 008，PDF 导出用 window.print）
+- ✅ 项目运行截图已入库（Task 006，17 张截图）
+- ⚠️ `src/content/personal/about.md` 中 Email 仍为"待补充"（简历页已有完整联系方式）
 
 ### 风险提示
 

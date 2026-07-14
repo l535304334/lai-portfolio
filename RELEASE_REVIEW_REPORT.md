@@ -390,4 +390,50 @@ All acceptance criteria met:
 
 **等待用户确认后推送 master 到远程仓库。**
 
-**下一任务：** Task 007 — Vercel 部署与上线（等待用户启动）
+---
+
+## 12. Task 007 + Task 008 Post-Release Audit（2026-07-15）
+
+### 12.1 Task 007 — Final Portfolio Review
+
+**范围：** 7 部分最终作品集评审（内容真实性 + 导师/面试官视角 + 全站一致性 + 事实修正 + 验证）
+
+**修正内容：**
+1. 隐私脱敏：公司名 → [已脱敏]网约车出行公司
+2. 技术栈修正：删除 ECharts 6，新增高德地图 JS API 2.0 + WebSocket
+3. 核心功能新增：支付系统 / 计费系统 / VIP 会员体系
+4. 测试描述修正："155 个 API 测试用例" → "155 个前端测试用例"
+5. 数据一致性：Love 项目 23 页面 → 17 页面（timeline.md + Home.vue）
+
+**验证：** typecheck + build + Playwright 50/50 + 人工 18/18 ✅
+**Commit：** `5c58f58`
+
+### 12.2 Task 008 — Resume 系统完善
+
+**范围：** 将 Resume 页从占位状态完善为正式简历（交互式信息收集 + 第 7 虚拟模块 + PDF 打印）
+
+**交付物：**
+- 新增 `virtual:resume-content` 虚拟模块（第 7 个）
+- Resume.vue 从占位页重写为正式简历页（Markdown 渲染 + window.print() PDF 导出 + @media print A4 打印样式）
+- Playwright Test 7 更新（h1 唯一 + Markdown 内容 + 下载按钮）
+
+**关键决策：**
+- PDF 导出使用 window.print() + @media print（零依赖）
+- 用户坦诚"通过 AI 完成"，采用"工程能力 + 项目使用技术栈"描述，不写"熟练/精通"等级
+- h1 唯一性：移除 Markdown 中的 `# 赖睿轩`，保留 page__title 作为唯一 h1
+
+**验证：** typecheck + build（1657 模块）+ Playwright 49/49 + 人工 8/8 ✅
+**Commit：** `5285b1f`（**未 push** — 含电话号码，仓库公开）
+
+### 12.3 ⚠️ 隐私风险
+
+简历 Markdown `src/content/resume/index.md` 含电话号码 18279755182，GitHub 仓库 `l535304334/lai-portfolio` 为公开仓库。Commit `5285b1f` **仅在本地，未 push**。在脱敏或转私有前禁止 push。
+
+### 12.4 文档一致性修正（本次审计）
+
+本次 Final Release Audit 修正了以下过时文档：
+- **PROJECT_CONTEXT.md** — 从 Task 002 阶段更新到 Task 008（头部、任务表、页面结构、待补资产）
+- **AI_RULES.md** — 从 Task 002 阶段更新到 Task 008（头部、任务表、页面状态表）
+- **RELEASE_REVIEW_REPORT.md** — 追加本节 Task 007/008 审计记录
+
+**下一任务：** Task 009 — Vercel 部署与上线（等待用户启动，需先解决隐私问题）

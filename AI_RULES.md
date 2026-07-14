@@ -2,9 +2,9 @@
 
 > 本文件是本项目所有 AI（Trae / Claude Code / Codex / ChatGPT 等）的统一协作规范。
 > 所有开发默认遵守本文件。如本文件与《架构确认文档-v1.2.md》冲突，以 v1.2 为准并立即报告冲突。
-> 最后更新：2026-07-09
-> Master Baseline：`a805869`（Task 002 Release, 2026-07-09）— Release Baseline 以 master 为准
-> Develop HEAD：`6d54dc1`（可领先 master，含文档同步提交）· 默认开发分支：`develop`
+> 最后更新：2026-07-15
+> Master Baseline：`5285b1f`（Task 008, 2026-07-15）— Release Baseline 以 master 为准
+> 当前分支：`master`（develop 已合并，与 master 同步）
 
 ---
 
@@ -194,13 +194,16 @@
 |------|------|------|
 | 000 | 项目内容资产整理 | ✅ 已完成 |
 | 000.5 | 架构图、流程图、展示素材 | ✅ 已完成 |
-| **001** | **项目初始化与基础设施** | **✅ 已完成（2026-07-08）** |
-| **002** | **首页开发（Hero + 项目卡片 + 时间线 + 联系方式）** | **✅ 已完成（2026-07-08）** |
-| **003** | **构建时内容插件 + 项目详情页 + Markdown 内容** | **⏸️ Task 003 Ready** |
-| 004 | 面试准备页 + AI 实践页 | 待开始 |
-| 005 | 能力页 + 简历页 + 关于页 | 待开始 |
-| 006 | 部署与上线（Vercel） | 待开始 |
-| 007 | Release Audit | 待开始 |
+| 001 | 项目初始化与基础设施 | ✅ 已完成 |
+| 002 | 首页开发 | ✅ 已完成 |
+| 003 | 构建时内容插件 + 项目详情页 | ✅ 已完成（Tag v0.3.0） |
+| 004 | 面试准备页 + AI 实践页 | ✅ 已完成（Tag v0.4.0） |
+| 005 | 能力页 + 简历页 + 关于页 | ✅ 已完成（Tag v0.5.0） |
+| 006 | 项目同步 + 最终仓库清理 | ✅ 已完成 |
+| 007 | Final Portfolio Review | ✅ 已完成 |
+| 008 | Resume 系统完善 | ✅ 已完成（Commit `5285b1f`） |
+| 009 | Vercel 部署与上线 | 待开始 |
+| 010 | Release Audit | 待开始 |
 
 ### Task 交付要求
 
@@ -208,18 +211,18 @@
 - 每个 Task 完成后暂停，等待下一条指令
 - **不得提前开发后续 Task 的内容**
 
-### 当前已实现页面（Task 001 + Task 002）
+### 当前已实现页面（Task 001~008 全部完成）
 
 | 路径 | 文件 | 状态 |
 |------|------|------|
 | `/` | [src/pages/Home.vue](src/pages/Home.vue) | ✅ 已实现（Task 002） |
-| `/projects/:slug` | [src/pages/ProjectDetail.vue](src/pages/ProjectDetail.vue) | 占位（Task 003 替换） |
-| `/skills` | [src/pages/Skills.vue](src/pages/Skills.vue) | 占位（Task 005 替换） |
-| `/interview` | [src/pages/Interview.vue](src/pages/Interview.vue) | 占位（Task 004 替换） |
-| `/ai-practice` | [src/pages/AiPractice.vue](src/pages/AiPractice.vue) | 占位（Task 004 替换） |
-| `/resume` | [src/pages/Resume.vue](src/pages/Resume.vue) | 占位（Task 005 替换） |
-| `/about` | [src/pages/About.vue](src/pages/About.vue) | 占位（Task 005 替换） |
-| 404 | [src/pages/NotFound.vue](src/pages/NotFound.vue) | 最终版 |
+| `/projects/:slug` | [src/pages/ProjectDetail.vue](src/pages/ProjectDetail.vue) | ✅ 已实现（Task 003，virtual:project-detail） |
+| `/skills` | [src/pages/Skills.vue](src/pages/Skills.vue) | ✅ 已实现（Task 005，virtual:skills-content） |
+| `/interview` | [src/pages/Interview.vue](src/pages/Interview.vue) | ✅ 已实现（Task 004，4 分类 17 题） |
+| `/ai-practice` | [src/pages/AiPractice.vue](src/pages/AiPractice.vue) | ✅ 已实现（Task 004，virtual:ai-practice-content） |
+| `/resume` | [src/pages/Resume.vue](src/pages/Resume.vue) | ✅ 已实现（Task 008，virtual:resume-content + window.print PDF） |
+| `/about` | [src/pages/About.vue](src/pages/About.vue) | ✅ 已实现（Task 005，virtual:personal-content） |
+| 404 | [src/pages/NotFound.vue](src/pages/NotFound.vue) | ✅ 最终版 |
 
 ---
 

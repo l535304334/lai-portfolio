@@ -133,14 +133,32 @@ Task 004 delivers the interview preparation page (`/interview`) and AI engineeri
 | `952cc52` | feat | 004.1 add interview types and virtual:interview-content module |
 | `31053fb` | feat | 004.2 implement interview page with collapsible Q&A components |
 | `aaf43f3` | feat | 004.3 implement AI practice page with virtual:ai-practice-content |
-| (release) | docs | 004.4 final verification and release report |
+| `eb25da3` | docs | 004.4 final verification and release report |
 
 ### 5.2 Merge & Tag
 
 1. `feature/task-004-interview-ai-practice` → `develop` (fast-forward)
 2. `develop` → `master` (fast-forward)
 3. Tag `v0.4.0` created on master
-4. Pushed to GitHub remote
+4. Pushed to GitHub remote via SSH (`git@github.com:l535304334/lai-portfolio.git`)
+
+### 5.3 Remote Baseline Establishment
+
+| Step | Status | Details |
+|------|--------|---------|
+| Initial HTTPS push | ❌ Failed | `github.com:443` unreachable (network issue) |
+| Remote URL | SSH | `git@github.com:l535304334/lai-portfolio.git` |
+| SSH auth | ✅ | `ssh -T git@github.com` → `Hi l535304334!` |
+| Force push master | ✅ | `e8f0f84...eb25da3 master -> master (forced update)` — undid 2 erroneous commits |
+| Push develop | ✅ | `a0402c1..eb25da3 develop -> develop` |
+| Push tags | ✅ | `[new tag] v0.4.0 -> v0.4.0` |
+| Remote verification (MCP GitHub) | ✅ | `origin/master` = `eb25da3` confirmed |
+
+**Erroneous commits undone:**
+- `1856b0c` — 添加江南出行运行截图 + 更新 jiangnan-travel.md（unintended）
+- `e8f0f84` — 添加 README.md（unintended）
+
+Both removed via `git reset --hard eb25da3` + `git push --force-with-lease origin master` (user-authorized history rewrite).
 
 ---
 

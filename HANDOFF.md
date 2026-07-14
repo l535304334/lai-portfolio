@@ -20,10 +20,11 @@
 | Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
 | Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
 | Release Review | ✅ Task 001/002/003/004 全部通过 |
-| **Master Baseline** | Task 004 Release（Tag `v0.4.0`） |
-| **当前分支** | `master`（Task 004 已 FF 合并） |
-| **Develop HEAD** | 与 master 同步（Task 004 已 FF 合并） |
-| **工作区状态** | Task 004 完成，工作区干净，等待用户确认开始 Task 005 |
+| **Master Baseline** | Task 004 Release（Tag `v0.4.0`，Commit `eb25da3`） |
+| **远程 Baseline** | `origin/master` = `origin/develop` = `eb25da3`（已同步） |
+| **当前分支** | `master`（Task 004 已 FF 合并 + 远程推送完成） |
+| **Develop HEAD** | 与 master 同步（`eb25da3`） |
+| **工作区状态** | Task 004 远程 Baseline 已建立，工作区干净（仅 untracked 临时文件），等待用户确认开始 Task 005 |
 | 验证 | ✅ build 成功（1650 模块，2.57s）/ typecheck 通过 |
 | **当前进度** | Task 004 完成，等待 Task 005 启动 |
 

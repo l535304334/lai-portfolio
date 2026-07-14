@@ -10,10 +10,12 @@
 
 **Task 005 待开始 — 能力页 + 简历页 + 关于页**
 
-- **Master Baseline：** Task 004 Release（Tag `v0.4.0`）
-- **当前分支：** `master`（Task 004 已 FF 合并到 develop → master）
+- **Master Baseline：** Task 004 Release（Tag `v0.4.0`，Commit `eb25da3`）
+- **远程 Baseline：** `origin/master` = `origin/develop` = `eb25da3`（已同步，含 Tag `v0.4.0`）
+- **当前分支：** `master`（Task 004 已 FF 合并 + 远程推送完成）
 - **Release Review：** Task 001/002/003/004 全部通过
-- **工作区状态：** Task 004 完成，工作区干净，等待用户确认开始 Task 005
+- **工作区状态：** Task 004 远程 Baseline 已建立，工作区干净（仅 untracked 临时文件），等待用户确认开始 Task 005
+- **远程操作记录：** 撤销了 master 上 2 个误操作 commit（`1856b0c` 截图 + `e8f0f84` README.md），通过 `git reset --hard eb25da3` + `git push --force-with-lease` 恢复到 Task 004 Release Baseline
 
 ### Task 进度总览
 

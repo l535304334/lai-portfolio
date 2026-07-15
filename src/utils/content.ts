@@ -118,6 +118,8 @@ async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
         featured: Boolean(data.featured),
         order: typeof data.order === 'number' ? data.order : undefined,
         github: data.github ? String(data.github) : undefined,
+        status: data.status ? String(data.status) : undefined,
+        role: data.role ? String(data.role) : undefined,
         html,
         decision: (await loadDecisionBySlug(root, String(data.slug))) ?? undefined,
       }

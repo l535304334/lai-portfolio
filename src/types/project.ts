@@ -32,6 +32,10 @@ export interface ProjectContent {
   featured?: boolean
   order?: number
   github?: string
+  /** 项目当前状态（如 "Release 1.0 · 2026-07-08"），从 frontmatter.status 提取 */
+  status?: string
+  /** 项目角色（如 "全栈独立开发"），从 frontmatter.role 提取 */
+  role?: string
   html: string
   /** 技术决策记录（按 slug 匹配 decisions/*.md，可选） */
   decision?: DecisionContent

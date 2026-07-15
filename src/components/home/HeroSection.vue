@@ -10,7 +10,7 @@ const stats: HeroStat[] = [
   { value: '3', label: '完整项目' },
   { value: '218', label: '源文件' },
   { value: '97', label: 'API 端点' },
-  { value: '155', label: '测试用例' },
+  { value: '236', label: '测试用例' },
 ]
 </script>
 
@@ -18,16 +18,16 @@ const stats: HeroStat[] = [
   <section class="hero">
     <div class="container hero__grid">
       <div class="hero__main">
-        <p class="hero__eyebrow mono">// 软件工程学生 · 技术成长档案</p>
+        <p class="hero__eyebrow mono">// 赖睿轩 · 软件工程学生</p>
 
         <h1 class="hero__title">
-          从需求到系统的<br />
-          <span class="hero__title-accent">软件工程实践</span>
+          客户端 · Serverless · 分布式系统<br />
+          <span class="hero__title-accent">三类工程实践</span>
         </h1>
 
         <p class="hero__subtitle">
-          三个完整项目，从单文件 14,000 行到企业级全栈系统。<br />
-          不是"我做了什么"——而是"遇到什么问题、为什么这样解决、怎么验证"。
+          三个完整项目，覆盖客户端存储、AI 工程化、并发控制三类工程问题。<br />
+          从需求到测试，独立完成全流程。
         </p>
 
         <div class="hero__actions">
@@ -102,7 +102,7 @@ const stats: HeroStat[] = [
 }
 
 .hero__subtitle {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
   line-height: var(--leading-normal);
   max-width: 32rem;
@@ -119,7 +119,7 @@ const stats: HeroStat[] = [
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-6);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   border-radius: var(--radius-md);
@@ -152,13 +152,13 @@ const stats: HeroStat[] = [
   color: var(--color-accent);
 }
 
-/* Stats panel — code-style aside */
+/* Stats panel — code-style aside with stronger elevation */
 .hero__stats {
   padding: var(--space-6);
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
 }
 
 .hero__stats-label {

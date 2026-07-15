@@ -10,9 +10,6 @@ const props = defineProps<{
 const githubHandle = computed(() =>
   props.contact.github.replace(/^https?:\/\/github\.com\//, ''),
 )
-const emailAvailable = computed(
-  () => props.contact.email !== null && props.contact.email !== '',
-)
 </script>
 
 <template>
@@ -21,14 +18,23 @@ const emailAvailable = computed(
       <div class="contact__grid">
         <div class="contact__main">
           <p class="contact__eyebrow mono">// 联系方式</p>
-          <h2 class="contact__title">有项目想聊？</h2>
-          <p class="contact__lead">
-            无论你是考研导师、面试官，还是对项目感兴趣的开发者——<br />
-            欢迎通过以下方式联系我。
-          </p>
+          <h2 class="contact__title">赖睿轩</h2>
+          <p class="contact__lead">软件工程学生</p>
         </div>
 
         <dl class="contact__methods">
+          <div class="contact__method">
+            <dt class="contact__method-key mono">
+              <Mail :size="14" :stroke-width="1.75" aria-hidden="true" />
+              Email
+            </dt>
+            <dd class="contact__method-value">
+              <a :href="`mailto:${contact.email}`" class="contact__link">
+                {{ contact.email }}
+              </a>
+            </dd>
+          </div>
+
           <div class="contact__method">
             <dt class="contact__method-key mono">
               <Github :size="14" :stroke-width="1.75" aria-hidden="true" />
@@ -44,23 +50,6 @@ const emailAvailable = computed(
                 {{ githubHandle }}
                 <ArrowUpRight :size="12" :stroke-width="2" aria-hidden="true" />
               </a>
-            </dd>
-          </div>
-
-          <div class="contact__method" :class="{ 'contact__method--pending': !emailAvailable }">
-            <dt class="contact__method-key mono">
-              <Mail :size="14" :stroke-width="1.75" aria-hidden="true" />
-              Email
-            </dt>
-            <dd class="contact__method-value">
-              <a
-                v-if="emailAvailable"
-                :href="`mailto:${contact.email}`"
-                class="contact__link"
-              >
-                {{ contact.email }}
-              </a>
-              <span v-else class="contact__pending mono">// 待补充</span>
             </dd>
           </div>
         </dl>
@@ -94,7 +83,7 @@ const emailAvailable = computed(
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 
 .contact__lead {
@@ -148,15 +137,6 @@ const emailAvailable = computed(
 
 .contact__link:hover {
   color: var(--color-accent);
-}
-
-.contact__pending {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-}
-
-.contact__method--pending {
-  opacity: 0.7;
 }
 
 @media (min-width: 768px) {

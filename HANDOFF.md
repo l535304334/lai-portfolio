@@ -23,16 +23,17 @@
 | Task 006 | ✅ 已完成（含 GitHub MCP 核对 + 4 Markdown 同步 + Playwright 50/50 + 仓库清理） |
 | Task 007 | ✅ 已完成（Final Portfolio Review，7 部分评审 + 4 类事实修正，Commit `5c58f58`） |
 | Task 008 | ✅ 已完成（Resume 系统完善，第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49） |
-| Release Review | ✅ Task 001~008 全部通过 |
-| **Master Baseline** | Task 008 commit（master，待推送） |
+| Task 009 | ✅ 已完成（Vercel 部署上线 + 隐私脱敏 commit `065a40c`） |
+| **Task 010 RC1** | **✅ 已完成（Timeline SSOT + Hero 重构 + P0 真实性修复，待 commit）** |
+| Release Review | ✅ Task 001~009 全部通过；Task 010 RC1 进行中 |
+| **Master Baseline** | Task 009 commit `7f440e0`（已推送至远程） |
 | **Tag** | `v0.5.0`（Task 005 Release，未移动） |
-| **远程 Baseline** | 待推送（Task 005 + 006 + 007 + 008 共多个 commit + Tag v0.5.0） |
 | **当前分支** | `master` |
-| **Develop HEAD** | 与 master 同步 |
-| **工作区状态** | Task 008 待 commit，不 push（含隐私内容，详见下方警告） |
-| 验证 | ✅ build 成功（1657 模块，2.29s）/ typecheck 通过 / Playwright 49/49 / 人工 8/8 |
-| **当前进度** | Task 008 完成，等待 Task 009 启动（Vercel 部署） |
-| **⚠️ 隐私警告** | 简历 Markdown（`src/content/resume/index.md`）含电话号码 18279755182，GitHub 仓库 `l535304334/lai-portfolio` 为**公开仓库**。**禁止 push 到远程**，除非先脱敏电话号码或将仓库转为私有。 |
+| **工作区状态** | Task 010 RC1 已完成，待 commit（不 push） |
+| 验证 | ✅ build 成功（1658 模块，2.65s）/ typecheck 通过 / Authenticity Audit + Consistency Audit 通过 |
+| **当前进度** | Task 010 RC1 完成，等待用户确认后进入 RC2 |
+| **虚拟模块数** | 8 个（content / project-detail / interview-content / ai-practice-content / skills-content / personal-content / resume-content / **timeline-content**） |
+| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel Git Integration 自动部署） |
 
 ---
 

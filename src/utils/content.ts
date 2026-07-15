@@ -21,6 +21,7 @@ import type { InterviewCategory, InterviewQAPair } from '../types/interview'
 import type { AiPracticeContent } from '../types/ai-practice'
 import type { PersonalContent } from '../types/personal'
 import type { ResumeContent } from '../types/resume'
+import type { TimelineContent, TimelineStage } from '../types/timeline'
 import { renderMarkdown } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
@@ -37,6 +38,8 @@ const VIRTUAL_PERSONAL_ID = 'virtual:personal-content'
 const RESOLVED_PERSONAL_ID = '\0' + VIRTUAL_PERSONAL_ID
 const VIRTUAL_RESUME_ID = 'virtual:resume-content'
 const RESOLVED_RESUME_ID = '\0' + VIRTUAL_RESUME_ID
+const VIRTUAL_TIMELINE_ID = 'virtual:timeline-content'
+const RESOLVED_TIMELINE_ID = '\0' + VIRTUAL_TIMELINE_ID
 
 const CONTENT_BASE = 'src/content'
 
@@ -329,6 +332,51 @@ async function scanResume(root: string): Promise<ResumeContent | null> {
   }
 }
 
+/**
+ * 扫描 growth/timeline.md，解析 frontmatter.stages 为结构化数据，
+ * 渲染 markdown body 为 HTML（About 页详细叙述使用）。
+ * 作为 Timeline 数据的 SSOT，Home / About 共用此数据源。
+ */
+async function scanTimeline(root: string): Promise<TimelineContent | null> {
+  const filePath = path.resolve(root, CONTENT_BASE, 'growth', 'timeline.md')
+  if (!fs.existsSync(filePath)) return null
+
+  const raw = fs.readFileSync(filePath, 'utf-8')
+  const { data, content } = matter(raw)
+
+  if (!data.slug) {
+    throw new Error(`[content-plugin] Missing "slug" in ${filePath}`)
+  }
+  if (!data.title) {
+    throw new Error(`[content-plugin] Missing "title" in ${filePath}`)
+  }
+
+  const rawStages = Array.isArray(data.stages) ? data.stages : []
+  const stages: TimelineStage[] = rawStages.map((s: Record<string, unknown>, idx: number) => {
+    const highlights = Array.isArray(s.highlights) ? s.highlights.map(String) : []
+    return {
+      date: String(s.date ?? ''),
+      title: String(s.title ?? `Stage ${idx + 1}`),
+      stack: String(s.stack ?? ''),
+      highlights,
+      learned: String(s.learned ?? ''),
+      nextStage: String(s.nextStage ?? ''),
+      capability: String(s.capability ?? ''),
+      upcoming: Boolean(s.upcoming),
+    }
+  })
+
+  const html = await renderMarkdown(content)
+
+  return {
+    slug: String(data.slug),
+    title: String(data.title),
+    date: String(data.date ?? ''),
+    stages,
+    html,
+  }
+}
+
 /** Vite 构建时内容插件 — 导出虚拟模块 */
 export function contentPlugin(): Plugin {
   return {
@@ -354,6 +402,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_RESUME_ID) {
         return RESOLVED_RESUME_ID
+      }
+      if (id === VIRTUAL_TIMELINE_ID) {
+        return RESOLVED_TIMELINE_ID
       }
     },
     async load(id) {
@@ -429,6 +480,17 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const resume = ${JSON.stringify(resume)}`
+      }
+      if (id === RESOLVED_TIMELINE_ID) {
+        const root = process.cwd()
+        const timeline = await scanTimeline(root)
+
+        const timelineFile = path.resolve(root, CONTENT_BASE, 'growth', 'timeline.md')
+        if (fs.existsSync(timelineFile)) {
+          this.addWatchFile(timelineFile)
+        }
+
+        return `export const timeline = ${JSON.stringify(timeline)}`
       }
     },
   }

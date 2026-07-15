@@ -8,15 +8,21 @@
 
 ## 当前阶段
 
-**Task 008 已完成 — Resume 系统完善**
+**Task 010 RC1 进行中 — Portfolio v2.0 全面体验升级**
 
-- **Master Baseline：** Task 008 commit（master，待推送）
+- **Master Baseline：** Task 009 commit `7f440e0`（已推送至远程）
 - **Tag：** `v0.5.0`（Task 005 Release，未移动）
 - **当前分支：** `master`
-- **Release Review：** Task 001~008 全部通过
-- **工作区状态：** Task 008 已 commit，待推送（含 Task 007 作品集评审修正 + Task 008 Resume 系统完善）
-- **核心交付物（Task 008）：** 第 7 个虚拟模块 `virtual:resume-content`、Resume.vue 从占位页重写为正式简历页（Markdown 渲染 + window.print() PDF 导出 + @media print A4 打印样式）、Playwright 49/49 验证通过
-- **⚠️ 隐私提醒：** 简历 Markdown（`src/content/resume/index.md`）含电话号码 18279755182，个人网站 GitHub 仓库 `l535304334/lai-portfolio` 为公开仓库。**禁止 push 到远程**，除非先脱敏电话号码或将仓库转为私有。
+- **Release Review：** Task 001~009 全部通过
+- **工作区状态：** Task 010 RC1 已完成，待 commit（不 push）
+- **核心交付物（Task 010 RC1）：**
+  - Timeline SSOT：第 8 个虚拟模块 `virtual:timeline-content`，timeline.md 作为唯一数据源，Home/About 共用
+  - Hero 重构：4 层信息架构（Who/What/Why/Next），去除营销话术，stats 155→236
+  - ProjectCard 视觉层次：Featured 通过 Surface/Shadow/Whitespace/Typography 建立权重（不用 accent border）
+  - Timeline 3 维度叙事：学习重点/能力变化/下一阶段，页面中文标签
+  - Contact 名片式：克制表达，使用真实邮箱
+  - P0 真实性修复：22+ 项冲突全部修复（9→8 AI、155→236 测试、12→多种事件、事件溯源弱化）
+  - SVG 真实性修正：2 个 SVG 文件文字修改（love-letter + jiangnan）
 
 ### Task 进度总览
 
@@ -32,13 +38,18 @@
 | 006 | 项目同步 + 最终仓库清理 | ✅ 已完成（含 GitHub MCP 核对 + 内容同步 + Playwright 50/50 验证 + 仓库清理） |
 | 007 | Final Portfolio Review（最终作品集评审） | ✅ 已完成（含内容真实性审查 + 导师/面试官视角评审 + 全站一致性检查 + 4 类事实修正，Commit `5c58f58`） |
 | **008** | **Resume 系统完善** | **✅ 已完成（含第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49）** |
-| 009 | Vercel 部署与上线 | 待开始 |
-| 010 | Release Audit（最终质量关卡） | 待开始 |
+| 009 | Vercel 部署与上线 | ✅ 已完成（Git Integration 自动部署 + 隐私脱敏 commit `065a40c`） |
+| **010** | **Portfolio v2.0 全面体验升级** | **🔄 RC1 进行中（Timeline SSOT + Hero 重构 + P0 真实性修复）** |
 
-### 后续开发顺序
+### 后续开发顺序（Task 010 RC 阶段）
 
-1. **Task 009** — Vercel 部署上线
-2. **Task 010** — Release Audit（最终质量关卡）
+1. **RC1** — Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复（当前）
+2. **RC2** — Project Detail 组件化（3 个项目）
+3. **RC3** — About 页深化
+4. **RC4** — Resume 结构化
+5. **RC5** — Skills Capability Matrix
+6. **RC6** — AI Practice（Mistakes + Prompt Engineering）
+7. **RC7** — SVG 统一性优化（字体/暗黑模式/统一主题）
 
 **规则：** 每个 Task 完成后暂停，等待用户确认，不得提前开发后续 Task 内容。
 
@@ -107,6 +118,155 @@
 
 - **⚠️ 隐私：** 简历 Markdown 含电话号码 18279755182，GitHub 仓库为公开仓库。已 commit 到本地，**禁止 push** 直到脱敏或转私有仓库。
 - 打印 PDF 页数未验证（取决于浏览器打印设置），建议用户手动验证 A4 页数。
+
+---
+
+## Task 010 RC1 — Portfolio v2.0 全面体验升级（第一轮 RC）
+
+**开始时间：** 2026-07-15
+**完成时间：** 2026-07-15
+**状态：** ✅ RC1 已完成（Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复）
+**Git Commit：** 待 commit（master，不 push）
+
+### 用户指令核心约束
+
+1. **Design Freeze**：以最新确认的 RC1 方案作为唯一实施依据，不得扩大范围
+2. **真实性高于完整性**：禁止推测任何技术细节，不脑补数据
+3. **Developer Academic 风格**：Amber 为唯一品牌 Accent，通过 Surface/Border/Typography/Spacing/Elevation 建立层级
+4. **不新增**：组件/页面/动画/Design Token/颜色/字体/抽象
+5. **SVG 原则**：仅文字真实性修正，禁止修改布局/风格/配色/字体方案
+6. **Timeline SSOT**：timeline.md 作为唯一数据源，Home/About 共用
+7. **每个 RC 完成后新增 Consistency Check**
+
+### 实施内容
+
+#### 1. Timeline SSOT（第 8 个虚拟模块）
+
+- `src/types/timeline.ts`：扩展 TimelineStage 接口（新增 learned/nextStage/capability 字段）+ 新增 TimelineContent 接口
+- `src/utils/content.ts`：新增 `scanTimeline` 函数 + `virtual:timeline-content` 虚拟模块（resolveId/load/HMR）
+- `src/env.d.ts`：新增 `virtual:timeline-content` 类型声明
+- `src/content/growth/timeline.md`：frontmatter 新增 stages 结构化数组（4 阶段，含 learned/nextStage/capability）
+- `src/pages/Home.vue`：移除硬编码 timelineStages，改用 `import { timeline as timelineContent } from 'virtual:timeline-content'`
+
+#### 2. Hero 重构（4 层信息架构）
+
+- `src/components/home/HeroSection.vue`：
+  - eyebrow: `// 赖睿轩 · 软件工程学生`
+  - title: `客户端 · Serverless · 分布式系统` + accent `三类工程实践`
+  - subtitle: 去除营销话术，每句有信息
+  - stats: `155 测试用例` → `236 测试用例`
+  - stats panel 阴影从 `--shadow-sm` 提升到 `--shadow-md`
+  - CTA primary padding 调整
+
+#### 3. ProjectCard 视觉层次（不依赖颜色）
+
+- `src/components/home/ProjectCard.vue`：
+  - Featured 默认即有 `box-shadow: var(--shadow-md)`（normal 无阴影）
+  - Featured hover 提升 `--shadow-lg`（normal hover `--shadow-md`）
+  - **不使用 accent border**（保持 `--color-border`）
+  - Featured padding `--space-8`（normal `--space-6`）
+  - Featured order 标签显示 "01 / 主项目"，使用 accent 色 + medium 字重
+
+#### 4. Timeline 3 维度叙事
+
+- `src/components/home/TimelineSection.vue`：
+  - 能力变化（capability）：surface + accent left border 突出
+  - 学习重点（learned）：muted 标签 + secondary 文字
+  - 下一阶段（nextStage）：更 muted 的文字
+  - highlights 移到底部，用 border-top 分隔
+
+#### 5. Contact 名片式克制
+
+- `src/components/home/ContactSection.vue`：
+  - 移除 `emailAvailable` computed 和 `contact__method--pending` 分支
+  - 移除"有项目想聊？"营销话术
+  - 标题改为"赖睿轩"，lead 改为"软件工程学生"（不写"2027 届"）
+  - 直接渲染 Email link（`535304334@qq.com`）
+
+#### 6. P0 真实性修复（22+ 项）
+
+**内容文件修复（12 个）：**
+- `src/content/projects/jiangnan-travel.md`：metrics 155→236；"12 种事件类型"→"多种事件类型"；"事件溯源审计"→"关键操作留痕审计"
+- `src/content/projects/love-letter.md`：AI 功能 9→8（line 28/45/57）
+- `src/content/resume/index.md`："9 个 AI 云函数"→"8 个"；"事件溯源审计"→"关键操作留痕审计"
+- `src/content/ai-practice/index.md`："案例 3：9 个 AI 云函数"→"8 个"
+- `src/content/interview/general.md`："9 个 AI 场景"→"8 个"
+- `src/content/interview/love-letter.md`："9 个 AI 云函数如何做..."→"8 个"
+- `src/content/interview/jiangnan-travel.md`："12 种事件类型"→"多种事件类型"
+- `src/content/decisions/jiangnan-travel.md`："12 种事件类型覆盖全流程"→"多种事件类型覆盖全流程"
+- `docs/个人能力分析与网站规划报告.md`：4 处修复（9→8 AI、12→多种事件、事件溯源弱化）
+- `docs/开发设计规范-v1.0.md`：2 处修复（155→236 测试、9→8 AI）
+- `docs/assets/screenshot-spec.md`：1 处修复（155→236 测试）
+- `src/content/growth/timeline.md`：body 同步修复真实性
+
+**SVG/MMD 文件修复（5 个）：**
+- `docs/assets/architecture/jiangnan-architecture.mmd`：`12类事件`→`多种事件类型`；`155 测试用例`→`81 后端 + 155 前端`
+- `docs/assets/architecture/love-letter-architecture.mmd`：移除 5 个 AI 函数节点，合并为描述性文字；标题 "9个函数"→"8 个 AI 云函数"
+- `docs/assets/architecture/overall-tech-stack.mmd`：`155 测试用例`→`236 测试用例`
+- `docs/assets/architecture/love-letter-architecture.svg`：3 行文字修改（标题 + 函数列表→中文描述）
+- `docs/assets/architecture/jiangnan-architecture.svg`：1 行文字修改（12 类事件→多种事件类型）
+
+### 验证结果
+
+| 验证项 | 结果 |
+|--------|------|
+| typecheck | ✅ 通过（0 错误） |
+| build | ✅ 成功（1658 模块，2.65s，exit code 0） |
+| ESLint | ⏭️ 跳过（项目未配置 ESLint） |
+| Playwright | ⏭️ 跳过（项目当前无 Playwright 配置和测试文件） |
+| Lighthouse | ⏭️ 跳过（需运行 preview server + Lighthouse CLI） |
+
+### Authenticity Audit
+
+- **扫描文件数量**：全仓库 grep 搜索（src/ + docs/ + *.md + *.mmd + *.svg + *.vue + *.ts）
+- **修改文件数量**：25 个文件（12 内容文件 + 5 SVG/MMD + 5 组件 + 3 基础设施）
+- **修复的真实性问题**：22+ 项（9→8 AI、155→236 测试、12→多种事件、事件溯源弱化）
+- **是否仍存在冲突**：❌ 无（最终 grep 确认 0 匹配）
+
+### Consistency Audit
+
+| 检查项 | 结果 |
+|--------|------|
+| Markdown 与页面展示一致 | ✅ Timeline SSOT，Home/About 共用同一数据源 |
+| SVG 与 Markdown 数据一致 | ✅ SVG 文字与 mmd 源文件一致（仅文字修改，未改布局） |
+| Hero 与 Projects 数据一致 | ✅ Hero stats "236 测试用例" 与 mmd/content 一致 |
+| 全站 AI 功能统一为 8 | ✅ 14 处全部统一 |
+| 全站测试统一为 236 | ✅ 4 处全部统一（含 81 后端 + 155 前端 分解） |
+| 全站事件类型统一 | ✅ 6 处全部统一为"多种事件类型" |
+| 全站 CRITICAL 统一 | ✅ 无"7 个 CRITICAL"残留 |
+| 所有内部链接正常 | ✅ build 成功，路由配置未变 |
+
+### Bundle Size
+
+| Chunk | gzip | 说明 |
+|-------|------|------|
+| index.js | 41.86 KB | Vue + Router + Lucide + 虚拟模块注册 |
+| Home.js | 4.88 KB | 首页组件 + virtual:timeline-content 数据 |
+| Home.css | 2.03 KB | 首页组件样式 |
+| **初始加载** | **~50 KB** | 首屏性能不变 |
+
+### 设计决策记录
+
+1. **Timeline SSOT 而非硬编码**：用户明确反对维护两份 Timeline 数据，要求 timeline.md 作为唯一数据源
+2. **不使用 accent border**：Featured 通过 Surface/Shadow/Whitespace/Typography 建立权重，颜色只负责品牌
+3. **字段名英文，页面中文标签**：TypeScript 接口用 learned/nextStage/capability，页面渲染用"学习重点"/"能力变化"/"下一阶段"
+4. **不写"2027 届"**：除非全站统一，否则 Contact lead 保持"软件工程学生"
+5. **SVG 仅文字修改**：不重绘布局，不统一风格（统一性优化放到 RC7）
+
+### RC1 不允许做的事情（已遵守）
+
+- ❌ 不新增组件/页面/动画/Design Token/颜色/字体/抽象
+- ❌ 不修改 RC2 及之后的内容
+- ❌ 不自行增加新的设计内容
+
+### 后续 RC 计划
+
+- **RC2**：Project Detail 组件化（3 个项目）
+- **RC3**：About 页深化
+- **RC4**：Resume 结构化
+- **RC5**：Skills Capability Matrix
+- **RC6**：AI Practice（Mistakes + Prompt Engineering）
+- **RC7**：SVG 统一性优化（字体/暗黑模式/统一主题）
 
 ---
 

@@ -13,7 +13,7 @@ metrics:
   - label: API 端点
     value: 97
   - label: 测试用例
-    value: 155
+    value: 236
   - label: 数据库表
     value: 27
 github: https://github.com/l535304334/jiangnan-travel
@@ -52,7 +52,7 @@ github: https://github.com/l535304334/jiangnan-travel
 - **并发调度引擎**：二阶分布式锁（order lock → driver tryLock），100 订单 × 20 司机压测零重复分配
 - **动态评分引擎**：静态加权 + 动态反馈学习 + 时间衰减，5 轮收敛成功率 50%→70%
 - **订单状态机**：10 状态 + 15+ 合法路径，枚举集中管理，18 个单元测试全覆盖
-- **事件溯源审计**：12 种事件类型，一条 SQL 回溯全生命周期
+- **关键操作留痕审计**：多种事件类型，一条 SQL 回溯全生命周期
 - **三层可观测性**：指标层 / 健康层（S/A/B/C/D 评级）/ 异常检测层
 - **支付系统**：状态机（pending→paid/failed/refunded）+ 幂等键防重复支付 + payment_trace 追踪日志
 - **计费系统**：距离费 + 时长费 + 高峰加价（7-9/17-19 点）+ 过路费 - 优惠券，订单完成时自动生成账单
@@ -85,4 +85,4 @@ github: https://github.com/l535304334/jiangnan-travel
 **学到的：**
 - 分布式锁不止是"加锁"，锁顺序、超时、锁后重读、WatchDog 续期都是坑
 - AI 生成的代码需要更严格的审查——并发安全的逻辑不能交给 AI
-- 代码审查的价值：81 个问题中 7 个 CRITICAL，全部是人工审查发现的
+- 代码审查的价值：81 个问题中多个 CRITICAL，全部是人工审查发现的

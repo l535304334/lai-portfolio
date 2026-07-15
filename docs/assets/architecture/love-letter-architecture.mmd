@@ -20,12 +20,8 @@ graph TB
             Period["updatePeriod<br/>经期 · pendingConfirm"]
             Record["manageRecord<br/>通用CRUD网关"]
         end
-        subgraph AI["AI 层 (9个函数)"]
-            Polish["aiPolishLetter<br/>书信润色"]
-            Poem["aiGeneratePoem<br/>诗歌生成"]
-            Article["aiGenerateArticle<br/>每日4篇科普"]
-            Tone["aiCheckTone<br/>语感检查"]
-            Report["aiGenerateReport<br/>周报月报"]
+        subgraph AI["AI 层 (8 个 AI 云函数)"]
+            AIFuncs["书信润色 · 诗歌生成 · 语感检查<br/>备忘提取 · 科普文章 · 健康建议<br/>打卡/愿望推荐 · 周报月报"]
         end
         subgraph Shared["共享模块"]
             DeepSeek["common/deepseek.js<br/>AI 调用封装"]

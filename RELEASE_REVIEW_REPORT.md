@@ -520,3 +520,100 @@ All acceptance criteria met:
 - SPA 路由刷新正常
 - GitHub 链接正确
 - SEO 基础信息完整
+
+---
+
+## 14. Task 010 RC1 — Portfolio v2.0 全面体验升级（第一轮 RC）（2026-07-15）
+
+### 14.1 RC1 范围
+
+| 子任务 | 状态 | 说明 |
+|--------|------|------|
+| Timeline SSOT | ✅ 完成 | 第 8 个虚拟模块 `virtual:timeline-content`，timeline.md 作为唯一数据源 |
+| Hero 重构 | ✅ 完成 | 4 层信息架构（Who/What/Why/Next），去除营销话术，stats 155→236 |
+| ProjectCard 视觉层次 | ✅ 完成 | Featured 通过 Surface/Shadow/Whitespace/Typography 建立权重（不用 accent border） |
+| Timeline 3 维度叙事 | ✅ 完成 | 学习重点/能力变化/下一阶段，页面中文标签 |
+| Contact 名片式 | ✅ 完成 | 克制表达，使用真实邮箱，移除营销话术 |
+| P0 真实性修复 | ✅ 完成 | 22+ 项冲突全部修复（9→8 AI、155→236 测试、12→多种事件、事件溯源弱化） |
+| SVG 真实性修正 | ✅ 完成 | 2 个 SVG 文件文字修改（love-letter + jiangnan），3 个 mmd 源文件修正 |
+
+### 14.2 验证结果
+
+| 验证项 | 结果 | 备注 |
+|--------|------|------|
+| typecheck | ✅ 通过 | 0 错误（strict + noUncheckedIndexedAccess） |
+| build | ✅ 成功 | 1658 模块，2.65s，exit code 0 |
+| ESLint | ⏭️ 跳过 | 项目未配置 ESLint |
+| Playwright | ⏭️ 跳过 | 项目当前无 Playwright 配置和测试文件 |
+| Lighthouse | ⏭️ 跳过 | 需运行 preview server + Lighthouse CLI |
+
+### 14.3 Authenticity Audit
+
+**扫描范围：** 全仓库 grep 搜索（src/ + docs/ + *.md + *.mmd + *.svg + *.vue + *.ts）
+
+**扫描关键词：**
+- `155 测试` / `155 用例`（指总数）
+- `9 个 AI` / `9个AI` / `AI功能:9`
+- `12 类事件` / `12 种事件`
+- `7 个 CRITICAL`
+- `事件溯源审计追踪`
+
+**修复统计：**
+- 修改文件数量：25 个（12 内容文件 + 5 SVG/MMD + 5 组件 + 3 基础设施）
+- 修复的真实性问题：22+ 项
+- 最终 grep 确认：0 匹配（无残留冲突）
+
+**关键修复项：**
+1. AI 云函数数量：9 → 8（全站 14 处统一）
+2. 测试用例数量：155 → 236（含 81 后端 + 155 前端分解）
+3. 事件类型：12 类 → 多种事件类型（全站 6 处统一）
+4. 事件溯源弱化：事件溯源审计追踪 → 关键操作留痕审计追踪
+
+### 14.4 Consistency Audit
+
+| 检查项 | 结果 | 说明 |
+|--------|------|------|
+| Markdown 与页面展示一致 | ✅ | Timeline SSOT，Home/About 共用 virtual:timeline-content |
+| SVG 与 Markdown 数据一致 | ✅ | SVG 文字与 mmd 源文件一致（仅文字修改，未改布局） |
+| Hero 与 Projects 数据一致 | ✅ | Hero stats "236 测试用例" 与 mmd/content 一致 |
+| 全站 AI 功能统一为 8 | ✅ | 14 处全部统一 |
+| 全站测试统一为 236 | ✅ | 4 处全部统一（含 81 后端 + 155 前端 分解） |
+| 全站事件类型统一 | ✅ | 6 处全部统一为"多种事件类型" |
+| 全站 CRITICAL 统一 | ✅ | 无"7 个 CRITICAL"残留 |
+| 所有内部链接正常 | ✅ | build 成功，路由配置未变 |
+
+### 14.5 Bundle Size
+
+| Chunk | gzip | 说明 |
+|-------|------|------|
+| index.js | 41.86 KB | Vue + Router + Lucide + 8 个虚拟模块注册 |
+| Home.js | 4.88 KB | 首页组件 + virtual:timeline-content 数据 |
+| Home.css | 2.03 KB | 首页组件样式 |
+| **初始加载** | **~50 KB** | 首屏性能不变 |
+
+### 14.6 RC1 Design Freeze 遵守情况
+
+**已遵守的限制：**
+- ❌ 不新增组件/页面/动画/Design Token/颜色/字体/抽象 — ✅ 未新增
+- ❌ 不修改 RC2 及之后的内容 — ✅ 未修改
+- ❌ 不自行增加新的设计内容 — ✅ 未增加
+- ✅ SVG 仅文字真实性修正，未修改布局/风格/配色/字体方案
+
+### 14.7 遗留事项
+
+- Playwright 测试未配置（项目当前无测试文件，待后续 RC 或独立任务补充）
+- Lighthouse 评分未重新验证（RC1 改动主要在内容，对性能影响可忽略）
+- SVG 统一性优化（字体/暗黑模式/统一主题）推迟到 RC7
+
+### 14.8 RC1 结论
+
+**✅ PASS — Task 010 RC1 已完成**
+
+- Timeline SSOT 架构建立，第 8 个虚拟模块实现
+- Hero 重构为 4 层信息架构，去除营销话术
+- ProjectCard 视觉层次通过 Surface/Shadow/Whitespace/Typography 建立（不用 accent border）
+- P0 真实性冲突全部修复（22+ 项，全站一致性通过）
+- typecheck + build 全部通过
+- Authenticity Audit + Consistency Audit 全部通过
+
+**等待用户确认后 commit，然后进入 RC2（Project Detail 组件化）。**

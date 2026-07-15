@@ -20,7 +20,10 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
     :class="{ 'card--featured': featured }"
   >
     <div class="card__head">
-      <span v-if="project.order" class="card__order mono">{{ String(project.order).padStart(2, '0') }}</span>
+      <span v-if="project.order" class="card__order mono" :class="{ 'card__order--featured': featured }">
+        <template v-if="featured">{{ String(project.order).padStart(2, '0') }} / 主项目</template>
+        <template v-else>{{ String(project.order).padStart(2, '0') }}</template>
+      </span>
       <a
         v-if="project.github"
         :href="project.github"
@@ -84,18 +87,23 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
   border-radius: var(--radius-lg);
   transition:
     transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    border-color var(--transition-fast);
+    box-shadow var(--transition-fast);
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
 }
 
+/* Featured: stronger default elevation + larger whitespace + larger type.
+   Border stays --color-border (color is for brand, not for weight). */
 .card--featured {
   padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+}
+
+.card--featured:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .card__head {
@@ -109,6 +117,11 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   letter-spacing: 0.05em;
+}
+
+.card__order--featured {
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
 }
 
 .card__github {

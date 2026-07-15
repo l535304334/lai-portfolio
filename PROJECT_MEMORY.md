@@ -16,7 +16,7 @@
 - **Release Review：** Task 001~009 全部通过
 - **工作区状态：** Task 010 RC1 已完成，待 commit（不 push）
 - **核心交付物（Task 010 RC1）：**
-  - Timeline SSOT：第 8 个虚拟模块 `virtual:timeline-content`，timeline.md 作为唯一数据源，Home/About 共用
+  - Timeline SSOT：第 8 个虚拟模块 `virtual:timeline-content`，timeline.md 作为唯一数据源，Home 使用；About 保持独立内容，不共享 Timeline
   - Hero 重构：4 层信息架构（Who/What/Why/Next），去除营销话术，stats 155→236
   - ProjectCard 视觉层次：Featured 通过 Surface/Shadow/Whitespace/Typography 建立权重（不用 accent border）
   - Timeline 3 维度叙事：学习重点/能力变化/下一阶段，页面中文标签
@@ -135,7 +135,7 @@
 3. **Developer Academic 风格**：Amber 为唯一品牌 Accent，通过 Surface/Border/Typography/Spacing/Elevation 建立层级
 4. **不新增**：组件/页面/动画/Design Token/颜色/字体/抽象
 5. **SVG 原则**：仅文字真实性修正，禁止修改布局/风格/配色/字体方案
-6. **Timeline SSOT**：timeline.md 作为唯一数据源，Home/About 共用
+6. **Timeline SSOT**：timeline.md 作为唯一数据源，Home 使用；About 保持独立内容，不共享 Timeline
 7. **每个 RC 完成后新增 Consistency Check**
 
 ### 实施内容
@@ -227,7 +227,7 @@
 
 | 检查项 | 结果 |
 |--------|------|
-| Markdown 与页面展示一致 | ✅ Timeline SSOT，Home/About 共用同一数据源 |
+| Markdown 与页面展示一致 | ✅ Timeline SSOT，Home 使用；About 独立不共享 |
 | SVG 与 Markdown 数据一致 | ✅ SVG 文字与 mmd 源文件一致（仅文字修改，未改布局） |
 | Hero 与 Projects 数据一致 | ✅ Hero stats "236 测试用例" 与 mmd/content 一致 |
 | 全站 AI 功能统一为 8 | ✅ 14 处全部统一 |

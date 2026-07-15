@@ -573,7 +573,7 @@ All acceptance criteria met:
 
 | 检查项 | 结果 | 说明 |
 |--------|------|------|
-| Markdown 与页面展示一致 | ✅ | Timeline SSOT，Home/About 共用 virtual:timeline-content |
+| Markdown 与页面展示一致 | ✅ | Timeline SSOT，Home 使用 virtual:timeline-content；About 保持独立内容 |
 | SVG 与 Markdown 数据一致 | ✅ | SVG 文字与 mmd 源文件一致（仅文字修改，未改布局） |
 | Hero 与 Projects 数据一致 | ✅ | Hero stats "236 测试用例" 与 mmd/content 一致 |
 | 全站 AI 功能统一为 8 | ✅ | 14 处全部统一 |

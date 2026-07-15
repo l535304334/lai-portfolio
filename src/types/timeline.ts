@@ -1,10 +1,10 @@
 /**
  * 技术成长时间线类型
  * 数据来源：src/content/growth/timeline.md frontmatter.stages（SSOT）
- * Home / About 共用同一份数据，避免双源不一致
+ * Home 使用此数据；About 保持独立内容，不共享 Timeline
  */
 
-/** 首页 / 关于页 时间线阶段 */
+/** 首页时间线阶段 */
 export interface TimelineStage {
   date: string
   title: string

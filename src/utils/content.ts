@@ -334,8 +334,8 @@ async function scanResume(root: string): Promise<ResumeContent | null> {
 
 /**
  * 扫描 growth/timeline.md，解析 frontmatter.stages 为结构化数据，
- * 渲染 markdown body 为 HTML（About 页详细叙述使用）。
- * 作为 Timeline 数据的 SSOT，Home / About 共用此数据源。
+ * 渲染 markdown body 为 HTML（未来扩展使用）。
+ * 作为 Timeline 数据的 SSOT，Home 使用此数据源；About 保持独立内容，不共享 Timeline。
  */
 async function scanTimeline(root: string): Promise<TimelineContent | null> {
   const filePath = path.resolve(root, CONTENT_BASE, 'growth', 'timeline.md')

@@ -19,6 +19,7 @@ metrics:
 github: https://github.com/l535304334/jiangnan-travel
 status: Release 1.0 · 2026-07-08
 role: 全栈独立开发
+architecture: jiangnan-travel
 ---
 
 ## 项目背景

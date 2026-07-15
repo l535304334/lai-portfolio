@@ -19,6 +19,7 @@ metrics:
 github: https://github.com/l535304334/interactive-quiz-system
 status: v1.0.0 · 2026-07-08 · 维护模式
 role: 独立设计与实现
+architecture: exam-system
 ---
 
 ## 项目背景

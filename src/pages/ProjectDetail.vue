@@ -5,6 +5,7 @@ import { projectDetails } from 'virtual:project-detail'
 import ProjectHeader from '@/components/project/ProjectHeader.vue'
 import MetricCard from '@/components/project/MetricCard.vue'
 import MarkdownContent from '@/components/project/MarkdownContent.vue'
+import ArchitectureDiagram from '@/components/project/ArchitectureDiagram.vue'
 import DecisionSection from '@/components/project/DecisionSection.vue'
 import ProjectNav from '@/components/project/ProjectNav.vue'
 
@@ -54,6 +55,8 @@ onMounted(() => {
       </section>
 
       <MarkdownContent :html="project.html" />
+
+      <ArchitectureDiagram :architecture="project.architecture" />
 
       <DecisionSection v-if="project.decision" :decision="project.decision" />
 

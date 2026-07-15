@@ -36,6 +36,8 @@ export interface ProjectContent {
   status?: string
   /** 项目角色（如 "全栈独立开发"），从 frontmatter.role 提取 */
   role?: string
+  /** 架构图标识（如 "jiangnan-travel"），从 frontmatter.architecture 提取，对应 src/assets/projects/{architecture}.svg */
+  architecture?: string
   html: string
   /** 技术决策记录（按 slug 匹配 decisions/*.md，可选） */
   decision?: DecisionContent

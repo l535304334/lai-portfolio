@@ -120,6 +120,7 @@ async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
         github: data.github ? String(data.github) : undefined,
         status: data.status ? String(data.status) : undefined,
         role: data.role ? String(data.role) : undefined,
+        architecture: data.architecture ? String(data.architecture) : undefined,
         html,
         decision: (await loadDecisionBySlug(root, String(data.slug))) ?? undefined,
       }

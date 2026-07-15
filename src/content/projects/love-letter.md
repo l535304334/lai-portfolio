@@ -19,6 +19,7 @@ metrics:
 github: https://github.com/l535304334/Love
 status: v1.0.0 · 2026-07-04 · 维护模式
 role: 全栈独立开发
+architecture: love-letter
 ---
 
 ## 项目背景

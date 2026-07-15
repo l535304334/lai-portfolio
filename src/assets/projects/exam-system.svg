@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" font-family="'Inter','Noto Sans SC',system-ui,sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#94a3b8"/></marker>
+  </defs>
+  <rect width="900" height="520" fill="#f8f9fa" rx="10"/>
+  <text x="450" y="28" text-anchor="middle" font-size="16" font-weight="600" fill="#1a202c">医学考试刷题系统 V9 — 系统架构</text>
+
+  <!-- === UI Layer === -->
+  <rect x="20" y="40" width="860" height="60" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <rect x="20" y="40" width="860" height="20" rx="6" fill="#1e293b"/><rect x="20" y="52" width="860" height="8" fill="#1e293b"/>
+  <text x="450" y="54" text-anchor="middle" font-size="10" font-weight="600" fill="#f1f5f9">用户界面层 — 单文件 HTML (14,563 行)</text>
+
+  <rect x="35" y="67" width="120" height="24" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.8"/><text x="95" y="83" text-anchor="middle" font-size="10" fill="#92400e">🏠 主导航栏</text>
+  <rect x="165" y="67" width="120" height="24" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.8"/><text x="225" y="83" text-anchor="middle" font-size="10" fill="#92400e">📝 题目卡片</text>
+  <rect x="295" y="67" width="120" height="24" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="0.8"/><text x="355" y="83" text-anchor="middle" font-size="10" fill="#92400e">📊 模态框</text>
+  <rect x="425" y="67" width="120" height="24" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="0.8"/><text x="485" y="83" text-anchor="middle" font-size="10" fill="#1e40af">⌨️ 键盘快捷键</text>
+  <rect x="555" y="67" width="130" height="24" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.8"/><text x="620" y="83" text-anchor="middle" font-size="10" fill="#065f46">🌓 深色模式切换</text>
+  <rect x="695" y="67" width="170" height="24" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/><text x="780" y="83" text-anchor="middle" font-size="10" fill="#475569">CSS 设计令牌 (65+ 变量)</text>
+
+  <!-- UI -> Logic -->
+  <line x1="300" y1="100" x2="300" y2="120" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="600" y1="100" x2="600" y2="120" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- === Logic Layer === -->
+  <rect x="20" y="124" width="860" height="100" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <rect x="20" y="124" width="860" height="20" rx="6" fill="#1e293b"/><rect x="20" y="136" width="860" height="8" fill="#1e293b"/>
+  <text x="450" y="138" text-anchor="middle" font-size="10" font-weight="600" fill="#f1f5f9">应用逻辑层 — Vanilla JavaScript (~2,600 行)</text>
+
+  <rect x="35" y="152" width="155" height="36" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1"/><text x="112" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e">刷题引擎</text><text x="112" y="181" text-anchor="middle" font-size="8" fill="#92400e">renderQuestion · 模式复合</text>
+  <rect x="205" y="152" width="155" height="36" rx="3" fill="#fef3c7" stroke="#d97706" stroke-width="1"/><text x="282" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#92400e">SM-2 间隔复习 ★</text><text x="282" y="181" text-anchor="middle" font-size="8" fill="#92400e">EF因子 · 间隔调度</text>
+  <rect x="375" y="152" width="155" height="36" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="0.8"/><text x="452" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">模拟考试</text><text x="452" y="181" text-anchor="middle" font-size="8" fill="#1e40af">分页 · 倒计时 · 自动交卷</text>
+  <rect x="545" y="152" width="155" height="36" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="0.8"/><text x="622" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">全局搜索</text><text x="622" y="181" text-anchor="middle" font-size="8" fill="#1e40af">异步索引 · mark高亮</text>
+  <rect x="715" y="152" width="150" height="36" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.8"/><text x="790" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#065f46">数据可视化</text><text x="790" y="181" text-anchor="middle" font-size="8" fill="#065f46">4个 Chart.js 图表</text>
+
+  <rect x="35" y="194" width="155" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="112" y="209" text-anchor="middle" font-size="9" fill="#065f46">快照备份/恢复 (10份)</text>
+  <rect x="205" y="194" width="155" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="282" y="209" text-anchor="middle" font-size="9" fill="#065f46">自定义题目管理</text>
+  <rect x="375" y="194" width="155" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="452" y="209" text-anchor="middle" font-size="9" fill="#065f46">JSON 导入/导出</text>
+  <rect x="545" y="194" width="155" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="622" y="209" text-anchor="middle" font-size="9" fill="#065f46">每日目标 + 学习计时</text>
+  <rect x="715" y="194" width="150" height="22" rx="3" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="790" y="209" text-anchor="middle" font-size="9" fill="#065f46">科目动态管理</text>
+
+  <!-- Logic -> State -->
+  <line x1="300" y1="224" x2="300" y2="244" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="600" y1="224" x2="600" y2="244" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- === State Layer === -->
+  <rect x="20" y="248" width="860" height="70" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <rect x="20" y="248" width="860" height="20" rx="6" fill="#1e293b"/><rect x="20" y="260" width="860" height="8" fill="#1e293b"/>
+  <text x="450" y="262" text-anchor="middle" font-size="10" font-weight="600" fill="#f1f5f9">状态管理层 (内存) + 持久化层 (localStorage)</text>
+
+  <rect x="35" y="276" width="160" height="34" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/><text x="115" y="290" text-anchor="middle" font-size="9" fill="#475569">wrongSet / doneSet</text><text x="115" y="304" text-anchor="middle" font-size="8" fill="#94a3b8">错题 · 已做集合</text>
+  <rect x="210" y="276" width="160" height="34" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/><text x="290" y="290" text-anchor="middle" font-size="9" fill="#475569">srsMap / wrongCountMap</text><text x="290" y="304" text-anchor="middle" font-size="8" fill="#94a3b8">SM-2 · 错题次数</text>
+  <rect x="385" y="276" width="160" height="34" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/><text x="465" y="290" text-anchor="middle" font-size="9" fill="#475569">dailyHistory</text><text x="465" y="304" text-anchor="middle" font-size="8" fill="#94a3b8">90天每日统计</text>
+  <rect x="560" y="276" width="160" height="34" rx="3" fill="#fee2e2" stroke="#dc2626" stroke-width="0.8"/><text x="640" y="290" text-anchor="middle" font-size="9" fill="#991b1b">配额管理 ★</text><text x="640" y="304" text-anchor="middle" font-size="8" fill="#991b1b">压缩 · 淘汰 · 监控</text>
+  <rect x="735" y="276" width="130" height="34" rx="3" fill="#ede9fe" stroke="#7c3aed" stroke-width="0.8"/><text x="800" y="290" text-anchor="middle" font-size="9" fill="#5b21b6">snap_*</text><text x="800" y="304" text-anchor="middle" font-size="8" fill="#5b21b6">10份快照</text>
+
+  <!-- State -> Data -->
+  <line x1="450" y1="318" x2="450" y2="338" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- === Data Layer === -->
+  <rect x="20" y="342" width="860" height="52" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <rect x="20" y="342" width="860" height="20" rx="6" fill="#1e293b"/><rect x="20" y="354" width="860" height="8" fill="#1e293b"/>
+  <text x="450" y="356" text-anchor="middle" font-size="10" font-weight="600" fill="#f1f5f9">数据层</text>
+
+  <rect x="35" y="368" width="250" height="18" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.5"/><text x="160" y="381" text-anchor="middle" font-size="9" fill="#475569">ALL_QUESTIONS 数组 (5,944 题, 5,950行)</text>
+  <rect x="305" y="368" width="250" height="18" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.5"/><text x="430" y="381" text-anchor="middle" font-size="9" fill="#475569">CSS 设计令牌 (:root 65+ 自定义属性)</text>
+  <rect x="575" y="368" width="290" height="18" rx="3" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.5"/><text x="720" y="381" text-anchor="middle" font-size="9" fill="#475569">Chart.js v4.4.4 (内联 205KB, 零外部请求)</text>
+
+  <!-- === Bottom Section === -->
+  <rect x="20" y="406" width="860" height="48" rx="6" fill="#fff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <rect x="20" y="406" width="860" height="20" rx="6" fill="#1e293b"/><rect x="20" y="418" width="860" height="8" fill="#1e293b"/>
+  <text x="450" y="420" text-anchor="middle" font-size="10" font-weight="600" fill="#f1f5f9">技术决策 &amp; 设计约束</text>
+
+  <rect x="35" y="432" width="260" height="16" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="0.3"/><text x="165" y="444" text-anchor="middle" font-size="8" fill="#92400e">单文件架构: 用户双击即用 (YAGNI)</text>
+  <rect x="310" y="432" width="260" height="16" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="0.3"/><text x="440" y="444" text-anchor="middle" font-size="8" fill="#1e40af">线性搜索: 6K题 indexOf ~1-3ms</text>
+  <rect x="585" y="432" width="280" height="16" rx="2" fill="#dcfce7" stroke="#059669" stroke-width="0.3"/><text x="725" y="444" text-anchor="middle" font-size="8" fill="#065f46">深色模式: 20个CSS变量覆盖 (vs V8的43个选择器)</text>
+
+  <!-- Legend -->
+  <rect x="20" y="466" width="860" height="46" rx="4" fill="transparent"/>
+  <rect x="35" y="474" width="10" height="10" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="0.5"/><text x="50" y="483" font-size="9" fill="#64748b">核心引擎</text>
+  <rect x="115" y="474" width="10" height="10" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="0.5"/><text x="130" y="483" font-size="9" fill="#64748b">功能模块</text>
+  <rect x="195" y="474" width="10" height="10" rx="2" fill="#dcfce7" stroke="#059669" stroke-width="0.5"/><text x="210" y="483" font-size="9" fill="#64748b">数据管理</text>
+  <rect x="275" y="474" width="10" height="10" rx="2" fill="#fee2e2" stroke="#dc2626" stroke-width="0.5"/><text x="290" y="483" font-size="9" fill="#64748b">配额/限制</text>
+  <text x="480" y="483" font-size="9" fill="#94a3b8">★ SM-2 间隔复习: 标准SM-2算法简化 (二元评分) + 错题系统集成 (最小侵入)</text>
+  <text x="480" y="499" font-size="9" fill="#94a3b8">★ 配额管理: 三层防御 — 快照压缩(90%) → 自动淘汰最旧 → navigator.storage.estimate() 主动预警</text>
+</svg>

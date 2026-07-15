@@ -51,6 +51,7 @@ defineProps<{
 .project-header__meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
 }

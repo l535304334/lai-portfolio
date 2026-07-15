@@ -24,14 +24,14 @@
 | Task 007 | ✅ 已完成（Final Portfolio Review，7 部分评审 + 4 类事实修正，Commit `5c58f58`） |
 | Task 008 | ✅ 已完成（Resume 系统完善，第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49） |
 | Task 009 | ✅ 已完成（Vercel 部署上线 + 隐私脱敏 commit `065a40c`） |
-| **Task 010 RC1** | **✅ 已完成（Timeline SSOT + Hero 重构 + P0 真实性修复，待 commit）** |
-| Release Review | ✅ Task 001~009 全部通过；Task 010 RC1 进行中 |
-| **Master Baseline** | Task 009 commit `7f440e0`（已推送至远程） |
+| **Task 010 RC1** | **✅ Released (Local) — commit `a263700`（Timeline SSOT + Hero 重构 + P0 真实性修复 + Playwright 基础设施恢复）** |
+| Release Review | ✅ Task 001~009 全部通过；Task 010 RC1 Released (Local) |
+| **Master Baseline** | Task 010 RC1 commit `a263700`（Local，未 push） |
 | **Tag** | `v0.5.0`（Task 005 Release，未移动） |
 | **当前分支** | `master` |
-| **工作区状态** | Task 010 RC1 已完成，待 commit（不 push） |
-| 验证 | ✅ build 成功（1658 模块，2.65s）/ typecheck 通过 / Authenticity Audit + Consistency Audit 通过 |
-| **当前进度** | Task 010 RC1 完成，等待用户确认后进入 RC2 |
+| **工作区状态** | RC1 Local Release Baseline 已冻结（不 push） |
+| 验证 | ✅ build 成功（1658 模块，2.36s）/ typecheck 通过 / Playwright 49/49 PASS / Authenticity Audit + Consistency Audit 通过 |
+| **当前进度** | RC1 Released (Local)，等待用户批准后进入 RC2 |
 | **虚拟模块数** | 8 个（content / project-detail / interview-content / ai-practice-content / skills-content / personal-content / resume-content / **timeline-content**） |
 | **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel Git Integration 自动部署） |
 

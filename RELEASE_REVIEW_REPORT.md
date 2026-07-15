@@ -616,4 +616,80 @@ All acceptance criteria met:
 - typecheck + build 全部通过
 - Authenticity Audit + Consistency Audit 全部通过
 
-**等待用户确认后 commit，然后进入 RC2（Project Detail 组件化）。**
+---
+
+## 15. Task 010 RC1 Release Gate（最终冻结）
+
+> **本节为 RC1 Release Gate 最终验收记录，冻结 RC1 Local Release Baseline。**
+> **Date：** 2026-07-15
+> **Status：** Released (Local)
+
+### 15.1 最终核查结果
+
+| 验证项 | 结果 | 备注 |
+|--------|------|------|
+| `npm run typecheck` | ✅ PASS | 0 错误（strict mode + noUncheckedIndexedAccess） |
+| `npm run build` | ✅ PASS | 1658 模块，2.36s，exit code 0 |
+| `npm test` (Playwright) | ✅ PASS | 49/49 通过（0 失败） |
+| `git status` | ✅ clean | nothing to commit, working tree clean |
+| `git ls-files --others --exclude-standard` | ✅ 无未跟踪文件 | 0 untracked files |
+
+### 15.2 真实性最终扫描（分类）
+
+| 搜索关键词 | 真实技术术语 | 历史变更记录 | 应修复内容 |
+|-----------|-------------|-------------|-----------|
+| 155（测试用例上下文） | 4 处（81+155=236 分解说明） | 5 处（PROJECT_MEMORY/RELEASE_REPORT 变更记录） | 0 |
+| 9 个 AI / 9个AI / AI 功能: 9 | 0 | 5 处（变更记录） | 0 |
+| 12 类事件 / 12 种事件 | 0 | 6 处（变更记录） | 0 |
+| 7 个 CRITICAL | 0 | 3 处（元数据描述） | 0 |
+| 事件溯源（Event Sourcing） | 21 处（架构模式术语，保留） | 7 处（变更记录） | 0 |
+| 事件溯源审计 | 0 | 4 处（变更记录） | 0 |
+
+**结论：** 0 处应修复内容。所有匹配均为历史变更记录或保留的真实技术术语。
+
+### 15.3 RC1 Release Manifest
+
+| 项目 | 值 |
+|------|-----|
+| **RC1 Baseline Commit** | `a263700b327416aa4fa4a2291ace3e977c986639` |
+| **Release Date** | 2026-07-15 |
+| **Status** | Released (Local) — 未 push |
+| 修改文件数量 | 31 files changed（632 insertions, 176 deletions） |
+| 新增文件数量 | 1（.gitattributes） |
+| 删除文件数量 | 0 |
+| 虚拟模块数量 | 8 个 |
+| Vue 组件数量 | 15 个 |
+| 页面数量 | 8 个（Home / ProjectDetail / Skills / Interview / AiPractice / Resume / About / NotFound） |
+| Markdown 内容数量 | 15 个 |
+| Architecture 图数量 | 14 个（7 SVG + 7 mmd） |
+| Bundle Size（初始加载 gzip） | ~50 KB（index.js 41.86 KB + Home.js 4.88 KB + Home.css 2.03 KB） |
+| Build 时间 | 2.36s |
+| Playwright 通过数量 | 49/49 |
+| TypeScript 状态 | PASS（strict mode） |
+
+### 15.4 RC1 Release 决策
+
+**✅ RC1 Released (Local)**
+
+- 所有 Design Freeze 目标达成
+- 最终核查全部通过（typecheck + build + Playwright + git clean）
+- 真实性扫描 0 处应修复内容
+- 工程基线完善（Playwright 恢复 + .gitattributes 行尾统一 + 文档描述修正）
+
+### 15.5 剩余 Technical Debt（非 RC1 范围）
+
+1. Lighthouse 基线未建立（建议 Release 前通过 Vercel PageSpeed Insights 抓取）
+2. ESLint 未配置（可选，TypeScript strict 已提供足够类型安全）
+3. SVG 统一性优化推迟到 RC7
+4. About 页未使用 Timeline SSOT（实际不需要，About 聚焦个人介绍）
+5. 9 个文件行尾差异已通过 .gitattributes 消除（工作区干净）
+
+### 15.6 Git 状态确认
+
+```
+On branch master
+Your branch is ahead of 'origin/master' by 6 commits.
+nothing to commit, working tree clean
+```
+
+**RC1 Local Release Baseline 已冻结。未 push。**

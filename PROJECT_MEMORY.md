@@ -8,13 +8,14 @@
 
 ## 当前阶段
 
-**Task 010 RC1 进行中 — Portfolio v2.0 全面体验升级**
+**Task 010 RC1 Released (Local) — Portfolio v2.0 全面体验升级**
 
-- **Master Baseline：** Task 009 commit `7f440e0`（已推送至远程）
+- **RC1 Release Date：** 2026-07-15
+- **RC1 Baseline Commit：** `a263700b327416aa4fa4a2291ace3e977c986639`（Local，未 push）
 - **Tag：** `v0.5.0`（Task 005 Release，未移动）
 - **当前分支：** `master`
-- **Release Review：** Task 001~009 全部通过
-- **工作区状态：** Task 010 RC1 已完成，待 commit（不 push）
+- **Release Review：** Task 001~009 全部通过；Task 010 RC1 Released (Local)
+- **工作区状态：** RC1 Local Release Baseline 已冻结（不 push）
 - **核心交付物（Task 010 RC1）：**
   - Timeline SSOT：第 8 个虚拟模块 `virtual:timeline-content`，timeline.md 作为唯一数据源，Home 使用；About 保持独立内容，不共享 Timeline
   - Hero 重构：4 层信息架构（Who/What/Why/Next），去除营销话术，stats 155→236
@@ -39,12 +40,12 @@
 | 007 | Final Portfolio Review（最终作品集评审） | ✅ 已完成（含内容真实性审查 + 导师/面试官视角评审 + 全站一致性检查 + 4 类事实修正，Commit `5c58f58`） |
 | **008** | **Resume 系统完善** | **✅ 已完成（含第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49）** |
 | 009 | Vercel 部署与上线 | ✅ 已完成（Git Integration 自动部署 + 隐私脱敏 commit `065a40c`） |
-| **010** | **Portfolio v2.0 全面体验升级** | **🔄 RC1 进行中（Timeline SSOT + Hero 重构 + P0 真实性修复）** |
+| **010** | **Portfolio v2.0 全面体验升级** | **✅ RC1 Released (Local) — commit `a263700`（Timeline SSOT + Hero 重构 + P0 真实性修复）** |
 
 ### 后续开发顺序（Task 010 RC 阶段）
 
-1. **RC1** — Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复（当前）
-2. **RC2** — Project Detail 组件化（3 个项目）
+1. **RC1** — Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复 ✅ Released (Local)
+2. **RC2** — Project Detail 组件化（3 个项目）（待用户批准后启动）
 3. **RC3** — About 页深化
 4. **RC4** — Resume 结构化
 5. **RC5** — Skills Capability Matrix
@@ -125,8 +126,9 @@
 
 **开始时间：** 2026-07-15
 **完成时间：** 2026-07-15
-**状态：** ✅ RC1 已完成（Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复）
-**Git Commit：** 待 commit（master，不 push）
+**状态：** ✅ RC1 Released (Local) — Timeline SSOT + Hero 重构 + ProjectCard 视觉层次 + P0 真实性修复
+**Release Date：** 2026-07-15
+**Baseline Commit：** `a263700b327416aa4fa4a2291ace3e977c986639`（Local，未 push）
 
 ### 用户指令核心约束
 

@@ -1,25 +1,39 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const props = defineProps<{
   /** 架构图标识（对应 frontmatter.architecture，匹配 src/assets/projects/{architecture}.svg） */
   architecture?: string
 }>()
 
-/** 预加载 src/assets/projects/ 下所有 SVG，返回路径 → URL 映射 */
-const svgModules = import.meta.glob('../../assets/projects/*.svg', {
-  eager: true,
+/**
+ * 按需加载 src/assets/projects/ 下 SVG：返回路径 → 动态 import() 加载器 映射。
+ * 仅当组件渲染且 architecture prop 存在时，才会触发对应的 import() 获取 URL。
+ * URL 字符串不进入主 bundle，避免 eager 收集所有 SVG URL。
+ */
+const svgModuleLoaders = import.meta.glob('../../assets/projects/*.svg', {
   query: '?url',
   import: 'default',
-}) as Record<string, string>
+}) as Record<string, () => Promise<string>>
 
-/** 根据 architecture 字段查找对应的 SVG URL */
-const svgUrl = computed(() => {
-  if (!props.architecture) return undefined
-  const key = Object.keys(svgModules).find((k) =>
-    k.endsWith(`/${props.architecture}.svg`),
+/** 当前匹配到的 SVG URL（异步加载，初始为 undefined） */
+const svgUrl = ref<string | undefined>(undefined)
+
+watchEffect(async () => {
+  const arch = props.architecture
+  if (!arch) {
+    svgUrl.value = undefined
+    return
+  }
+  const key = Object.keys(svgModuleLoaders).find((k) =>
+    k.endsWith(`/${arch}.svg`),
   )
-  return key ? svgModules[key] : undefined
+  const loader = key ? svgModuleLoaders[key] : undefined
+  if (!loader) {
+    svgUrl.value = undefined
+    return
+  }
+  svgUrl.value = await loader()
 })
 </script>
 

@@ -452,3 +452,71 @@ All acceptance criteria met:
 - **RELEASE_REVIEW_REPORT.md** — 追加本节 Task 007/008 审计记录
 
 **下一任务：** Task 009 — Vercel 部署与上线（隐私问题已解决，可执行 push / Release / 部署）
+
+---
+
+## 13. Task 009 — Vercel 部署与线上验证（2026-07-15）
+
+### 13.1 部署信息
+
+| 项 | 值 |
+|----|-----|
+| 部署平台 | Vercel |
+| 部署方式 | Vercel Dashboard（GitHub 仓库导入） |
+| 源分支 | `master` |
+| 源 Commit | `065a40c`（fix(privacy): remove phone number from resume for public repo） |
+| 部署状态 | ✅ Ready |
+| 部署耗时 | ~1 分钟 |
+| 线上地址 | https://lai-portfolio-xi.vercel.app |
+| Deployment URL | lai-portfolio-k23cca7lp-l535304334s-projects.vercel.app |
+
+### 13.2 线上全站验证
+
+| 验证项 | 结果 |
+|--------|------|
+| `/` 首页 | ✅ 渲染正常 |
+| `/projects/jiangnan-travel` | ✅ 渲染正常 |
+| `/projects/love-letter` | ✅ 渲染正常 |
+| `/projects/exam-system` | ✅ 渲染正常 |
+| `/skills` 能力页 | ✅ 渲染正常 |
+| `/interview` 面试页 | ✅ 渲染正常 |
+| `/ai-practice` AI 实践页 | ✅ 渲染正常 |
+| `/resume` 简历页（含 PDF 下载按钮） | ✅ 渲染正常，按钮存在 |
+| `/about` 关于页 | ✅ 渲染正常 |
+| 路由刷新（直接访问 /resume, /about） | ✅ SPA rewrite 生效 |
+| 控制台 Errors | ✅ 0 个 |
+| 控制台 Warnings | ✅ 0 个 |
+| 响应式布局（桌面 1280px） | ✅ 无水平溢出 |
+| 响应式布局（移动 375px） | ✅ 无水平溢出 |
+| GitHub 链接 | ✅ 指向 https://github.com/l535304334 |
+| SEO `<title>` | ✅ "赖睿轩 | 软件工程学生 · 技术成长档案" |
+| SEO `<meta description>` | ✅ 存在 |
+
+### 13.3 Lighthouse 评分
+
+| 维度 | Mobile | Desktop | 评价 |
+|------|--------|---------|------|
+| Performance | 93 | 93 | 🟢 优秀（>90） |
+| Accessibility | 96 | 96 | 🟢 优秀（>90） |
+| Best Practices | 100 | 100 | 🟢 满分 |
+| SEO | 91 | 91 | 🟢 优秀（>90） |
+
+**Lighthouse 综合评价：** 四项评分均超过 90 分，Best Practices 满分。网站性能、可访问性、最佳实践和 SEO 均达到优秀水平。
+
+### 13.4 优化建议（供后续参考，不阻塞发布）
+
+- **Performance：** 减少渲染阻塞请求、优化 LCP、减少 DOM 大小
+- **Accessibility：** 提升背景色与前景色对比度、统一相同链接用途
+- **SEO：** 确保图片具备 alt 属性、提供描述性链接文字
+
+### 13.5 部署结论
+
+✅ **网站已成功部署到 Vercel，可作为最终线上版本长期使用。**
+
+- 9 个路由全部正常
+- 0 控制台错误
+- Lighthouse 四项评分均 >90
+- 响应式布局无溢出
+- SPA 路由刷新正常
+- GitHub 链接正确
+- SEO 基础信息完整

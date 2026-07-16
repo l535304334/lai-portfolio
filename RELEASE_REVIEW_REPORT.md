@@ -1458,3 +1458,147 @@ nothing to commit, working tree clean
 4. **禁止**提前进入 RC4 或修改任何 RC4 内容
 
 **RC3 发布完成。等待用户批准 RC4。**
+
+---
+
+## 20. RC4.1 Report — Skills 数据层 + 视觉重构（2026-07-17）
+
+> **本节为 RC4.1 子阶段报告。**
+>
+> **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划。
+>
+> **RC4 定位**：全局基础 + Skills 试点（建立子页面 Header 工具类 + Skills 数据层与视觉重构）。
+
+### 20.1 子阶段目标
+
+RC4.1 作为 RC4 的第一个子阶段，承担两项核心交付：
+
+1. **全局基础**：在 [src/styles/global.css](src/styles/global.css) 建立 `.page__header` / `.page__subtitle` 工具类（CSS utility，非新组件），为 RC5（Resume）/ RC6（Interview + AiPractice）子页面统一 Header 模式铺路
+2. **Skills 试点**：
+   - 将技术栈从 Markdown body 迁移至 frontmatter.categories（结构化数据）
+   - 消除 Skills 页 `page__hint` 硬编码，subtitle 从 SSOT 读取
+   - 建立"frontmatter 结构化 + body 叙事"的双层信息架构，与 About.md 模式对齐
+
+### 20.2 修改文件清单（7 个，1 新建 + 6 修改）
+
+| # | 文件 | 类型 | 改动概要 |
+|---|---|---|---|
+| 1 | [src/types/skills.ts](src/types/skills.ts) | ★ 新建 | SkillsContent + SkillCategory 接口（subtitle? + categories? 可选字段） |
+| 2 | [src/utils/content.ts](src/utils/content.ts) | 修改 | scanSkills 返回类型改为 SkillsContent；新增 subtitle + categories 解析逻辑（含空值过滤） |
+| 3 | [src/env.d.ts](src/env.d.ts) | 修改 | virtual:skills-content 类型声明改用 SkillsContent（替代原 inline 类型） |
+| 4 | [src/content/skills/index.md](src/content/skills/index.md) | 修改 | frontmatter 新增 subtitle + 6 项 categories；body 移除"## 技术栈" section（仅保留学习路线 + 当前学习） |
+| 5 | [src/styles/global.css](src/styles/global.css) | 修改 | 新增 `.page__header` / `.page__subtitle` 工具类（CSS utility，非组件；样式值参考 About.vue `.about__header`） |
+| 6 | [src/pages/Skills.vue](src/pages/Skills.vue) | 修改 | 完全重写：应用工具类 + categories 卡片网格（6 个分类）+ 移除 scoped `.skills__header` CSS |
+| 7 | [release-gate-task-005.mjs](release-gate-task-005.mjs) | 修改 | Test 6 扩展：+10 项断言（subtitle 渲染 + page__hint 消除 + page__header 应用 + 6 分类卡片 + 6 分类名称验证）；skillsP 阈值 5 → 4 |
+
+### 20.3 数据流变更
+
+**变更前**（RC3 状态）：
+```
+skills/index.md (frontmatter: slug/title/date + body 含"## 技术栈")
+  → scanSkills() 返回 { slug, title, date, html }
+  → Skills.vue 硬编码 page__hint "技术栈 · 学习路线 · 持续学习中"
+  → MarkdownContent 渲染 html（含技术栈 + 学习路线 + 当前学习）
+```
+
+**变更后**（RC4.1）：
+```
+skills/index.md (frontmatter: slug/title/date + ★subtitle + ★categories[6] + body 仅学习路线+当前学习)
+  → scanSkills() 返回 SkillsContent { slug, title, date, ★subtitle, ★categories, html }
+  → Skills.vue 从 SSOT 读取 subtitle 渲染至 .page__subtitle
+  → Skills.vue 渲染 categories 为 6 个 .skills__category 卡片
+  → MarkdownContent 渲染 html（仅学习路线 + 当前学习）
+```
+
+### 20.4 设计决策
+
+| # | 决策 | 理由 |
+|---|---|---|
+| 1 | `.page__header` / `.page__subtitle` 作为 CSS utility 而非新组件 | 避免消耗组件配额（剩余 1 个），同时为 RC5/RC6 子页面提供统一 Header 模式 |
+| 2 | About.vue 保留 scoped `.about__header` 不强制迁移 | RC3.2 已冻结，外科手术式修改原则；新页面优先使用工具类 |
+| 3 | 技术栈从 body 迁移至 frontmatter.categories | categories 是结构化数据（name + items），适合卡片网格展示；body 仅保留叙事内容 |
+| 4 | categories 使用卡片网格而非 MetricCard 复用 | category 数据是"name + items 字符串"，不是 MetricCard 适配的"number + label" |
+| 5 | `.page__header` 样式值参考 About.vue `.about__header` | 建立 About 为参考基准（space-12 margin-bottom / space-10 padding-bottom / 1px border-bottom） |
+| 6 | Playwright `skillsP >= 5` 调整为 `>= 4` | 技术栈段落迁移至 frontmatter 后，body 段落数减少，阈值同步调整 |
+| 7 | subtitle 字段为可选（`subtitle?: string`） | 向后兼容，不破坏现有消费者；与 PersonalContent.subtitle 模式对齐 |
+
+### 20.5 Playwright 测试扩展
+
+**Test 6（Skills 页）断言数变化**：7 项 → 17 项（+10 项）
+
+| 类别 | 新增断言 | 验证内容 |
+|---|---|---|
+| SSOT subtitle | `Skills 页 subtitle 渲染 = "技术栈 · 学习路线 · 持续学习中"` | subtitle 从 frontmatter 读取并渲染至 `.page__subtitle` |
+| 硬编码消除 | `Skills 页 page__hint 硬编码已消除` | `.page__hint` count === 0 |
+| 工具类应用 | `Skills 页应用 .page__header 工具类` | `.page__header` count === 1 |
+| 结构化卡片 | `Skills 页 categories 渲染 6 个分类卡片` | `.skills__category` count === 6 |
+| 分类名称（×6） | `Skills 页分类 "后端开发" 存在` 等 6 项 | 6 个分类名称全部正确渲染 |
+
+**测试结果**：65/65 通过（RC3 是 55/55，新增 10 项全部通过）
+
+### 20.6 Bundle 体积对比
+
+| Chunk | RC3 | RC4.1 | 变化 |
+|---|---|---|---|
+| Skills CSS | 1.05 kB / gzip 0.42 kB | 1.09 kB / gzip 0.43 kB | +0.04 kB / +0.01 kB gzip |
+| Skills JS | 2.23 kB / gzip 1.50 kB | 2.67 kB / gzip 1.53 kB | +0.44 kB / +0.03 kB gzip |
+| 主包 index.js | 107.82 kB / gzip 41.89 kB | 107.82 kB / gzip 41.89 kB | 0 |
+| 总模块数 | 1664 | 1664 | 0 |
+
+**结论**：Bundle 体积变化可忽略（Skills CSS +0.04 kB / JS +0.44 kB，因新增 categories 卡片渲染逻辑）；主包与总模块数零变化。
+
+### 20.7 验证结果
+
+| 验证项 | 结果 |
+|---|---|
+| `npm run typecheck` | ✅ 通过（exit 0，0 错误） |
+| `npm run build` | ✅ 通过（1664 模块，2.40s，gzip 主包 41.89 KB） |
+| `npm test`（Playwright） | ✅ **65/65** 通过（RC3 是 55/55，+10 项断言全部通过） |
+| 控制台错误扫描（7 路由） | ✅ 0 运行时错误（已过滤 Shiki singleton 警告） |
+| 响应式（桌面/平板/移动） | ✅ Skills 页 3 断点无水平溢出 |
+| 主题切换 | ✅ 点击两次后 data-theme = dark |
+
+### 20.8 约束遵守
+
+| 约束 | 状态 |
+|---|---|
+| 新增组件配额 ≤2 | ✅ RC4.1 未新增组件（剩余 1 个） |
+| 新增第三方依赖 | ✅ 0 |
+| 新增 Design Token / 颜色 / 字体 / 动画 | ✅ 0（仅新增 CSS utility 类，使用现有 Token） |
+| Markdown SSOT 保持 | ✅ skills/index.md 为唯一数据源 |
+| frontmatter 字段向后兼容 | ✅ subtitle + categories 均为可选字段 |
+| 每子阶段三项验证 | ✅ typecheck + build + Playwright 全过 |
+| 隐私扫描 | ✅ 0 手机号 / 0 真实密钥 |
+| 外科手术式修改 | ✅ 仅触碰必要文件，About.vue 等无关文件未改 |
+
+### 20.9 RC3.3 IA Review P2 建议处理进度
+
+| # | 建议 | RC4.1 处理 |
+|---|---|---|
+| 3 | 4 子页面 page__hint 迁移 SSOT | 🟡 Skills 已完成（其余 3 页待 RC5/RC6） |
+| 4 | 3 子页面 .xxx__header 提取为 .page__header | 🟡 工具类已建立并验证（About.vue 保留 scoped，其余子页面待 RC5/RC6 应用） |
+| 5 | Skills vs Projects vs Resume 能力描述重复监控 | 🟡 Skills 软件工程实践分类已建立（待 RC5 Resume 重构时比对） |
+
+### 20.10 风险评估
+
+| 风险 | 严重度 | 处理 |
+|---|---|---|
+| Skills.vue 完全重写可能引入未发现的问题 | 低 | Playwright +10 项断言已覆盖核心功能；65/65 全过 |
+| categories 卡片网格在移动端可能溢出 | 低 | Test 13 已验证 375x667 无水平溢出 |
+| `.page__header` 工具类未来可能需要微调 | 低 | RC5/RC6 应用时如发现冲突，再统一调整（外科手术式） |
+
+### 20.11 待用户批准事项
+
+1. **是否批准 RC4.1 通过**？
+2. **是否立即 commit + 推送 origin/master**？（RC4~RC7 不发新版本，仅推送 origin）
+3. **是否进入 RC4.2 Final Review**？（Code/Design/Performance 局部审计 + 文档同步）
+
+### 20.12 下一步
+
+**等待用户批准 RC4.1 后**：
+1. Git commit RC4.1 改动（7 个文件）
+2. 推送 origin/master
+3. 进入 RC4.2 Final Review（Code/Design/Performance 局部审计 + 文档同步）
+4. RC4.2 完成后输出 RC4 整体报告，等待用户批准进入 RC5
+
+**RC4.1 报告结束。等待用户批准。**

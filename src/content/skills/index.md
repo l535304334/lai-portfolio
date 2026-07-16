@@ -3,27 +3,21 @@ slug: skills
 type: skill
 title: 技术能力
 date: 2026-07
+subtitle: 技术栈 · 学习路线 · 持续学习中
+categories:
+  - name: 后端开发
+    items: Java 17 · Spring Boot 3 · MyBatis-Plus · MySQL · Redis · Redisson · JWT · Spring Security · Knife4j
+  - name: 前端开发
+    items: Vue 3 (Composition API) · React 18 · TypeScript (strict) · Vite · Element Plus · ECharts · Zustand · Pinia
+  - name: 小程序 & 跨端
+    items: Taro 4 · 微信小程序 · 微信云开发 CloudBase · Serverless
+  - name: 工具 & 运维
+    items: Docker · Docker Compose · Git · GitHub Actions · Nginx · Vitest · Playwright · ESLint
+  - name: AI 工程化
+    items: DeepSeek API · Prompt Engineering · AI 辅助开发 (Claude Code / Trae) · SSE 流式响应
+  - name: 软件工程实践
+    items: 状态机设计 · 事件溯源 · 分布式锁 · 评分算法 · 安全加固 (OWASP Top 10) · 技术文档
 ---
-
-## 技术栈
-
-### 后端开发
-Java 17 · Spring Boot 3 · MyBatis-Plus · MySQL · Redis · Redisson · JWT · Spring Security · Knife4j
-
-### 前端开发
-Vue 3 (Composition API) · React 18 · TypeScript (strict) · Vite · Element Plus · ECharts · Zustand · Pinia
-
-### 小程序 & 跨端
-Taro 4 · 微信小程序 · 微信云开发 CloudBase · Serverless
-
-### 工具 & 运维
-Docker · Docker Compose · Git · GitHub Actions · Nginx · Vitest · Playwright · ESLint
-
-### AI 工程化
-DeepSeek API · Prompt Engineering · AI 辅助开发 (Claude Code / Trae) · SSE 流式响应
-
-### 软件工程实践
-状态机设计 · 事件溯源 · 分布式锁 · 评分算法 · 安全加固 (OWASP Top 10) · 技术文档
 
 ## 学习路线
 

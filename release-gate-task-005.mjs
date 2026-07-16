@@ -142,7 +142,7 @@ try {
   check('AI 实践页 h3（案例）存在', aiH3 >= 3, `h3 count: ${aiH3}`)
   await screenshot(page, '05-ai-practice')
 
-  // ===== Test 6: Skills 页（Task 005.1 ★）=====
+  // ===== Test 6: Skills 页（Task 005.1 ★ + RC4.1 重构）=====
   log('\n=== Test 6: Skills 页（新增）===')
   await page.goto(`${BASE}/skills`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(800)
@@ -156,15 +156,46 @@ try {
   const skillsEyebrow = await page.locator('.page__eyebrow').count()
   check('Skills 页 eyebrow 存在', skillsEyebrow >= 1)
 
+  // RC4.1: subtitle 渲染验证（从 frontmatter SSOT 读取，替换原硬编码 page__hint）
+  const skillsSubtitle = await page.locator('.page__subtitle').textContent()
+  check(
+    'Skills 页 subtitle 渲染 = "技术栈 · 学习路线 · 持续学习中"',
+    skillsSubtitle?.trim() === '技术栈 · 学习路线 · 持续学习中',
+    `actual: ${skillsSubtitle}`,
+  )
+
+  // RC4.1: page__hint 硬编码消除验证（不应再出现 .page__hint）
+  const skillsHintCount = await page.locator('.page__hint').count()
+  check('Skills 页 page__hint 硬编码已消除', skillsHintCount === 0, `hint count: ${skillsHintCount}`)
+
+  // RC4.1: .page__header 工具类应用验证
+  const skillsPageHeader = await page.locator('.page__header').count()
+  check('Skills 页应用 .page__header 工具类', skillsPageHeader === 1, `page__header count: ${skillsPageHeader}`)
+
+  // RC4.1: categories 结构化卡片验证（6 个技术栈分类）
+  const skillsCategoryCount = await page.locator('.skills__category').count()
+  check('Skills 页 categories 渲染 6 个分类卡片', skillsCategoryCount === 6, `categories: ${skillsCategoryCount}`)
+
+  const expectedCategoryNames = ['后端开发', '前端开发', '小程序 & 跨端', '工具 & 运维', 'AI 工程化', '软件工程实践']
+  const categoryNames = await page.locator('.skills__category-name').allTextContents()
+  const normalizedCategoryNames = categoryNames.map((s) => s.trim())
+  for (const name of expectedCategoryNames) {
+    check(
+      `Skills 页分类 "${name}" 存在`,
+      normalizedCategoryNames.includes(name),
+      `names: ${JSON.stringify(normalizedCategoryNames)}`,
+    )
+  }
+
   const skillsH2 = await page.locator('h2').count()
   check('Skills 页 h2 >= 3（技术栈/学习路线/当前学习）', skillsH2 >= 3, `h2 count: ${skillsH2}`)
 
   const skillsH3 = await page.locator('h3').count()
-  check('Skills 页 h3 >= 5（分类）', skillsH3 >= 5, `h3 count: ${skillsH3}`)
+  check('Skills 页 h3 >= 5（分类 + 学习路线阶段）', skillsH3 >= 5, `h3 count: ${skillsH3}`)
 
-  // Markdown 渲染验证
+  // Markdown 渲染验证（body 仅含学习路线 + 当前学习，技术栈已迁移至 frontmatter categories）
   const skillsP = await page.locator('.markdown p').count()
-  check('Skills 页段落存在', skillsP >= 5, `p count: ${skillsP}`)
+  check('Skills 页段落存在（学习路线阶段描述）', skillsP >= 4, `p count: ${skillsP}`)
 
   const skillsUl = await page.locator('.markdown ul').count()
   check('Skills 页无序列表存在', skillsUl >= 1, `ul count: ${skillsUl}`)

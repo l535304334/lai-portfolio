@@ -140,3 +140,21 @@ section[id] {
   color: var(--color-text-muted);
   margin-top: var(--space-8);
 }
+
+/* 页面 Header 工具类 — 子页面统一 Header 容器（RC4 建立，参考 About.about__header 样式值）
+   消费者：Skills（RC4）/ Resume（RC5）/ Interview + AiPractice（RC6）
+   About 保持 .about__header 独立实现（RC3 冻结），RC7/RC8 评估是否迁移 */
+.page__header {
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-10);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 页面 Subtitle 工具类 — 从 SSOT frontmatter.subtitle 读取（替换 page__hint 硬编码） */
+.page__subtitle {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+  margin-top: var(--space-2);
+  max-width: 36rem;
+}

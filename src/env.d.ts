@@ -27,7 +27,8 @@ declare module 'virtual:ai-practice-content' {
 }
 
 declare module 'virtual:skills-content' {
-  export const skills: { slug: string; title: string; date: string; html: string } | null
+  import type { SkillsContent } from '@/types/skills'
+  export const skills: SkillsContent | null
 }
 
 declare module 'virtual:personal-content' {

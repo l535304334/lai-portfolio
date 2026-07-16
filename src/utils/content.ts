@@ -20,6 +20,7 @@ import type { DecisionContent } from '../types/decision'
 import type { InterviewCategory, InterviewQAPair } from '../types/interview'
 import type { AiPracticeContent } from '../types/ai-practice'
 import type { PersonalContent } from '../types/personal'
+import type { SkillsContent } from '../types/skills'
 import type { ResumeContent } from '../types/resume'
 import type { TimelineContent, TimelineStage } from '../types/timeline'
 import { renderMarkdown } from './markdown'
@@ -261,7 +262,7 @@ async function scanAiPractice(root: string): Promise<AiPracticeContent | null> {
 }
 
 /** 扫描 skills/index.md，渲染 HTML，返回技能页内容（单文件） */
-async function scanSkills(root: string): Promise<{ slug: string; title: string; date: string; html: string } | null> {
+async function scanSkills(root: string): Promise<SkillsContent | null> {
   const filePath = path.resolve(root, CONTENT_BASE, 'skills', 'index.md')
   if (!fs.existsSync(filePath)) return null
 
@@ -281,6 +282,15 @@ async function scanSkills(root: string): Promise<{ slug: string; title: string; 
     slug: String(data.slug),
     title: String(data.title),
     date: String(data.date ?? ''),
+    subtitle: data.subtitle ? String(data.subtitle) : undefined,
+    categories: Array.isArray(data.categories)
+      ? data.categories
+          .map((c: Record<string, unknown>) => ({
+            name: String(c.name ?? ''),
+            items: String(c.items ?? ''),
+          }))
+          .filter((c) => c.name && c.items)
+      : undefined,
     html,
   }
 }

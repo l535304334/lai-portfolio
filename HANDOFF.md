@@ -1,88 +1,285 @@
 # 项目交接文档（HANDOFF.md）
 
-> 本文件是 AI 接手入口。任何 AI（Trae / GLM / Claude Code / Codex / ChatGPT 等）接手本项目时，**优先阅读本文件**，无需重新分析整个项目。
-> 最后更新：2026-07-15
+> **本文件是整个项目的最终交接文档。**
+>
+> 任何 AI（Trae / GLM / Claude Code / Codex / ChatGPT 等）接手本项目时，**仅阅读本文件即可获得全部上下文**，无需重新分析整个项目，无需翻阅历史对话。
+>
+> 以后所有开发均以本文件作为唯一项目上下文。
+>
+> 最后更新：2026-07-17
+> 当前阶段：**RC3.1 已完成（commit `c8b7913`，本地未推送），等待用户批准进入 RC3.2**
 
 ---
 
-## 1. 项目定位
+## 0. PROJECT STATUS SNAPSHOT（快速恢复上下文）
 
-**面向考研复试导师与校招面试官的软件工程学生技术作品集网站** — 通过三个真实项目案例展示「问题 → 方案对比 → 选择理由 → 实现 → 验证 → 复盘」的工程思维链条。
-
----
-
-## 2. 当前状态
+> 新会话开始时，**只需阅读本节即可快速恢复上下文**。详细内容见后续章节。
 
 | 项 | 值 |
-|----|-----|
-| Task 001 | ✅ 已完成 |
-| Task 002 | ✅ 已完成 |
-| Task 003 | ✅ 已完成（含 Release Gate 14/14 Playwright 测试 + 合并 master + Tag v0.3.0） |
-| Task 004 | ✅ 已完成（含 Release Gate 33/33 Playwright 测试 + 合并 master + Tag v0.4.0） |
-| Task 005 | ✅ 已完成（含 Release Gate 50/50 Playwright 测试 + 合并 master + Tag v0.5.0） |
-| Task 006 | ✅ 已完成（含 GitHub MCP 核对 + 4 Markdown 同步 + Playwright 50/50 + 仓库清理） |
-| Task 007 | ✅ 已完成（Final Portfolio Review，7 部分评审 + 4 类事实修正，Commit `5c58f58`） |
-| Task 008 | ✅ 已完成（Resume 系统完善，第 7 虚拟模块 + Resume.vue 重写 + PDF 打印 + Playwright 49/49） |
-| Task 009 | ✅ 已完成（Vercel 部署上线 + 隐私脱敏 commit `065a40c`） |
-| **Task 010 RC1** | **✅ Released (Local) — commit `a263700`（Timeline SSOT + Hero 重构 + P0 真实性修复 + Playwright 基础设施恢复）** |
-| Release Review | ✅ Task 001~009 全部通过；Task 010 RC1 Released (Local) |
-| **Master Baseline** | Task 010 RC1 commit `a263700`（Local，未 push） |
-| **Tag** | `v0.5.0`（Task 005 Release，未移动） |
-| **当前分支** | `master` |
-| **工作区状态** | RC1 Local Release Baseline 已冻结（不 push） |
-| 验证 | ✅ build 成功（1658 模块，2.36s）/ typecheck 通过 / Playwright 49/49 PASS / Authenticity Audit + Consistency Audit 通过 |
-| **当前进度** | RC1 Released (Local)，等待用户批准后进入 RC2 |
-| **虚拟模块数** | 8 个（content / project-detail / interview-content / ai-practice-content / skills-content / personal-content / resume-content / **timeline-content**） |
-| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel Git Integration 自动部署） |
+|---|---|
+| **项目名称** | 软件工程学生技术作品集（Portfolio v2.0） |
+| **当前阶段** | RC3.1 已完成 |
+| **下一阶段** | RC3.2（About.vue 视觉重构）— **待用户批准** |
+| **项目版本** | `2.0.0`（[package.json](package.json)） |
+| **最新 Commit** | `c8b7913` — `feat(rc3.1): refactor About data layer to character-profile model` |
+| **最新 Tag** | `v2.0.0`（RC2 Release，commit `20598ae`，已推送 origin） |
+| **本地 vs 远程** | 本地领先 `origin/master` **1 commit**（RC3.1 未推送） |
+| **工作区状态** | clean（HANDOFF.md 更新后会再次 clean） |
+| **当前分支** | `master`（受保护，禁止直接 push 历史） |
+| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2** |
+| **虚拟模块数** | 8 个（已定型，不再新增） |
+| **测试基线** | Playwright 48/48 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)） |
+| **构建基线** | 1664 模块，约 2.5s（gzip 主包 41.88 KB） |
+| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，origin/master 触发） |
+| **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
+| **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
+| **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每子阶段三项验证 |
+| **下一步动作** | 询问用户：「是否批准进入 RC3.2？或先推送 RC3.1 commit 到 origin？」 |
+| **完整 Roadmap** | RC3 → RC4 → RC5 → RC6 → RC7 → RC8（详见 §七） |
+| **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 
 ---
 
-## 3. 当前技术栈
+## 一、项目概述
+
+### 1.1 项目目标
+
+构建一个面向考研复试导师与校招面试官的**软件工程学生技术作品集网站**，通过三个真实项目案例展示「问题 → 方案对比 → 选择理由 → 实现 → 验证 → 复盘」的工程思维链条。
+
+网站是简历的"证据"，不是简历的 HTML 版。
+
+### 1.2 用户定位
+
+| 用户 | 关注点 | 网站策略 |
+|------|--------|----------|
+| 考研复试导师 | 学术潜力、工程素养、独立思考 | 重点展示设计决策过程、方案对比、状态机/算法设计、文档规范 |
+| 校招面试官 | 落地能力、代码质量、解决问题 | 重点展示项目架构、代码片段、测试体系、性能优化、安全意识 |
+
+### 1.3 网站定位
+
+**Developer Academic 风格** — 克制、专业、有细节。
+
+- 不追暗黑炫酷、不走纯学术白底、不追花哨动画
+- 配色：Slate 灰色系 + Amber 强调色
+- 字体：Inter（正文）+ JetBrains Mono（代码/技术术语）
+- 个人品牌来自工程质量、内容质量、项目深度，而非视觉装饰
+- Hero 信息层级：Who / What / Why / Next / Engineering Metrics（无营销文案）
+
+### 1.4 当前版本
+
+- **项目版本**：`2.0.0`（见 [package.json](package.json)）
+- **当前 Tag**：`v2.0.0`（RC2 Release，已推送 origin）
+- **下一版本**：未规划。RC3 不发新版本，仍属 v2.0.0 范畴
+
+### 1.5 技术栈
 
 | 层级 | 选型 | 版本 |
 |------|------|------|
-| 框架 | Vue 3 | 3.5+ |
-| 语言 | TypeScript（strict） | 5.5+ |
-| 构建 | Vite | 6+ |
-| 路由 | Vue Router（web history） | 4.x |
-| CSS | CSS Custom Properties | — |
-| 图标 | Lucide Vue | — |
+| 框架 | Vue 3 (`<script setup lang="ts">` + Composition API) | 3.5+ |
+| 语言 | TypeScript（strict: true） | 5.6.3 |
+| 构建 | Vite（含构建时内容插件） | 6.4.3 |
+| 路由 | Vue Router（createWebHistory） | 4.5+ |
+| CSS | CSS Custom Properties（设计令牌系统） | — |
+| 图标 | Lucide Vue Next | 0.460+ |
 | 字体 | Inter + JetBrains Mono（Google Fonts） | — |
-| 部署 | Vercel（SPA rewrites） | — |
+| Markdown 解析 | markdown-it + gray-matter（仅构建时） | 14.3.0 / 4.0.3 |
+| 代码高亮 | Shiki（仅构建时，深色主题不随主题切换） | 4.3.1 |
+| E2E 测试 | Playwright | 1.48+ |
+| 部署 | Vercel（SPA rewrites，master 分支自动部署） | — |
 
-**运行时 bundle 仅含：** Vue 3 + Vue Router + Lucide Vue + CSS（gzip ~52KB）。
+**运行时 bundle 仅含：** Vue 3 + Vue Router + Lucide Vue + CSS（gzip 主包约 41.88 KB）。
 
-**运行时依赖（3 项）：** vue@^3.5.13 / vue-router@^4.5.0 / lucide-vue-next@^0.460.0
-**开发时依赖（9 项）：** @types/node / @vitejs/plugin-vue / typescript / vite / vue-tsc / markdown-it / gray-matter / shiki / @types/markdown-it
+**运行时依赖（3 项）**：vue / vue-router / lucide-vue-next
+**开发时依赖（9 项）**：@types/markdown-it / @types/node / @vitejs/plugin-vue / gray-matter / markdown-it / playwright / shiki / typescript / vite / vue-tsc
 
-**Task 003 已引入（仅构建时，不进运行时 bundle）：** markdown-it ^14.3.0 / gray-matter ^4.0.3 / shiki ^4.3.1 / @types/markdown-it ^14.1.2
+### 1.6 当前分支
+
+- **分支**：`master`（生产分支，受保护）
+- **本地领先远程**：1 commit（RC3.1 commit `c8b7913` 未推送）
+- **远程 `origin/master`**：已包含 RC2 完整内容（commit `20598ae` + tag `v2.0.0`）
+
+### 1.7 Git 状态
+
+```
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.  ← RC3.1 待推送
+nothing to commit, working tree clean
+```
+
+**最近 5 个 commit**：
+```
+c8b7913 feat(rc3.1): refactor About data layer to character-profile model  ← 本地未推送
+20598ae chore(release): v2.0.0                                              ← origin/master
+12992da docs(rc2.5): final review and design consistency
+4d9c1e6 fix: improve accessibility with aria-labelledby and labeled nav
+2563e38 style(rc2.3): strengthen visual hierarchy of project detail components
+```
+
+**所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0`
 
 ---
 
-## 4. 当前目录
+## 二、开发历史
+
+项目经历 **Task 001~010** → **RC1** → **RC2** → **RC3.1** 三个阶段。
+
+### 2.1 Task 001~010（项目奠基，2026-07-08 ~ 2026-07-15）
+
+| Task | 内容 | 交付 |
+|------|------|------|
+| 000 | 内容资产整理 | 14 个 Markdown 内容文件 |
+| 001 | 工程骨架 | Vue 3 + Vite + 路由 + 主题切换 + 8 占位页 |
+| 002 | 首页 | Hero / ProjectCard / Timeline / Contact 4 组件 |
+| 003 | 构建时内容插件 + 项目详情页 | virtual:content + virtual:project-detail + Shiki + markdown-it |
+| 004 | 面试页 + AI 实践页 | virtual:interview-content + virtual:ai-practice-content |
+| 005 | Skills / Resume / About | virtual:skills-content + virtual:personal-content（Tag v0.5.0） |
+| 006 | 项目同步 + 仓库清理 | 3 项目 GitHub 链接 + 17 张截图入库 |
+| 007 | Final Portfolio Review | 7 部分评审 + 4 类事实修正 |
+| 008 | Resume 系统完善 | virtual:resume-content + window.print PDF |
+| 009 | Vercel 部署上线 | https://lai-portfolio-xi.vercel.app |
+| 010 | Release Audit（RC 阶段开始） | 进入 RC1 |
+
+### 2.2 RC1 — 真实性与架构稳定（2026-07-15 ~ 2026-07-16）
+
+**设计目标**：在 Task 010 框架下，完成 P0 真实性修复 + 架构稳定性改造，作为后续视觉/交互升级的基线。
+
+**最终成果**：
+
+1. **Timeline SSOT 改造**（commit `864c996`）
+   - 将时间线数据从 Home.vue 静态数组迁移至 [src/content/growth/timeline.md](src/content/growth/timeline.md) frontmatter.stages
+   - 新增 `virtual:timeline-content` 虚拟模块（第 8 个，也是最后一个虚拟模块）
+   - Home.vue 从 SSOT 读取，About 保持独立内容不共享 Timeline
+   - TimelineStage 结构化字段：date / title / stack / highlights / learned / capability / nextStage / upcoming
+
+2. **Hero 重构**
+   - 移除"3 项目 / 218 文件 / 97 API"中可疑的"155 API tests"
+   - 替换为更稳定的工程指标：3 完整项目 / 218 源文件 / 97 API 端点 / 236 测试用例
+
+3. **P0 真实性修复**
+   - 修正文档中 4 处 "155 API tests" → "155 frontend tests"
+   - 修正 `开发设计规范-v1.0.md` 中 2 处过时数据
+   - 修正 `个人能力分析与网站规划报告.md` 中 1 处过时数据
+
+4. **工程基础设施**
+   - 添加 [.gitattributes](.gitattributes)：`* text=auto eol=lf` 统一行尾，避免 Windows CRLF 污染
+   - 恢复 Playwright 测试基础设施（release-gate-task-005.mjs）
+
+5. **RC1 Local Release Baseline 冻结**（commit `1ad444a`）
+   - Local Release（不推送 origin），作为 RC2 开发的稳定基线
+
+**为什么这样设计**：
+
+- **Timeline SSOT 是后续所有数据迁移的范式**。先在 Timeline 上验证 SSOT 模式，再推广到 About 等页面
+- **真实性优先于视觉**。在视觉升级前必须保证内容真实，否则视觉升级只是包装错误
+- **本地冻结而非远程发布**。RC1 不发布到生产，避免后续 RC 阶段频繁打 tag
+
+### 2.3 RC2 — 视觉升级与组件化（2026-07-16 ~ 2026-07-17）
+
+**设计目标**：以 RC1 为基线，对项目详情页和首页进行视觉层次、组件化、可访问性的全面升级，**严格控制新增组件数 ≤2**。
+
+**子阶段与最终成果**：
+
+| 子阶段 | Commit | 主要交付 |
+|---|---|---|
+| RC2.1 | `2233883` `9de992f` | 提取 ProjectHeader 组件（status / role 从 frontmatter 渲染，flex-wrap 移动端防护） |
+| RC2.2 | `2b39f33` `d9e315d` | ArchitectureDiagram 组件集成 + `import.meta.glob` 从 eager 改为 lazy（真正按需加载 SVG） |
+| RC2.3 | `2563e38` | 强化 ProjectDetail 视觉层次（DecisionSection border-top / padding / h2 字号差异化） |
+| RC2.4 | `4d9c1e6` | 可访问性修复（5 个 section aria-labelledby / ProjectNav aria-label / ArchitectureDiagram 动态 alt） |
+| RC2.5 | `12992da` | Final Review + Design Audit（eyebrow letter-spacing 统一为 0.08em） |
+| RC2 Release | `20598ae` + tag `v2.0.0` | 版本号 0.1.0 → 2.0.0 + Release Notes + push 15 commits 到 origin/master |
+
+**RC2 新增组件配额使用**：
+- 用户限制：≤2 个新组件
+- 实际新增：1 个（[ArchitectureDiagram.vue](src/components/project/ArchitectureDiagram.vue)）
+- **剩余配额：1 个**（RC3+ 可继续使用）
+
+**为什么这样设计**：
+
+- **组件配额制**强制在抽象与冗余之间做权衡，避免为单次使用做抽象
+- **ArchitectureDiagram 不修改 SVG 内容**，只处理显示、响应式、暗黑模式兼容（SVG 视为"亮色卡片"，用防御性样式适配 dark mode）
+- **子阶段串行执行**：每个 RC2.x 完成后必须通过 typecheck + build + Playwright 三项验证才能进入下一阶段
+- **eyebrow letter-spacing 统一 0.08em**：RC2.3 曾有意差异化到 0.12em，RC2.5 经讨论后统一，因差异化已通过其他方式实现
+
+### 2.4 RC3 — About 页面重构（2026-07-17 开始，进行中）
+
+**设计目标**：将 About 页从"5 section 散乱内容"重构为"人物画像"模型，建立结构化 frontmatter + Markdown body 的双层信息架构，避免与 Hero / Timeline / Resume 信息重复。
+
+**子阶段规划**：
+
+| 子阶段 | 状态 | 主要交付 |
+|---|---|---|
+| RC3.1 数据层重构 | ✅ 已完成（commit `c8b7913`，本地未推送） | 类型扩展 + frontmatter + 解析逻辑 + 测试同步 |
+| RC3.2 About.vue 视觉重构 | ⏳ 待批准 | Facts Panel + Header 强化 + CSS（消费 subtitle + facts） |
+| RC3.3 Final Review & Release | ⏳ 待批准 | Code/Design/Performance/**Information Architecture Review** + 文档 |
+
+**RC3.1 已完成的工作**：
+
+1. **类型扩展**（[src/types/personal.ts](src/types/personal.ts)）
+   - 新增 `PersonalFact` 接口（label + value 结构化键值对）
+   - `PersonalContent` 新增 `subtitle?: string` 和 `facts?: PersonalFact[]` 字段
+   - 全部为可选字段，向后兼容
+
+2. **解析逻辑扩展**（[src/utils/content.ts](src/utils/content.ts)）
+   - `scanPersonal()` 解析 `subtitle` 和 `facts`
+   - `.filter((f) => f.label && f.value)` 过滤空值，保证数据质量
+
+3. **内容重组**（[src/content/personal/about.md](src/content/personal/about.md)）
+   - frontmatter 新增 `subtitle: 软件工程学生 · 后端开发 · 分布式系统`
+   - frontmatter 新增 4 项 `facts`（教育 / 方向 / 考研 / GitHub）— 全部为长期稳定信息
+   - body 从 5 section（个人简介 / 教育 / 方向 / 联系方式 / 关于本站）精简为 3 section（工程定位 / 成长轨迹 / 关于本站）
+   - "成长轨迹" section 末尾引导访问 Timeline（`/#timeline`），不重复 Timeline 内容
+   - Email 不展示（隐私考虑），仅保留 GitHub
+
+4. **测试断言同步**（[release-gate-task-005.mjs](release-gate-task-005.mjs) Test 8）
+   - `h2 >= 4` → `h2 >= 3（工程定位/成长轨迹/关于本站）`
+   - 移除 `ul` 测试（联系方式已移到 facts）
+   - 移除直接 GitHub 链接测试（RC3.2 About.vue 渲染 facts 后将重新添加）
+   - 新增 Timeline 引导链接测试（`a[href*="#timeline"]`）
+
+**验证结果**：
+- ✅ typecheck 通过（exit 0）
+- ✅ build 通过（1664 模块，2.47s）
+- ✅ Playwright 48/48 通过（原 49 项，移 2 增 1，净 -1）
+- ✅ Bundle 体积零变化（About CSS 0.14 kB / JS 2.23 kB，与 RC2.5 完全一致）
+
+**为什么这样设计**：
+
+- **About = 人物画像，不是 Resume**。Resume 在 `/resume` 路由，About 不应重复
+- **facts ≤4 项且仅长期稳定信息**。不放项目数 / API 数 / 文件数等易变数据，避免与 Hero 重复
+- **成长轨迹只做概述 + 引导**。Timeline 在首页有完整呈现，About 不应重复，而是引导访问
+- **Email 不公开**。隐私考虑，About 仅保留 GitHub
+- **RC3.3 新增 Information Architecture Review**。重点检查 Hero / Timeline / Resume / About 之间的信息重复，确保每个页面职责清晰
+
+---
+
+## 三、当前项目架构
+
+### 3.1 目录结构
 
 ```
 个人网页/
-├── AI_RULES.md                    # AI 协作规范（必读）
-├── PROJECT_CONTEXT.md              # 项目上下文索引（必读）
-├── PROJECT_MEMORY.md              # 项目记忆档案（必读）
-├── HANDOFF.md                     # 本文件
+├── AI_RULES.md                    # AI 协作规范
+├── PROJECT_CONTEXT.md            # 项目上下文索引（旧版，本文件优先级更高）
+├── PROJECT_MEMORY.md             # 项目记忆档案
+├── HANDOFF.md                     # ★ 本文件（最终交接文档）
+├── RELEASE_REVIEW_REPORT.md      # 发布评审报告（含 RC2 Final Review Report §16-17）
 ├── ai-workspace.yaml              # AI 工作区配置
 ├── index.html                     # 入口 HTML（含 FOUC 防御脚本）
-├── package.json
+├── package.json                   # version: 2.0.0
 ├── tsconfig.json / tsconfig.node.json
 ├── vite.config.ts
 ├── vercel.json                    # SPA rewrites
+├── .gitattributes                 # * text=auto eol=lf
+├── release-gate-task-005.mjs      # Playwright E2E 测试（48 用例，17 测试组）
 │
 ├── docs/
 │   ├── 架构确认文档-v1.2.md        # ⭐ 权威架构文档（最高优先级）
-│   ├── 开发设计规范-v1.0.md        # v1.1 内容（文件名 v1.0，参考）
+│   ├── 开发设计规范-v1.0.md        # 内容为 v1.1（文件名 v1.0，参考）
 │   ├── 个人能力分析与网站规划报告.md  # v1.0 背景资料
 │   ├── task000-completion-report.md
-│   ├── assets/
-│   │   ├── architecture/          # 7 套 SVG + Mermaid 源码
-│   │   └── screenshots/           # 江南出行项目截图
-│   └── ...
+│   └── assets/
+│       ├── architecture/          # 7 套 SVG + Mermaid 源码
+│       └── screenshots/           # 17 张项目截图
 │
 ├── public/
 │   └── favicon.svg                # Amber 方块 + "L" 字母
@@ -92,320 +289,710 @@
     ├── router/index.ts            # 7 业务路由 + 404，scrollBehavior 含 hash
     ├── composables/useTheme.ts    # 单例主题（system/light/dark 三态）
     ├── layouts/DefaultLayout.vue
-    ├── components/common/         # NavBar / Footer / ThemeToggle / BackToTop
-    ├── components/home/           # HeroSection / ProjectCard / TimelineSection / ContactSection
-    ├── components/project/        # ProjectHeader / MetricCard / MarkdownContent / DecisionSection / ProjectNav
-    ├── pages/                     # 8 个页面（见 §5）
+    │
+    ├── components/
+    │   ├── common/                # NavBar / Footer / ThemeToggle / BackToTop
+    │   ├── home/                  # HeroSection / ProjectCard / TimelineSection / ContactSection
+    │   ├── interview/             # InterviewCategory / InterviewQuestion
+    │   └── project/               # ProjectHeader / MetricCard / MarkdownContent / DecisionSection / ProjectNav / ArchitectureDiagram
+    │
+    ├── pages/                     # 8 个页面
+    │   ├── Home.vue / ProjectDetail.vue / Skills.vue / Interview.vue
+    │   ├── AiPractice.vue / Resume.vue / About.vue / NotFound.vue
+    │
     ├── styles/
-    │   ├── tokens.css             # v1.2 §2.2 全量设计令牌
-    │   └── global.css             # reset + .page 全局样式 + 工具类
-    ├── types/                     # 类型定义（按域拆分，5 文件 + personal.ts）
-    │   ├── content.ts             # ContentMeta / Metric
+    │   ├── tokens.css             # Design Token 系统（color / space / text / radius / shadow / transition）
+    │   ├── global.css             # reset + .page 全局样式 + 工具类
+    │   └── code-theme.css         # Shiki 代码高亮主题
+    │
+    ├── types/                     # 类型定义（按域拆分）
+    │   ├── content.ts             # ContentMeta / Metric（基础类型）
     │   ├── project.ts             # ProjectSummary / ProjectContent
     │   ├── decision.ts            # DecisionContent
-    │   ├── timeline.ts            # TimelineStage
+    │   ├── timeline.ts            # TimelineStage / TimelineContent
     │   ├── contact.ts             # ContactInfo
-    │   ├── interview.ts           # InterviewQAPair / InterviewCategory（Task 004）
-    │   ├── ai-practice.ts         # AiPracticeContent（Task 004）
-    │   └── personal.ts            # PersonalContent（Task 005，4 行）
-    │   └── resume.ts              # ResumeContent（Task 008，4 行）
-    ├── content/                   # 15 个 Markdown 内容文件（Task 003 + 008 渲染）
-    │   ├── personal/  projects/  decisions/
-    │   ├── interview/  skills/  growth/  ai-practice/  resume/
-    ├── assets/                    # 空（Task 004 SVG 图表）
+    │   ├── interview.ts           # InterviewQAPair / InterviewCategory
+    │   ├── ai-practice.ts         # AiPracticeContent
+    │   ├── personal.ts            # ★ PersonalContent / PersonalFact（RC3.1 扩展）
+    │   └── resume.ts              # ResumeContent
+    │
+    ├── content/                   # Markdown 内容（SSOT）
+    │   ├── personal/about.md      # ★ RC3.1 重组（subtitle + 4 facts + 3 section body）
+    │   ├── projects/              # 3 个项目（jiangnan-travel / love-letter / exam-system）
+    │   ├── decisions/              # 3 个决策文档（10 项技术决策）
+    │   ├── interview/              # 4 个分类（17 道题）
+    │   ├── skills/index.md
+    │   ├── growth/timeline.md      # ★ RC1 SSOT 改造后的时间线数据源
+    │   ├── ai-practice/index.md
+    │   └── resume/index.md
+    │
+    ├── assets/
+    │   └── projects/              # 3 个项目架构图 SVG（Vite 静态资源引用）
+    │
     └── utils/
-        └── content.ts             # Vite 虚拟模块插件（7 虚拟模块，Task 003~005 + 008 累积）
+        ├── content.ts             # ★ Vite 构建时内容插件（8 个虚拟模块）
+        └── markdown.ts            # markdown-it + Shiki 配置
 ```
 
-**虚拟模块清单（7 个，src/utils/content.ts）：**
-- `virtual:content` — 项目摘要（Task 003）
-- `virtual:project-detail` — 项目详情 HTML（Task 003）
-- `virtual:interview-content` — 面试问答 HTML（Task 004）
-- `virtual:ai-practice-content` — AI 实践 HTML（Task 004）
-- `virtual:skills-content` — 技能页 HTML（Task 005.1）
-- `virtual:personal-content` — 关于我 HTML（Task 005.3）
-- `virtual:resume-content` — 简历页 HTML（Task 008）
+### 3.2 数据流（Markdown SSOT 模式）
+
+```
+src/content/**/*.md  ← 唯一数据源（SSOT）
+   │
+   ├─ frontmatter（gray-matter 解析）
+   │     └─ 由 vite 内容插件 scanXxx() 提取为结构化字段
+   │
+   └─ body（Markdown）
+         └─ 由 renderMarkdown() 渲染为 html
+               │  （markdown-it + Shiki，仅构建时）
+               │
+               ▼
+   virtual:*-content  →  TypeScript 类型化数据
+               │
+               ▼
+   pages/*.vue  →  渲染到 DOM
+```
+
+**关键约束**：
+- **Markdown 是唯一数据源**。禁止创建第二数据源
+- frontmatter 字段必须向后兼容，新增字段必须可选
+- 运行时零解析开销（全部构建时完成）
+
+### 3.3 虚拟模块（8 个，[src/utils/content.ts](src/utils/content.ts)）
+
+| 虚拟模块 | 用途 | 引入 Task |
+|---|---|---|
+| `virtual:content` | 项目摘要数组（无 HTML，首页用） | Task 003 |
+| `virtual:project-detail` | 项目详情（含渲染 HTML + 决策记录） | Task 003 |
+| `virtual:interview-content` | 面试问答分类 | Task 004 |
+| `virtual:ai-practice-content` | AI 工程实践内容 | Task 004 |
+| `virtual:skills-content` | 技术能力内容 | Task 005.1 |
+| `virtual:personal-content` | ★ 关于我内容（RC3.1 扩展 subtitle + facts） | Task 005.3 / RC3.1 |
+| `virtual:resume-content` | 简历内容 | Task 008 |
+| `virtual:timeline-content` | ★ 时间线内容（SSOT 改造，RC1 新增） | RC1 |
+
+**虚拟模块类型声明位置**：[src/env.d.ts](src/env.d.ts)
+
+### 3.4 主要组件关系
+
+**首页**（`Home.vue`）：
+```
+HeroSection  ← virtual:content（项目数等指标硬编码在组件内）
+ProjectCard  ← virtual:content（ProjectSummary[]）
+TimelineSection  ← virtual:timeline-content（TimelineStage[]）
+ContactSection  ← 静态数据
+```
+
+**项目详情页**（`ProjectDetail.vue`）：
+```
+ProjectHeader  ← virtual:project-detail（ProjectContent：status/role）
+MetricCard  ← ProjectContent.metrics
+ArchitectureDiagram  ← ProjectContent.architecture（懒加载 SVG）
+DecisionSection  ← ProjectContent.decision
+MarkdownContent  ← ProjectContent.html
+ProjectNav  ← 项目列表（上一篇/下一篇）
+```
+
+**关于页**（`About.vue`，RC3.2 待重构）：
+```
+当前：单一 MarkdownContent  ← virtual:personal-content.html
+RC3.2 后：Header（title + ★subtitle）+ Facts Panel（★facts）+ MarkdownContent（body）
+```
+
+### 3.5 页面职责（不可重复）
+
+| 路径 | 页面 | 职责 | 禁止 |
+|---|---|---|---|
+| `/` | Home | Who / What / Why / Next + 工程指标 + 项目卡片摘要 + 完整 Timeline + Contact | 不重复项目详情内容 |
+| `/projects/:slug` | ProjectDetail | 单项目完整内容 + 技术决策 + 架构图 + 指标 | 不重复其他项目 |
+| `/skills` | Skills | 技术栈分类 + 学习路线 | 不重复项目细节 |
+| `/interview` | Interview | 17 道面试题（4 分类） | 不重复项目内容 |
+| `/ai-practice` | AiPractice | AI 工程实践流程 | — |
+| `/resume` | Resume | 完整简历 + PDF 下载 | 不重复 About 人物画像 |
+| `/about` | About | **人物画像**（长期稳定信息 + 工程定位 + 成长概述 + 站点说明） | **不重复 Hero 工程指标 / Timeline 完整内容 / Resume 联系方式** |
+
+### 3.6 设计系统
+
+**Design Token 系统**（[src/styles/tokens.css](src/styles/tokens.css)）：
+
+| 类别 | 示例 |
+|---|---|
+| 颜色 | `--color-text-primary` / `--color-text-secondary` / `--color-text-muted` / `--color-accent` / `--color-accent-strong` / `--color-on-accent` / `--color-surface` / `--color-border` |
+| 间距 | `--space-1` ~ `--space-20`（4px / 8px / 12px / 16px / 20px / 24px / 32px / 40px / 48px / 64px / 80px） |
+| 字号 | `--text-xs` / `--text-sm` / `--text-base` / `--text-lg` / `--text-xl` / `--text-2xl` / `--text-3xl` / `--text-4xl` / `--text-5xl` |
+| 圆角 | `--radius-sm` / `--radius-md` / `--radius-lg` |
+| 阴影 | `--shadow-sm` / `--shadow-md` / `--shadow-lg` |
+| 过渡 | `--transition-fast` / `--transition-base` |
+| 行高 | `--leading-normal` / `--leading-heading` |
+| 字重 | `--font-weight-regular` / `--font-weight-medium` / `--font-weight-semibold` |
+
+**已建立的规范**：
+
+1. **ProjectCard 视觉层次**：通过 Surface / Shadow / Whitespace / Typography 建立，**禁止用 accent border 作为视觉权重**
+2. **Timeline 阶段标签**：必须包含 learning focus / capability changes / next stage，中文标签自然阅读
+3. **Hero 信息层级**：仅 Who / What / Why / Next / Engineering Metrics，**禁止营销文案**
+4. **Contact section**：克制、名片式，禁止营销语言
+5. **ProjectDetail frontmatter**：包含 status / role / architecture 字段（RC2.1 新增）
+6. **Eyebrow 元素**：全站统一 `letter-spacing: 0.08em`（RC2.5 统一）
+7. **ArchitectureDiagram 组件**：B1 方案，不修改 SVG 内容，只处理显示、响应式、暗黑模式兼容
+8. **SVG 资源**：必须放在 `src/assets/projects/`，使用 Vite 静态资源方式引用
+9. **ArchitectureDiagram 自动隐藏**：无架构图时不显示占位内容
+10. **所有新组件必须小且单一职责**
 
 ---
 
-## 5. 当前页面
+## 四、当前数据结构
 
-| 路径 | 文件 | 状态 |
-|------|------|------|
-| `/` | `src/pages/Home.vue` | ✅ 已实现（Task 002，4 个组件组合） |
-| `/projects/:slug` | `src/pages/ProjectDetail.vue` | ✅ 已实现（Task 003，5 个组件 + DecisionSection） |
-| `/skills` | `src/pages/Skills.vue` | ✅ 已实现（Task 005，virtual:skills-content + MarkdownContent） |
-| `/interview` | `src/pages/Interview.vue` | ✅ 已实现（Task 004，4 分类 17 题 + 折叠面板） |
-| `/ai-practice` | `src/pages/AiPractice.vue` | ✅ 已实现（Task 004，MarkdownContent 渲染） |
-| `/resume` | `src/pages/Resume.vue` | ✅ 已实现（Task 008，virtual:resume-content + MarkdownContent + window.print PDF） |
-| `/about` | `src/pages/About.vue` | ✅ 已实现（Task 005，virtual:personal-content + MarkdownContent） |
-| 404 | `src/pages/NotFound.vue` | ✅ 最终版 |
+### 4.1 ProjectContent（[src/types/project.ts](src/types/project.ts)）
 
----
+```typescript
+interface ProjectContent {
+  slug: string
+  title: string
+  subtitle?: string
+  date: string
+  tags: string[]
+  metrics: Metric[]
+  featured?: boolean
+  order?: number
+  github?: string
+  status?: string       // ★ RC2.1 新增：项目当前状态（如 "Release 1.0 · 2026-07-08"）
+  role?: string         // ★ RC2.1 新增：项目角色（如 "全栈独立开发"）
+  architecture?: string // ★ RC2.1 新增：架构图标识（对应 src/assets/projects/{architecture}.svg）
+  html: string
+  decision?: DecisionContent
+}
+```
 
-## 6. 当前阶段 — Task 007（待开始）
+**字段使用位置**：
+- `slug` / `title` / `subtitle` / `date` / `tags` / `github`：[ProjectHeader.vue](src/components/project/ProjectHeader.vue)
+- `status` / `role`：[ProjectHeader.vue](src/components/project/ProjectHeader.vue)（RC2.1 提取）
+- `metrics`：[MetricCard.vue](src/components/project/MetricCard.vue)
+- `architecture`：[ArchitectureDiagram.vue](src/components/project/ArchitectureDiagram.vue)（RC2.2 集成，懒加载 SVG）
+- `html`：[MarkdownContent.vue](src/components/project/MarkdownContent.vue)
+- `decision`：[DecisionSection.vue](src/components/project/DecisionSection.vue)
 
-### 目标
+### 4.2 PersonalContent（[src/types/personal.ts](src/types/personal.ts)，RC3.1 扩展）
 
-部署与上线（Vercel）— 将本地构建产物部署到 Vercel，配置生产环境。
+```typescript
+interface PersonalFact {  // ★ RC3.1 新增
+  label: string
+  value: string
+}
 
-### 上一任务 — Task 006（✅ 已完成）
+interface PersonalContent {
+  slug: string
+  title: string
+  date: string
+  subtitle?: string         // ★ RC3.1 新增：一句话定位
+  facts?: PersonalFact[]    // ★ RC3.1 新增：≤4 项长期稳定信息
+  html: string
+}
+```
 
-**Master Baseline：** Commit `f5563ac`（Task 006 项目同步）
-**Tag：** `v0.5.0`（未移动，Task 006 仅内容同步无代码功能变更）
+**字段使用位置**：
+- `slug` / `title` / `date` / `html`：[About.vue](src/pages/About.vue)（当前仅渲染 html，RC3.2 将消费 subtitle + facts）
+- `subtitle`：RC3.2 将在 About.vue Header 区域 H1 下方渲染
+- `facts`：RC3.2 将在 About.vue Facts Panel 区域渲染为结构化 key-value 列表
 
-#### Task 006 完成内容
+### 4.3 PersonalFact 字段（RC3.1 新增）
 
-- ✅ 使用 GitHub MCP 核对 3 个项目 GitHub 仓库（jiangnan-travel / Love / interactive-quiz-system）
-- ✅ 更新 4 个 Markdown 文件（jiangnan-travel.md / love-letter.md / exam-system.md / timeline.md）
-  - 添加 3 个项目的 GitHub 链接（frontmatter `github` 字段）
-  - 添加 3 个项目的发布状态（Release 1.0 / v1.0.0）
-  - 修正 jiangnan-travel.md 测试数据（18→81）和 RELEASE 路径
-  - timeline.md 添加 3 个项目发布状态时间戳
-- ✅ typecheck + build 通过（1654 模块，2.39s）
-- ✅ Playwright 50/50 PASS（端口 4180）
-- ✅ 人工页面验证 18/18 PASS（3 个 GitHub 链接 + 0 console error + Markdown 渲染正常）
-- ✅ Repository Cleanup：.gitignore 添加 debug.log + release-gate-test.mjs
-- ✅ 17 张项目截图入库（8 题库 + 9 两地书）
-- ✅ 文档同步更新（PROJECT_MEMORY.md / HANDOFF.md / RELEASE_REVIEW_REPORT.md）
+```typescript
+interface PersonalFact {
+  label: string   // 标签（如"教育"）
+  value: string   // 值（如"南昌大学 · 软件工程 · 2023 级"）
+}
+```
 
-#### Task 006 验证结果
+**当前 4 项 facts 内容**（[about.md](src/content/personal/about.md) frontmatter）：
 
-| 验证项 | 结果 |
-|--------|------|------|
-| `npm run typecheck` | ✅ 通过（0 错误） |
-| `npm run build` | ✅ 成功（1654 模块，2.39s） |
-| Playwright 全量回归 | ✅ 50/50 PASS（17 测试组） |
-| 人工页面验证 | ✅ 18/18 PASS |
-| 隐私扫描 | ✅ 0 匹配 |
-| Git commit | ✅ `f5563ac`（24 files, +285 -5） |
+| label | value |
+|---|---|
+| 教育 | 南昌大学 · 软件工程 · 2023 级 |
+| 方向 | 后端开发 / 分布式系统 / 软件工程实践 |
+| 考研 | 408 计算机科学 · 2026 届 |
+| GitHub | github.com/l535304334 |
 
-**等待推送：** Task 006 commit `f5563ac` 待推送到 origin/master
+**约束**：
+- **≤4 项**
+- **仅长期稳定信息**（不放项目数 / API 数 / 文件数等易变数据）
+- Email 不在 facts 中（隐私考虑，仅保留 GitHub）
 
-### Task 007 待开始
+### 4.4 TimelineStage（[src/types/timeline.ts](src/types/timeline.ts)，RC1 改造）
 
-- Vercel 部署上线
-- 生产环境配置（`vercel.json` 已存在 SPA rewrites）
-- 域名配置（可选）
-- 首次部署验证
+```typescript
+interface TimelineStage {
+  date: string
+  title: string
+  stack: string
+  highlights: string[]
+  learned: string      // 学习重点
+  nextStage: string    // 下一阶段触发原因
+  capability: string  // 能力变化
+  upcoming?: boolean  // 是否为未来计划阶段
+}
+```
 
-### 上一任务 — Task 005（✅ 已完成）
+**字段使用位置**：
+- 全部字段：[TimelineSection.vue](src/components/home/TimelineSection.vue)（首页时间线渲染）
 
-**Master Baseline：** Tag `v0.5.0`
+### 4.5 其他数据结构
 
-#### Task 005 Release Gate 结果
-
-- ✅ Playwright 全量回归测试 50/50 通过（17 测试组，覆盖 Task 001~005 全部功能）
-- ✅ Skills 页：virtual:skills-content + MarkdownContent 全文渲染
-- ✅ Resume 页：静态占位卡片（Task 005 阶段，**Task 008 已升级为正式简历页**）
-- ✅ About 页：virtual:personal-content + MarkdownContent 全文渲染
-- ✅ 导航栏 7 个链接全部存在（首页 / 项目 / 能力 / 面试 / AI 实践 / 简历 / 关于）
-- ✅ 7 路由控制台 0 运行时错误
-- ✅ 响应式桌面/平板/移动 3 断点无水平溢出
-- ✅ 主题切换（Task 002 回归）
-- ✅ typecheck + build 通过（1654 模块，2.39s）
-- ✅ Bundle Size：初始加载 51.18 KB gzip（+0.39 KB vs Task 004），新增内容全部懒加载
-
-#### Task 005 交付物
-
-**005.1 — Skills 页面**
-- `src/utils/content.ts` — 新增 `virtual:skills-content`（`scanSkills` + resolveId/load + HMR）
-- `src/env.d.ts` — 新增 `virtual:skills-content` 模块声明
-- `src/pages/Skills.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.32 KB）
-
-**005.2 — Resume 页面（静态占位，Task 008 已升级为正式简历页）**
-- `src/pages/Resume.vue` — 静态占位卡片（gzip 0.44 KB）→ **Task 008 重写为 virtual:resume-content + MarkdownContent + window.print PDF**
-
-**005.3 — About 页面**
-- `src/types/personal.ts` — `PersonalContent` 接口（4 行）
-- `src/utils/content.ts` — 新增 `virtual:personal-content`（`scanPersonal` + resolveId/load + HMR）
-- `src/env.d.ts` — 新增 `virtual:personal-content` 模块声明
-- `src/pages/About.vue` — 替换占位页，MarkdownContent 全文渲染（gzip 1.26 KB）
-
-**005.7 — Playwright 全量回归测试**
-- `release-gate-task-005.mjs` — 50 测试用例（17 测试组，覆盖 7 路由 + 3 新页 + 导航 + 响应式 + 主题切换 + 控制台错误扫描）
-
-**005.8 — Release Gate**
-- typecheck + build 通过
-- Bundle Size 对比（Task 004 → Task 005）
-- FF 合并 feature → develop → master
-- Tag `v0.5.0` 创建
-- 文档更新（PROJECT_MEMORY.md / HANDOFF.md / RELEASE_REVIEW_REPORT.md）
-
-#### Task 005 架构冲突（Rule 7）
-
-架构文档 §8 指定 Skills 页使用 `SkillCategory.vue` + `TimelineItem.vue` 自定义组件，Resume 页使用 iframe + PDF 检测。Plan v2 经用户批准偏离 §8，遵循 §2.3（原生 HTML 优先 + KISS/YAGNI）。3 页全部使用 MarkdownContent 全文渲染，Resume 在 Task 005 为静态占位（**Task 008 已升级为正式简历页**）。详见 PROJECT_MEMORY.md「Task 005 — 架构冲突记录」。
-
-### Task 006~008 已完成
-
-- Task 006：项目同步 + 仓库清理（Commit `f5563ac`）
-- Task 007：Final Portfolio Review（Commit `5c58f58`）
-- Task 008：Resume 系统完善（第 7 虚拟模块 + PDF 打印 + Playwright 49/49，待 commit）
-
-- Vercel 部署上线
-- 生产环境配置（`vercel.json` 已存在 SPA rewrites）
-- 域名配置（可选）
-- 首次部署验证
+| 类型 | 文件 | 用途 |
+|---|---|---|
+| `ContentMeta` | [content.ts](src/types/content.ts) | 所有内容文件 frontmatter 公共字段 |
+| `Metric` | [content.ts](src/types/content.ts) | 项目指标（label + value） |
+| `ProjectSummary` | [project.ts](src/types/project.ts) | 首页项目摘要（无 HTML） |
+| `DecisionContent` | [decision.ts](src/types/decision.ts) | 技术决策记录 |
+| `TimelineContent` | [timeline.ts](src/types/timeline.ts) | 时间线内容（stages + html） |
+| `ContactInfo` | [contact.ts](src/types/contact.ts) | 联系方式 |
+| `InterviewQAPair` / `InterviewCategory` | [interview.ts](src/types/interview.ts) | 面试问答 |
+| `AiPracticeContent` | [ai-practice.ts](src/types/ai-practice.ts) | AI 实践内容 |
+| `ResumeContent` | [resume.ts](src/types/resume.ts) | 简历内容 |
 
 ---
 
-### 上一任务 — Task 003（✅ 已完成）
+## 五、不要重复设计/不要重复开发 — 已冻结决策清单（FROZEN INVENTORY）
 
-**Master Baseline：** Tag `v0.3.0`
+> **本章节列出所有已经确定的架构、设计和约束。**
+>
+> 新 AI（或开发者）接手项目时，**禁止重新设计或重复开发**以下内容。
+>
+> 如需修改，必须先向用户提出并获明确批准。**冲突必须暴露，不自行折中**。
 
-#### Task 003 Release Gate 结果
+### 5.0 FROZEN INVENTORY 汇总（快速参考）
 
-- ✅ Playwright 端到端测试 14/14 通过
-- ✅ 3 个项目详情页 + Markdown + Shiki + DecisionSection + 导航 + 404 + 响应式 全部验收
-- ✅ 修复 1 项代码 bug（MarkdownContent 表格 overflow-x: auto，commit `02e79f8`）
-- ✅ Tag `v0.3.0` 已创建并推送 GitHub
+| 类别 | 冻结项 | 状态 |
+|---|---|---|
+| 风格 | Developer Academic 风格（Slate + Amber / Inter + JetBrains Mono） | 🔒 不更换 |
+| 风格 | Hero 信息层级（Who/What/Why/Next/Metrics，禁营销文案） | 🔒 不变 |
+| 风格 | Eyebrow 全站统一 `letter-spacing: 0.08em` | 🔒 不变 |
+| 风格 | ProjectCard 视觉四要素（Surface/Shadow/Whitespace/Typography，禁 accent border） | 🔒 不变 |
+| 数据 | Markdown SSOT（8 个虚拟模块已定型，不再新增/不重命名） | 🔒 不破 |
+| 数据 | frontmatter 字段必须向后兼容（新增字段必须可选） | 🔒 不破 |
+| 数据 | Timeline SSOT 在 `src/content/growth/timeline.md` | 🔒 不移 |
+| 数据 | About 保持独立内容，不共享 Timeline | 🔒 不并 |
+| 数据 | About facts ≤4 项且仅长期稳定信息（不放易变数据） | 🔒 不变 |
+| 数据 | About 4 项 facts 内容（教育/方向/考研/GitHub） | 🔒 不改 |
+| 数据 | Email 不公开（仅保留 GitHub） | 🔒 不变 |
+| 页面 | 页面职责划分（Home/ProjectDetail/Skills/Interview/AiPractice/Resume/About） | 🔒 不变 |
+| 页面 | About = 人物画像（不重复 Hero/Timeline/Resume） | 🔒 不变 |
+| 组件 | ArchitectureDiagram.vue B1 方案（不修改 SVG 内容） | 🔒 不改 |
+| 组件 | SVG 资源必须放 `src/assets/projects/`（Vite 静态资源引用） | 🔒 不移 |
+| 组件 | ArchitectureDiagram 自动隐藏（无图不显示占位） | 🔒 不变 |
+| 组件 | 新增组件总配额 ≤2（已用 1，剩余 1） | 🔒 不超 |
+| 组件 | 所有新组件必须小且单一职责 | 🔒 不破 |
+| 工程 | 行尾统一 LF（`.gitattributes`） | 🔒 不改 |
+| 工程 | Playwright 测试基础设施必须维护 | 🔒 不删 |
+| 工程 | 每子阶段三项验证（typecheck + build + Playwright） | 🔒 不省 |
+| 工程 | Event Sourcing 术语保留策略（技术领域保留 / 宣传克制） | 🔒 不变 |
+| 工程 | 当前 8 个虚拟模块（不再新增、不重命名） | 🔒 不动 |
+| 工程 | v2.0.0 已发布内容（RC3+ 只能增量改进，不推翻重做） | 🔒 不破 |
+| 工程 | 架构以《架构确认文档-v1.2.md》为准，已锁定 | 🔒 不改 |
+| 工程 | RC 阶段禁止新增业务功能/页面/动画/Token/字体/抽象（除非用户明确要求） | 🔒 不破 |
+| 工程 | 子阶段必须串行执行（禁止跳阶段或提前实现后续 RC 内容） | 🔒 不破 |
 
-### Task 003 范围
+### 5.1 风格定位
 
-- Vite 构建时 Markdown 转换插件（virtual:content + virtual:project-detail 双虚拟模块）
-- 项目详情页模板（`ProjectDetail.vue` 替换占位）
-- 3 个项目 Markdown 渲染（江南出行 / 两地书 / 题库）
-- Shiki 代码高亮（仅构建时，深色主题不随主题切换）
-- markdown-it + gray-matter（仅构建时依赖）
-- Decision 内容仅 Markdown → HTML 渲染，无结构化解析（用户决定，偏离 v1.2 §8）
+- **Developer Academic 风格** — 克制、专业、有细节。不追暗黑炫酷、不走纯学术白底、不追花哨动画
+- **个人品牌来自工程质量、内容质量、项目深度**，而非视觉装饰或 Logo
+- 配色：Slate 灰色系 + Amber 强调色（不更换）
+- 字体：Inter + JetBrains Mono（不更换，最多 2 个字体家族）
 
-### Task 003 已引入的依赖（仅构建时，不进运行时 bundle）
+### 5.2 数据架构
 
-| 类型 | 包名 | 用途 |
-|------|------|------|
-| 构建时 | markdown-it ^14.3.0 | Markdown → HTML |
-| 构建时 | gray-matter ^4.0.3 | Frontmatter 解析 |
-| 构建时 | shiki ^4.3.1 | 代码高亮（v1.2 §2.7 规定） |
-| 构建时 | @types/markdown-it ^14.1.2 | TS 类型声明 |
+- **Markdown 是唯一 SSOT**。所有内容必须以 Markdown 文件为数据源，禁止创建第二数据源
+- **frontmatter 字段必须向后兼容**。新增字段必须可选，不破坏现有消费者
+- **8 个虚拟模块已定型**。不再新增虚拟模块（virtual:content / project-detail / interview-content / ai-practice-content / skills-content / personal-content / resume-content / timeline-content）
+- **Timeline 数据 SSOT 已建立**。Home.vue 从 `virtual:timeline-content` 读取，About 保持独立内容不共享 Timeline
 
-### Task 003 边界
+### 5.3 页面职责划分（不可重复）
 
-✅ **允许：** virtual:content / virtual:project-detail 插件 / ProjectDetail.vue / Shiki / markdown-it / gray-matter
-❌ **禁止：** 提前实现 Task 004 内容（`/interview` + `/ai-practice` 页面）
+- **Home** = Who / What / Why / Next + Engineering Metrics + Project Cards + Timeline + Contact
+- **ProjectDetail** = 单项目完整内容（架构 / 决策 / 指标 / 代码）
+- **Skills** = 技术栈分类 + 学习路线
+- **Interview** = 17 道面试题
+- **AiPractice** = AI 工程实践流程
+- **Resume** = 完整简历 + PDF 下载
+- **About** = **人物画像**（长期稳定信息 + 工程定位 + 成长概述 + 站点说明），不重复 Hero 工程指标 / Timeline 完整内容 / Resume 联系方式
 
-### Task 002 完成回顾
+### 5.4 组件设计
 
-Task 002 已完成以下 5 个文件开发（Git Commit `df83559` on feature/task-002-homepage）：
+- **ArchitectureDiagram.vue（B1 方案）**：不修改 SVG 内容，只处理显示、响应式、暗黑模式兼容
+- **SVG 资源必须放在 `src/assets/projects/`**，使用 Vite 静态资源方式引用
+- **ArchitectureDiagram 自动隐藏**：无架构图时不显示占位内容
+- **所有新组件必须小且单一职责**
+- **新增组件配额**：RC2 + RC3 + 后续 RC 阶段**总共 ≤2 个新组件**（已用 1 个，剩余 1 个）
 
-| 类型 | 文件 | 说明 |
-|------|------|------|
-| 组件 | `src/components/home/HeroSection.vue` | 非对称 7fr/5fr 网格 Hero |
-| 组件 | `src/components/home/ProjectCard.vue` | Bento 卡片（featured/normal 两态） |
-| 组件 | `src/components/home/TimelineSection.vue` | `<ol>` + CSS `::before` 时间线 |
-| 组件 | `src/components/home/ContactSection.vue` | `<dl>` 语义化联系方式 |
-| 页面 | `src/pages/Home.vue` | 组合 4 组件，持有类型化静态数据 |
+### 5.5 视觉规范
 
-**注意：** Home.vue 当前持有静态数据（projects / timelineStages / contact），Task 003 实现后应替换为 `import { projects } from 'virtual:content'`。
+- **ProjectCard 视觉层次**：通过 Surface / Shadow / Whitespace / Typography 建立，**禁止用 accent border 作为视觉权重**
+- **Eyebrow 元素**：全站统一 `letter-spacing: 0.08em`
+- **Hero 信息层级**：仅 Who / What / Why / Next / Engineering Metrics，**禁止营销文案**
+- **Contact section**：克制、名片式，禁止营销语言
+- **Timeline 阶段标签**：必须包含 learning focus / capability changes / next stage，中文标签自然阅读
+- **Email 不公开**：About 页不展示 Email，仅保留 GitHub
+
+### 5.6 工程规范
+
+- **行尾统一 LF**：`.gitattributes` 配置 `* text=auto eol=lf`，避免 Windows CRLF 污染
+- **Playwright 测试基础设施必须维护**：[release-gate-task-005.mjs](release-gate-task-005.mjs) 必须能运行，`package.json` 必须包含 Playwright 依赖和 `test` 脚本
+- **每个 RC 子阶段完成后**：必须立即执行 `npm run typecheck` + `npm run build` + `npm test`（Playwright），三项全过才能进入下一子阶段
+- **Event Sourcing 术语保留**：在技术实现 / 架构设计 / 决策记录 / 面试材料 / 架构图中保留；在指标 / 宣传描述 / 能力摘要中使用更克制的"关键操作留痕"
+
+### 5.7 RC 阶段约束
+
+- **RC 阶段禁止新增业务功能**（除非用户明确要求）
+- **RC 阶段禁止新增组件**（除非消耗 ≤2 配额）
+- **RC 阶段禁止新增页面 / 动画 / Design Token / 颜色系统 / 字体 / 抽象**（除非用户明确要求）
+- **RC 阶段子阶段必须串行执行**：禁止跳阶段或提前实现 RC3+ 内容
+- **ProjectDetail 必须以 Markdown 为唯一内容源（SSOT）**，禁止创建第二数据源
 
 ---
 
-## 7. 禁止事项
+## 六、当前开发进度
 
-### 禁止引入
+### 6.1 已完成
 
-- ❌ Element Plus / Naive UI / 任何第三方 UI 库
-- ❌ Tailwind CSS / UnoCSS / 任何 CSS 框架
-- ❌ Pinia / Vuex / 任何状态管理库
-- ❌ Nuxt / Next.js / 任何 SSR/SSG 框架
-- ❌ GSAP / 任何动画库（CSS transition 够用）
-- ❌ 后端服务 / 数据库 / 服务器
-- ❌ 运行时 Markdown 解析（必须构建时处理，Task 003）
-- ❌ **未经确认的新依赖**（Task 003 需引入 markdown-it / gray-matter / Shiki，须经用户确认）
+| 阶段 | 状态 | 关键交付 |
+|---|---|---|
+| Task 001~010 | ✅ 全部完成 | 项目奠基（v0.3.0 → v1.0.0） |
+| **RC1** | ✅ Released (Local) commit `1ad444a` | Timeline SSOT + Hero 重构 + P0 真实性修复 + .gitattributes |
+| **RC2** | ✅ Released (Origin) commit `20598ae` + tag `v2.0.0` | ProjectHeader 提取 + ArchitectureDiagram 集成 + 视觉层次强化 + 可访问性修复 + Design Audit |
+| **RC3.1** | ✅ 完成（本地未推送）commit `c8b7913` | About 数据层重构（PersonalFact + subtitle + 4 项 facts） |
 
-### 禁止行为
+### 6.2 剩余（按规划顺序）
 
-- ❌ `as any` 绕过类型检查
-- ❌ `@ts-ignore` 忽略错误
-- ❌ 硬编码颜色值（必须用设计令牌 `var(--*)`）
-- ❌ 修改 PATH / NODE_PATH / 环境变量
-- ❌ 自动升级 Node / npm / 全局工具
-- ❌ 修改 main / master / production 分支历史
-- ❌ `git push --force` / `git reset --hard` / `git clean -fdx`（除非用户明确确认）
-- ❌ 推送隐私内容（API Key / Token / 学号 / 手机号 / 实习材料）
-- ❌ **提前开发后续 Task 的内容**
-- ❌ **修改架构**（架构以《架构确认文档-v1.2.md》为准，已锁定）
-- ❌ **修改设计规范**
+| 阶段 | 状态 | 预期内容 |
+|---|---|---|
+| **RC3.2** | ⏳ 待批准 | About.vue 视觉与交互重构（Facts Panel + Header 强化 + CSS，消费 subtitle + facts） |
+| **RC3.3** | ⏳ 待批准 | Final Review & Release（Code / Design / Performance / **Information Architecture Review** + 文档） |
+| **RC4** | ⏳ 未规划 | 候选：**Skills 页深化重构**（待用户在 RC3.3 完成后确认范围） |
+| **RC5** | ⏳ 未规划 | 候选：**Resume 页深化重构**（顺序可由用户调整） |
+| **RC6** | ⏳ 未规划 | 候选：**Interview 页深化重构**（顺序可由用户调整） |
+| **RC7** | ⏳ 未规划 | 候选：**AiPractice 页深化重构**（顺序可由用户调整） |
+| **RC8** | ⏳ 未规划 | Final Release Review / 全站一致性审计 / Core Web Vitals 验证 / v3.0.0 发布 |
+
+**重要说明**：
+- **RC4~RC7 候选页面顺序未锁定**。新 AI 在 RC3.3 完成后应主动询问用户：「RC4~RC7 的页面顺序与目标是什么？是否按 Skills → Resume → Interview → AiPractice 顺序推进，或需要调整？」
+- 用户的工作流是"按 RC 阶段顺序、用户批准后推进"，**禁止跳阶段或提前实现后续 RC 内容**
+- 每完成一个 RC 子阶段，必须输出 Report（修改文件 / 数据流 / 风险 / Bundle / 验证结果），**等待用户批准才能进入下一子阶段**
+- **RC3.3 必须包含 Information Architecture Review**（用户在 RC3.1 消息中明确要求）
 
 ---
 
-## 8. AI 接手说明
+## 七、后续开发路线
 
-### 接手流程
+### 7.1 下一步（RC3.2）
 
-任何 AI 接手本项目后：
+**目标**：在 RC3.1 数据层基础上，重构 [About.vue](src/pages/About.vue) 视觉与交互。
 
-1. **无需重新分析项目** — 本文件 + 三份协作文档已包含全部上下文
-2. **默认遵守以下文档**（按优先级）：
-   - [《架构确认文档-v1.2.md》](docs/架构确认文档-v1.2.md) — 架构锁定版，最高权威
-   - [AI_RULES.md](AI_RULES.md) — 项目 AI 协作规范
-   - [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) — 项目上下文索引
-   - [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
-   - 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
-3. **直接从 Task 004 开始** — Master Baseline 为 Task 003 Release（Tag `v0.3.0`），develop 与 master 同步
+**预期工作**：
+1. 在 About.vue 渲染 `subtitle`（H1 下方的定位语）
+2. 在 About.vue 渲染 `facts` 为 Facts Panel（结构化 key-value 列表，参考 [HeroSection.vue](src/components/home/HeroSection.vue) 的 stats aside 模式）
+3. 强化 Header 区域视觉层次（eyebrow / title / subtitle / facts 四层）
+4. 重新添加 Playwright facts 断言（验证 4 项 facts 渲染）
+5. **不新增组件**（About.vue 内部结构调整），**不消耗 RC 新组件配额**（仍剩 1 个）
 
-### 接手后第一步
+**预期验证**：
+- typecheck 通过
+- build 通过（Bundle 体积预期小幅增长，但应保持在合理范围）
+- Playwright 全量通过（含新增 facts 断言）
+- 输出 RC3.2 Report
+
+### 7.2 之后（RC3.3）
+
+**目标**：Final Review & Release。
+
+**预期工作**：
+1. **Code Review** — 检查 Dead Code / 重复 CSS / 无用 import / TypeScript 类型 / Vue 最佳实践
+2. **Design Audit** — 统一 spacing / border / radius / shadow / letter-spacing / hover / transition / focus
+3. **Performance Audit** — 检查 Bundle / 动态导入 / 重复 CSS / 未使用资源
+4. **★ Information Architecture Review**（RC3.3 新增，用户在 RC3.1 消息中明确要求）
+   - 重点检查 Hero / Timeline / Resume / About 之间的信息重复
+   - 确保每个页面职责清晰、内容互补
+5. **Documentation** — 更新必要文档
+6. **Final Validation** — typecheck + build + Playwright 全量回归
+7. **Release** — 版本号是否升级由用户决定；创建 Git Tag；Push 全部 commit 到 origin/master
+
+### 7.3 整体顺序（长期 Roadmap）
+
+```
+═══════════════════════════════════════════════════════════════
+  Portfolio v2.0 长期 Roadmap（RC3 → RC8）
+═══════════════════════════════════════════════════════════════
+
+【已完成】
+  RC1 ✅ 真实性 + 架构稳定（Timeline SSOT）
+  RC2 ✅ 视觉升级 + 组件化（ProjectDetail / v2.0.0 已发布）
+  RC3.1 ✅ About 数据层重构（PersonalFact + subtitle + facts）
+
+【进行中】
+  RC3 ──── About 页面重构（人物画像）
+    RC3.2 ⏳ About.vue 视觉重构（Facts Panel + Header 强化）
+    RC3.3 ⏳ Final Review + IA Review + Release
+
+【待规划】RC4 ~ RC7（每阶段开始前必须由用户批准范围）
+  RC4 ──── 候选：Skills 页深化重构
+  RC5 ──── 候选：Resume 页深化重构
+  RC6 ──── 候选：Interview 页深化重构
+  RC7 ──── 候选：AiPractice 页深化重构
+  （候选页面顺序可由用户调整，例如可改为 Interview 先于 Resume）
+
+【收尾】
+  RC8 ──── Final Release Review
+            · 全站一致性审计
+            · Core Web Vitals 性能验证
+            · 可访问性 WCAG 检查
+            · v3.0.0 发布（待用户确认版本号）
+
+═══════════════════════════════════════════════════════════════
+```
+
+**关键原则**：
+1. **每个 RC 阶段开始前必须由用户批准范围**，禁止 AI 自行决定下一阶段内容
+2. **RC4~RC7 候选页面顺序未锁定**，由用户在 RC3.3 完成后确认
+3. **RC3.3 必须包含 Information Architecture Review**（用户在 RC3.1 消息中明确要求）
+4. **每个子阶段完成后必须执行三项验证**（typecheck + build + Playwright）
+5. **每个子阶段完成后必须输出 Report**，等待用户批准才能进入下一子阶段
+
+---
+
+## 八、当前已知问题
+
+### 8.1 技术债
+
+| # | 问题 | 严重度 | 处理建议 |
+|---|---|---|---|
+| 1 | Shiki singleton 警告（构建时输出"10 instances have been created. Shiki is supposed to be used as a singleton"） | 低 | 构建时已知问题，非运行时错误。Playwright Test 16 已通过 `consoleErrors.filter((e) => !e.includes('Shiki'))` 过滤。后续可重构 markdown.ts 缓存 highlighter 实例 |
+| 2 | `git config user.name` 历史值显示乱码（如 v2.0.0 tag 的 tagger name 显示为"璧栫澘轿"） | 低 | 历史问题，v1.0.0 tag 也有。是 PowerShell GBK 编码问题，不影响实际使用。**禁止自动修改 git config**（环境维护原则） |
+| 3 | RC3.1 commit `c8b7913` 未推送到 origin | 中 | 待 RC3.2/RC3.3 完成后统一推送，或用户批准后单独推送 |
+
+### 8.2 待确认事项
+
+| # | 事项 | 处理建议 |
+|---|---|---|
+| 1 | **RC4~RC8 的具体页面与范围未在历史对话中明确** | 新 AI 接手后必须主动询问用户 |
+| 2 | About 页是否需要展示 Email | **用户已决定**：暂不公开，仅保留 GitHub（见 §5.5） |
+| 3 | RC3.3 完成后是否升级版本号到 v2.1.0 | 由用户在 RC3.3 阶段决定 |
+| 4 | 后续 RC 阶段是否仍消耗 ≤2 新组件配额 | **是**（已用 1 个，剩余 1 个，见 §5.4） |
+
+### 8.3 暂不处理的问题
+
+- **Google Fonts CDN 国内访问**：已用 `preconnect` + `display=swap` 优化，未来可评估自托管字体子集（不在当前 RC 范围）
+- **未配置 ESLint / Prettier**：依赖 TypeScript strict 模式保证代码质量，未来可添加（不在当前 RC 范围）
+- **文档版本号不一致**：《开发设计规范-v1.0.md》文件名为 v1.0 但内容为 v1.1，以《架构确认文档-v1.2.md》为权威
+
+### 8.4 未来优化点
+
+- Shiki highlighter 单例化（减少构建警告）
+- About.vue 重构后可考虑提取 FactsPanel 为独立组件（若 RC3+ 其他页面也需类似面板）— 但需消耗新组件配额
+- 字体自托管子集（性能优化）
+- 全站 Lighthouse / Core Web Vitals 自动化测试
+
+---
+
+## 九、开发约束
+
+### 9.1 依赖约束
+
+- **禁止引入新依赖**（运行时 + 开发时），除非用户明确批准
+- **禁止**：Element Plus / Naive UI / Tailwind / UnoCSS / Pinia / Vuex / Nuxt / GSAP / 后端 / 数据库 / 运行时 Markdown 解析
+- 当前依赖清单见 [package.json](package.json)（3 运行时 + 9 开发时），不得擅自增加
+
+### 9.2 SSOT 约束
+
+- **Markdown 是唯一数据源**，禁止创建第二数据源
+- **frontmatter 字段必须向后兼容**，新增字段必须可选
+- **Timeline 数据 SSOT 在 `src/content/growth/timeline.md`**，Home 从 SSOT 读取
+- **About 保持独立内容**，不共享 Timeline
+
+### 9.3 风格约束
+
+- **遵循 Developer Academic 风格**
+- **禁止营销文案 / AI 风格文案**（Hero 仅 Who/What/Why/Next/Metrics）
+- **配色不更换**（Slate + Amber）
+- **字体不更换**（Inter + JetBrains Mono）
+- **Eyebrow 全站统一 `letter-spacing: 0.08em`**
+- **禁止硬编码颜色值**（必须用 `var(--*)` 设计令牌）
+- **禁止用 accent border 作为视觉权重**
+
+### 9.4 组件约束
+
+- **新增组件总配额 ≤2**（已用 1 个：ArchitectureDiagram；剩余 1 个）
+- **所有新组件必须小且单一职责**
+- **禁止为单次使用做抽象**
+
+### 9.5 RC 阶段约束
+
+- **禁止新增业务功能**（除非用户明确要求）
+- **禁止新增页面 / 动画 / Design Token / 颜色系统 / 字体 / 抽象**（除非用户明确要求）
+- **子阶段必须串行执行**：RC3.1 → RC3.2 → RC3.3，禁止跳阶段
+- **每个子阶段完成后必须执行 typecheck + build + Playwright 三项验证**，全过才能进入下一阶段
+- **每个子阶段完成后必须输出 Report**（修改文件 / 数据流 / 风险 / Bundle / 验证结果），等待用户批准
+
+### 9.6 Git 约束
+
+- **禁止自动 push**（除非用户明确要求）
+- **禁止** `git push --force` / `git reset --hard` / `git clean -fdx` / `git rebase -i`（除非用户明确确认）
+- **禁止修改 main / master / production 分支历史**
+- **Commit 消息格式**：`<type>: <description>`，type ∈ feat / fix / refactor / docs / test / chore / perf / ci / style
+- **禁止推送隐私内容**（API Key / Token / 学号 / 手机号 / 实习材料）
+- **PowerShell 限制**：不支持 heredoc；GBK 编码会导致非 ASCII 字符乱码，**Git Tag message 应使用纯 ASCII**（参考 v2.0.0 tag 的处理）
+
+### 9.7 环境维护约束
+
+- **禁止自动修改 PATH / NODE_PATH / 环境变量 / 系统配置**
+- **禁止自动安装 / 卸载 / 升级 / 重装 Node.js / npm / 全局工具**
+- **修改系统环境前必须先分析影响范围并明确征求确认**
+- **优先采用可回滚、影响最小的方案**
+- **删除文件前必须先 grep 确认无引用**
+- **不追整洁**：不得因追求"环境整洁"删除仍可用于回滚或恢复的文件
+
+### 9.8 失败显性化约束
+
+- **错误必须抛出 / 返回 / 上报**，禁止吞掉或藏于默认值
+- **批处理跳过时**：跳过数量和原因要在输出中展示，不得埋日志
+- **不能 100% 确认成功时**：必须明确说明，禁止默认成功
+
+### 9.9 冲突暴露约束
+
+- **代码库存在矛盾模式时**：明确指出冲突（如"A 用 X，B 用 Y，新代码该用哪个？"），等待人类决策，**绝不混合或自行选择**
+- **运行时冲突自检测**：规则冲突 / Agent 文件冲突 / Skill 重复触发 / MCP 工具冲突 → 暂停并输出冲突报告
+
+---
+
+## 十、AI 接手说明（项目生命周期通用）
+
+> **本章节适用于项目生命周期内任何阶段的新 AI 接手**（不仅限于 RC3）。
+>
+> 无论是 RC3、RC4、RC5，还是 RC8 后的维护阶段，都应遵循本章节的流程。
+
+### 10.1 假设
+
+新 AI 完全没有任何项目上下文。**仅阅读本文件（HANDOFF.md）一份文档**，即可继续整个项目后续开发，无需翻阅历史对话，无需重新分析整个项目。
+
+**优先阅读顺序**：
+1. **§0 PROJECT STATUS SNAPSHOT**（快速恢复上下文，1 分钟）
+2. **§五 FROZEN INVENTORY**（了解什么不能动，2 分钟）
+3. **§六 当前开发进度** + **§七 后续开发路线**（了解下一步，2 分钟）
+4. 必要时再深入其他章节
+
+### 10.2 接手后第一步：环境验证
 
 ```bash
 # 1. 确认环境
 node --version   # 需 ≥18（当前 v22.19.0）
 npm --version    # 需 ≥9（当前 v11.18.0）
 
-# 2. 确认 Baseline（master 与 develop 同步，Task 003 已合并）
-git branch --show-current   # develop（默认开发分支）
-git rev-parse master        # Task 003 Release（Tag v0.3.0）
-git rev-parse develop       # 与 master 同步
+# 2. 确认 Git 状态
+git branch --show-current   # 应为 master
 git status                  # 应为 clean
+git log --oneline -3        # 最新 commit 应为 c8b7913 (RC3.1)
+git tag -l                  # 应有 v0.3.0 / v0.4.0 / v0.5.0 / v1.0.0 / v2.0.0
 
-# 3. 验证可运行
-npm install            # 恢复依赖
-npm run typecheck      # 应通过
-npm run build          # 应成功（gzip ~51KB 初始 + 12.54KB 懒加载）
-npm run dev            # 启动 localhost:5173 或 5174
+# 3. 恢复依赖
+npm install
+
+# 4. 验证可运行
+npm run typecheck   # 应通过（exit 0）
+npm run build       # 应成功（1664 模块，约 2.5s）
+npm run dev         # 启动 localhost:5173
+
+# 5. 验证测试（需先启动 preview 在 4180 端口）
+npm run preview -- --port 4180 --strictPort   # 另一终端
+npm test                                       # 应 48/48 通过
 ```
 
-### 关键约束
+### 10.3 接手后第二步：理解当前状态
 
-- **每个 Task 完成后暂停**，输出报告，等待用户确认，不得自动进入下一 Task
-- **不得提前开发后续 Task 内容**（Task 003 不实现 `/interview` + `/ai-practice`）
-- **重大修改需先报告并等待确认**（技术栈 / 页面结构 / 目录结构 / 设计原则 / 新增依赖 / .gitignore / Git 工作流）
-- **冲突必须暴露，不自行折中** — 发现文档冲突或代码矛盾时，暂停并报告
+1. **阅读 §0 PROJECT STATUS SNAPSHOT**，确认当前阶段、最新 Commit、Git 状态、组件配额等关键信息
+2. **如本地领先远程**：询问用户是否先推送未推送的 commit 到 origin，或继续本地开发
+3. **如当前阶段为"待批准"**：不要自动开始下一阶段，先询问用户是否批准进入下一阶段
+4. **如当前阶段为"进行中"**：根据 §七 后续开发路线继续推进，但每完成一个子阶段必须暂停并输出 Report
 
-### 已知问题（不阻塞 Task 003）
+### 10.4 之后按什么顺序继续
 
-详见 [AI_RULES.md §13](AI_RULES.md) 与 [PROJECT_MEMORY.md](PROJECT_MEMORY.md)「遗留问题」与「Duplicate Review 结果」章节。核心 8 项：
+**通用流程**（适用于项目生命周期任何阶段）：
 
-1. 文档版本号不一致（v1.0 文件名 / v1.1 内容）— 以 v1.2 为准
-2. tokens.css 预定义未使用令牌（`--color-java` 等、`--code-*` 高亮令牌）— Task 003 使用
-3. 空目录 `src/assets/` 与 `src/utils/` 未进 Git — Task 003/004 添加首文件时自然解决
-4. Google Fonts CDN 国内访问 — Task 007 评估是否自托管字体子集
-5. 未配置 ESLint / Prettier — Task 007 可选添加
-6. `src/content/personal/about.md` 中 Email 待补充 — Task 005 前补充
-7. Interface 类型跨组件重复（`ProjectSummary` / `TimelineStage` / `ContactInfo` 在 Home.vue 与子组件各定义一次，共约 34 行）— Task 003 统一（virtual:content 类型集中声明）
-8. CSS `__eyebrow` 样式块跨 3 组件重复（TimelineSection / ContactSection / Home，共约 18 行）— 后续统一提取为 `.section__eyebrow` 全局类
+```
+1. 阅读 §0 SNAPSHOT，确认当前阶段
+    ↓
+2. 询问用户是否批准进入下一阶段（或是否先推送本地 commit）
+    ↓
+3. 执行下一阶段（参考 §七 后续开发路线）
+    ↓
+4. 完成后执行三项验证（typecheck + build + Playwright）
+    ↓
+5. 输出 Report（修改文件 / 数据流 / 风险 / Bundle / 验证结果）
+    ↓
+6. 等待用户批准进入下一子阶段
+    ↓
+7. 循环回到步骤 1
+```
+
+**RC3 → RC8 推进顺序**（详见 §七）：
+- RC3.2 → RC3.3 → 询问用户确认 RC4 范围 → RC4 → RC5 → RC6 → RC7 → RC8
+- **每个 RC 阶段开始前必须由用户批准**，禁止 AI 自行决定下一阶段范围
+
+### 10.5 哪些内容不要重新设计
+
+**所有冻结决策已统一汇总至 [§五 FROZEN INVENTORY](#五不要重复设计不要重复开发--已冻结决策清单frozen-inventory)**。
+
+新 AI 接手后，**禁止重新设计或重复开发** §五 列出的任何项目。如需修改，必须：
+1. 先向用户提出修改建议（含理由 + 影响范围 + 替代方案）
+2. 等待用户明确批准
+3. 修改后更新 §五 FROZEN INVENTORY 清单
+
+**冲突暴露原则**：如发现代码库存在与冻结决策矛盾的模式，**暂停并输出冲突报告**，等待人类决策，**绝不混合或自行选择**。
+
+### 10.6 哪些内容已冻结（不可改）
+
+详见 [§五 FROZEN INVENTORY](#五不要重复设计不要重复开发--已冻结决策清单frozen-inventory) 汇总表。核心冻结项：
+
+- **架构**：以《架构确认文档-v1.2.md》为准，已锁定
+- **设计规范**：已锁定，RC 阶段禁止修改
+- **当前 8 个虚拟模块**：不再新增、不重命名
+- **当前 v2.0.0 已发布内容**：RC3+ 只能在其上增量改进，不推翻重做
+- **当前 4 项 About facts**：教育 / 方向 / 考研 / GitHub（不放易变数据）
+
+### 10.7 必须遵守的工作流
+
+1. **每个 RC 子阶段完成后暂停**，输出 Report，等待用户确认，**不得自动进入下一子阶段**
+2. **不得提前开发后续 RC 内容**（如 RC3.2 不实现 RC3.3 的 IA Review）
+3. **重大修改需先报告并等待确认**（技术栈 / 页面结构 / 目录结构 / 设计原则 / 新增依赖 / .gitignore / Git 工作流）
+4. **冲突必须暴露，不自行折中** — 发现文档冲突或代码矛盾时，暂停并报告
+5. **长任务需要检查点**：超过 3 步或改超过 3 个文件的任务，每步都要总结进度
+
+### 10.8 权威文档优先级
+
+如遇冲突，按以下优先级判断：
+
+1. **本文件（HANDOFF.md）** — 最终交接文档，最高权威
+2. 《架构确认文档-v1.2.md》— 架构锁定版
+3. [AI_RULES.md](AI_RULES.md) — AI 协作规范
+4. [PROJECT_MEMORY.md](PROJECT_MEMORY.md) — Task 执行历史与决策
+5. 《开发设计规范-v1.0.md》（内容为 v1.1，参考用）
+6. 《个人能力分析与网站规划报告.md》（v1.0，背景资料）
+
+**注意**：本文件已整合 PROJECT_CONTEXT.md 与历史 HANDOFF.md 的全部必要信息。PROJECT_CONTEXT.md 内容已过时（停留在 Task 008 阶段），新 AI **不需要阅读 PROJECT_CONTEXT.md**。
+
+### 10.9 重要提醒（项目生命周期通用）
+
+- **本文件是项目生命周期的长期交接文档**，不限于某个 RC 阶段
+- **每次完成 RC 子阶段或重大变更后**，应同步更新本文件（特别是 §0 SNAPSHOT 和 §五 FROZEN INVENTORY）
+- **接手后第一句话应是询问用户**：基于 §0 SNAPSHOT 的"下一步动作"字段，提出对应的确认问题（例如：「是否批准进入下一阶段？」「是否先推送本地 commit？」）
+- **禁止假设用户意图**：如果用户指令不明确，先问清楚再行动
+- **禁止自动 push / 自动 commit**：除非用户明确要求
+- **禁止跨阶段提前开发**：当前在 RC3 阶段，不要实现 RC4+ 内容
+- **本文件优先级最高**：如与其他文档冲突，以本文件为准（详见 §10.8）
 
 ---
 
-## 9. Git 提交规范
-
-```
-<type>: <description>
-
-<optional body>
-```
-
-| Type | 说明 |
-|------|------|
-| feat | 新功能 |
-| fix | Bug 修复 |
-| refactor | 重构 |
-| docs | 文档 |
-| style | 样式 |
-| test | 测试 |
-| chore | 构建/工具 |
-| perf | 性能优化 |
-
-**禁止：** 自动 push、自动 force、自动 reset、自动 clean、跳过 hooks。
-
----
-
-> 本文件随项目演进持续更新。每完成一个 Task 更新当前状态与下一阶段章节。
+> **本文件是整个项目的最终交接文档，适用于项目生命周期任何阶段。**
+>
+> 以后所有开发均以本文件作为唯一项目上下文。
+>
+> 本文件由原 AI 于 2026-07-17 RC3.1 完成后编写，并通过结构性调整使其成为项目长期交接文档。
+>
+> 新 AI 接手后应根据项目演进持续更新本文件（特别是 §0 SNAPSHOT 和 §五 FROZEN INVENTORY）。

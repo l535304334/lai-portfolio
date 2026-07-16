@@ -3,7 +3,7 @@ slug: resume
 type: resume
 title: 赖睿轩 · 简历
 date: 2026-07
-subtitle: 软件工程学生 · 后端开发 · 软件工程方向
+subtitle: 软件工程学生 · 后端开发 · 分布式系统
 ---
 
 535304334@qq.com · github.com/l535304334

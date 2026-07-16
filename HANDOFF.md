@@ -7,8 +7,8 @@
 > 以后所有开发均以本文件作为唯一项目上下文。
 >
 > 最后更新：2026-07-17
-> 当前阶段：**RC6 Completed（开发 + 验证 + Review 全部完成，待 commit + push），等待批准进入 RC7**
-> **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划（详见 §七）
+> 当前阶段：**RC7 In Progress（Final Polish）** — 用户 2026-07-17 批准 RC7 重新定位为 Final Polish（不再执行 IA + Nav 优化）
+> **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划（详见 §七）；**RC7 定位于 2026-07-17 经用户调整**，从"IA + Nav 优化"改为"Final Polish（最终打磨）"，依据为 RC7 Design Review 结论（详见 [RELEASE_REVIEW_REPORT.md §24](RELEASE_REVIEW_REPORT.md)）
 > **执行规则**（2026-07-17 用户调整）：每个 RC 包含完整生命周期（开发 → 验证 → Review → 文档 → Commit → Push → Report），Review 作为收尾工作不再单独拆分子阶段；RC5~RC8 保持结构一致
 
 ---
@@ -20,28 +20,29 @@
 | 项 | 值 |
 |---|---|
 | **项目名称** | 软件工程学生技术作品集（Portfolio v2.0） |
-| **当前阶段** | **RC6 Completed**（开发 + 验证 + Review 全部完成，待 commit + push） |
-| **下一阶段** | RC7 — 信息架构 + 全局导航优化（NavBar 顺序决策 + 跨页面职责确认） |
+| **当前阶段** | **RC7 Completed（Final Polish）** — 开发 + 验证 + Review 全部完成，待 commit + push |
+| **下一阶段** | RC8 — Final Release v3.0.0（全站最终审计 + v3.0.0 发布） |
 | **项目版本** | `2.0.0`（[package.json](package.json)）— RC4~RC7 不发新版本，RC8 统一发 v3.0.0 |
-| **最新 Commit** | `a0c4002` — `feat(rc5): resume subtitle ssot and page header utility adoption`（已推送 origin） |
+| **最新 Commit** | `92a605a` — `feat(rc6): interview and ai-practice page header utility adoption`（已推送 origin） |
 | **最新 Tag** | `v2.0.0`（RC2 Release，commit `20598ae`，已推送 origin） |
-| **本地 vs 远程** | **同步**（origin/master = `a0c4002`）；RC6 改动待 commit |
-| **工作区状态** | dirty（6 个文件：ai-practice.ts + content.ts + ai-practice/index.md + AiPractice.vue + Interview.vue + release-gate-task-005.mjs，待 commit） |
+| **本地 vs 远程** | **同步**（origin/master = `92a605a`）；RC7 改动待 commit |
+| **工作区状态** | dirty（6 个文件：resume/index.md + about.md + index.html + release-gate-task-005.mjs + robots.txt + sitemap.xml，待 commit）+ HANDOFF.md + RELEASE_REVIEW_REPORT.md 文档更新 |
 | **当前分支** | `master`（受保护，禁止直接 push 历史） |
-| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC5 + RC6 均未消耗） |
+| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC5 + RC6 + RC7 均未消耗） |
 | **虚拟模块数** | 8 个（已定型，不再新增） |
-| **测试基线** | Playwright **74/74** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC6 新增 6 项断言（Interview +3 + AiPractice +3） |
-| **构建基线** | 1662 模块，约 2.5s（gzip 主包 41.88 KB）— AiPractice chunk 3.85 KB / Interview chunk 14.93 KB |
+| **测试基线** | Playwright **74/74** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC7 Resume subtitle 断言更新（"软件工程方向" → "分布式系统"） |
+| **构建基线** | 1662 模块，2.49s（gzip 主包 41.87 KB）— RC7 零回归（-0.01 KB） |
 | **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，origin/master 触发） |
 | **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
 | **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
 | **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每 RC 完整生命周期 |
-| **RC3 Baseline** | ✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷） |
+| **RC3 Baseline** | ✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）— RC7 未解冻 |
 | **RC4 Baseline** | ✅ **冻结**（不再修改 RC4 内容，除非后续发现 P0/P1 缺陷） |
 | **RC5 Baseline** | ✅ **冻结**（不再修改 RC5 内容，除非后续发现 P0/P1 缺陷） |
-| **RC6 状态** | ✅ **完成**（开发 + 验证 + Review 全部完成，待 commit + push） |
-| **下一步动作** | commit + push RC6 → 输出 RC6 Final Report → 等待批准进入 RC7 |
-| **完整 Roadmap** | RC4（全局基础+Skills，已完成）→ RC5（Resume，已完成）→ RC6（Interview+AiPractice，已完成）→ RC7（IA+Nav）→ RC8（Final v3.0.0）（详见 §七） |
+| **RC6 Baseline** | ✅ **冻结**（不再修改 RC6 内容，除非后续发现 P0/P1 缺陷） |
+| **RC7 状态** | ✅ **完成**（Final Polish：Content Accuracy + SEO 基础资源 + 文案一致性 + a11y 验证） |
+| **下一步动作** | commit + push RC7 → 输出 RC7 Final Report → 等待批准进入 RC8（Final v3.0.0） |
+| **完整 Roadmap** | RC4（全局基础+Skills，已完成）→ RC5（Resume，已完成）→ RC6（Interview+AiPractice，已完成）→ RC7（Final Polish，已完成）→ RC8（Final v3.0.0）（详见 §七） |
 | **执行规则** | 每个 RC 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆 RC.x 子阶段） |
 | **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 | **RC3.3 Final Review** | 详见 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md)（Code/Design/Performance/IA Review + P1 修复 + 5 项 P2 建议） |
@@ -106,43 +107,47 @@
 ### 1.6 当前分支
 
 - **分支**：`master`（生产分支，受保护）
-- **本地与远程**：**同步**（origin/master = `a0c4002`）；RC6 改动尚未 commit
-- **远程 `origin/master`**：`a0c4002`（RC5 Resume 深化 commit，已包含 RC1 + RC2 + RC3 + RC4 + RC5 全部内容）
-- **最新 Tag**：`v2.0.0`（RC2 Release，RC3 + RC4 + RC5 + RC6 均不发新 tag，RC8 时统一升级 v3.0.0）
+- **本地与远程**：**同步**（origin/master = `92a605a`）；RC7 改动待 commit
+- **远程 `origin/master`**：`92a605a`（RC6 Interview + AiPractice 深化 commit，已包含 RC1 + RC2 + RC3 + RC4 + RC5 + RC6 全部内容）
+- **最新 Tag**：`v2.0.0`（RC2 Release，RC3 + RC4 + RC5 + RC6 + RC7 均不发新 tag，RC8 时统一升级 v3.0.0）
 
 ### 1.7 Git 状态
 
 ```
 On branch master
-Your branch is up to date with 'origin/master'.   ← RC5 已同步，RC6 待 commit
+Your branch is up to date with 'origin/master'.   ← RC6 已同步，RC7 待 commit
 Changes not staged for commit:
-        modified:   src/types/ai-practice.ts          ← RC6 AiPracticeContent 新增 subtitle? 字段
-        modified:   src/utils/content.ts              ← RC6 scanAiPractice 解析 subtitle
-        modified:   src/content/ai-practice/index.md  ← RC6 frontmatter 新增 subtitle
-        modified:   src/pages/AiPractice.vue          ← RC6 应用 .page__header / .page__subtitle + 移除 scoped header
-        modified:   src/pages/Interview.vue           ← RC6 应用 .page__header / .page__subtitle（动态计算）+ 移除 scoped header
-        modified:   release-gate-task-005.mjs         ← RC6 Test 3 + Test 5 各新增 3 项断言
+        modified:   HANDOFF.md                       ← RC7 文档同步（§0 + §1.6/1.7 + §2.8 + §6.1/6.2 + §7.5/7.7）
+        modified:   index.html                       ← RC7 SEO meta 增量（robots / canonical / og:url / og:site_name / twitter:title/description）
+        modified:   release-gate-task-005.mjs        ← RC7 Test 7 Resume subtitle 断言更新
+        modified:   src/content/personal/about.md    ← RC7 About facts 考研字段："2026 届" → "2027 考研"
+        modified:   src/content/resume/index.md      ← RC7 Resume subtitle："软件工程方向" → "分布式系统"
+        new file:   public/robots.txt                ← RC7 SEO 基础资源（新建）
+        new file:   public/sitemap.xml               ← RC7 SEO 基础资源（新建，9 条路由）
+        modified:   RELEASE_REVIEW_REPORT.md         ← RC7 §24 Final Review（待追加）
 ```
 
 **最近 6 个 commit**：
 ```
-a0c4002 feat(rc5): resume subtitle ssot and page header utility adoption  ← origin/master = HEAD
+92a605a feat(rc6): interview and ai-practice page header utility adoption  ← origin/master = HEAD
+a0c4002 feat(rc5): resume subtitle ssot and page header utility adoption
 6ab0a3b docs(rc4): final review with P1 fix and execution rule adjustment
-caff817 feat(rc4.1): rebuild Skills page with structured categories
+caff817 feat(rc4.1): rebuild skills page with structured categories and global page header utility
 bfb070e docs: append RC3 Release Summary (Section 19)
 8b45a28 docs: mark RC3 baseline frozen and origin/master synced
-16b68d2 fix(rc3.3): unify DecisionSection eyebrow to Chinese
 ```
 
 **所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0`
 
-**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）
+**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）— RC7 未解冻
 
 **RC4 Baseline 状态**：✅ **冻结**（不再修改 RC4 内容，除非后续发现 P0/P1 缺陷）
 
 **RC5 Baseline 状态**：✅ **冻结**（不再修改 RC5 内容，除非后续发现 P0/P1 缺陷）
 
-**RC6 状态**：✅ **完成**（开发 + 验证 + Review 全部完成，待 commit + push）
+**RC6 Baseline 状态**：✅ **冻结**（不再修改 RC6 内容，除非后续发现 P0/P1 缺陷）
+
+**RC7 状态**：✅ **完成**（Final Polish：开发 + 验证 + Review 全部完成，待 commit + push）
 
 ---
 
@@ -471,7 +476,66 @@ bfb070e docs: append RC3 Release Summary (Section 19)
 - **不修改 interview/*.md frontmatter**。Interview subtitle 是动态计算的，不需要从 frontmatter 读取
 - **AiPractice subtitle 内容简化**。原 hint 含嵌套引号（"AI 帮我写代码" 和 "我用 AI 加速了哪些环节..."），在 frontmatter 中处理引号复杂；简化为无嵌套引号的等价表达，语义不变
 
+### 2.8 RC7 — Final Polish（最终打磨）（2026-07-17，已完成）
 
+**设计目标**：经 RC7 Design Review 评估，原计划"信息架构 + 全局导航优化"无真正有价值的修改空间（IA 已合理、NavBar 三类用户路径均可自然完成、Header 类三种模式各有合理理由、eyebrow `//` 是有意的语义区分、About RC3 Freeze 解除收益小）。用户批准将 RC7 重新定位为 **Final Polish（最终打磨）**，坚持"最小修改、最大价值"原则，仅做 Content Accuracy + Release Polish，**不为了统一而统一、不为了重构而重构**。
+
+**RC7 完整生命周期**（按 2026-07-17 调整后的执行规则，不再拆子阶段）：
+
+| 阶段 | 状态 | 主要交付 |
+|---|---|---|
+| 开发 | ✅ 完成 | Resume subtitle 文案修正（"软件工程方向" → "分布式系统"）+ About facts 考研字段歧义消除（"2026 届" → "2027 考研"）+ public/robots.txt 新建 + public/sitemap.xml 新建（9 条路由）+ index.html SEO meta 增量（robots / canonical / og:url / og:site_name / twitter:title / twitter:description）+ release-gate-task-005.mjs Test 7 Resume subtitle 断言更新 |
+| 验证 | ✅ 完成 | typecheck + build + Playwright 74/74 全过 |
+| Review | ✅ 完成 | Code Review（0 P0/P1，2 P2 记录留 RC8：og:image 缺失 + per-route description）+ Design Review（0 问题，eyebrow/Header/NavBar 维持现状）+ Performance Review（0 问题，Bundle -0.01 KB）+ a11y 验证（35 处 aria-* 全部合理使用） |
+| 文档更新 | ✅ 完成 | HANDOFF.md + RELEASE_REVIEW_REPORT.md §24 同步 |
+| Commit + Push | ⏳ 待执行 | 收尾 commit + 推送 origin/master |
+| RC7 Final Report | ⏳ 待输出 | 等待批准进入 RC8（Final v3.0.0） |
+
+**RC7 开发阶段修改文件（6 个，2 新建 + 4 修改；不含文档 2 个）**：
+
+| 文件 | 类型 | 改动 |
+|---|---|---|
+| `src/content/resume/index.md` | 修改 | frontmatter `subtitle: 软件工程学生 · 后端开发 · 软件工程方向` → `subtitle: 软件工程学生 · 后端开发 · 分布式系统`（消除语义重复，对齐 About） |
+| `src/content/personal/about.md` | 修改 | frontmatter facts 考研字段 `408 计算机科学 · 2026 届` → `408 计算机科学 · 2027 考研`（消除"届"字歧义，用户 2027.06 毕业） |
+| `public/robots.txt` | 新建 | 基础 SEO 资源（User-agent: * + Allow: / + Sitemap 指向） |
+| `public/sitemap.xml` | 新建 | 基础 SEO 资源（9 条路由：1 首页 + 3 项目详情 + 5 子页面，priority 0.6~1.0） |
+| `index.html` | 修改 | SEO meta 增量：`<meta name="robots">` + `<link rel="canonical">` + `og:url` + `og:site_name` + `twitter:title` + `twitter:description` |
+| `release-gate-task-005.mjs` | 修改 | Test 7 Resume subtitle 断言更新（"软件工程方向" → "分布式系统"）+ 注释补充 RC7 来源 |
+
+**RC7 全程约束遵守：**
+- 新增组件配额：0/2（RC7 未新增组件，仍剩 1 个）
+- 新增第三方依赖：0
+- 新增 Design Token / 颜色 / 字体 / 动画：0
+- Markdown SSOT 保持：是（仅修改 frontmatter 文案，未新增字段或迁移结构）
+- 隐私扫描清洁：0 手机号 / 0 真实密钥
+- env.d.ts 无需修改
+- **明确不做的项全部遵守**：未调整 NavBar / 未统一 Header 类 / 未给所有 eyebrow 加 `//` / 未解除 About RC3 Freeze / 未新增组件动画Token / 未进行无收益 CSS 重构
+
+**RC7 验证结果：**
+- ✅ typecheck 通过（exit 0）
+- ✅ build 通过（1662 模块，2.49s，gzip 主包 41.87 KB — 比 RC6 减少 0.01 KB，零回归）
+- ✅ Playwright **74/74** 通过（与 RC6 一致，仅 Test 7 断言文案同步更新）
+- ✅ Bundle 体积变化：主包 index.js 107.78 KB / gzip 41.87 KB（-0.01 KB）
+
+**RC7 Design Review 结论（详见 [RELEASE_REVIEW_REPORT.md §24](RELEASE_REVIEW_REPORT.md)）：**
+
+| # | 评估项 | 结论 |
+|---|---|---|
+| 1 | Information Architecture 合理性 | 【建议保持现状】8 页职责清晰，3 分钟面试官快速浏览目标已达成 |
+| 2 | NavBar 调整必要性 | 【明确不要修改】复试导师 / 技术面试官 / 普通访客三类路径均可自然完成 |
+| 3 | Header 类统一 | 【建议保持现状】3 种模式（仅 page__header / page__header + xxx__header 双类 / 独立 scoped）各有合理理由：YAGNI / 打印 CSS 钩子 / RC3 冻结结构差异 |
+| 4 | eyebrow `//` 统一 | 【明确不要修改】`//` 是 section-level（页内 section）与 page-level（子页 H1）的有意语义区分，非历史遗留不一致 |
+| 5 | About RC3 Freeze 解除 | 【建议保持现状】facts 用 `<dl>` 结构，与其他页 `.page__header` 不同；解冻收益小、风险大 |
+| 6 | v3.0 成熟度评估 | 当前已基本达到 v3.0 成熟度；真正值得投入的仅 Content Accuracy + SEO 基础资源 |
+
+**为什么这样设计：**
+
+- **不为了统一而统一**。Design Review 确认 eyebrow `//`、Header 类、NavBar 顺序的"差异"实际是有意的设计模式，强行统一反而破坏语义。RC7 不实施任何仅为形式统一的修改
+- **Content Accuracy 优先**。Resume subtitle 中"软件工程方向"与 H1"软件工程学生"语义重复，且与 About subtitle "分布式系统" 不一致——这是真实的内容问题，必须修正
+- **About facts 考研字段"届"字歧义**。"届"在中文里既可指毕业年份也可指入学年份，用户 2027.06 毕业，"2026 届"易引起误解；改为"2027 考研"明确无歧义
+- **SEO 基础资源零风险**。robots.txt + sitemap.xml 是纯静态文件，不涉及运行时逻辑；index.html meta 增量不破坏现有渲染。这是发布前的基础打磨，属于"最大价值、最小风险"
+- **不补 og:image / twitter:image**。项目无现成图片源（favicon.svg 不适合作为社交分享图），强行添加需新增资源，超出 RC7 范围；记录为 P2 留 RC8 决策
+- **不实施 per-route description**。SPA 限制下，路由级 description 需在路由守卫中动态注入 document.head，属于新功能而非打磨；记录为 P2 留 RC8 决策
 
 ---
 
@@ -924,13 +988,13 @@ interface SkillsContent {
 | **RC3** | ✅ Released (Origin) commit `bfb070e`（origin/master 已同步，不发新 tag，仍属 v2.0.0） | About 页面重构：RC3.1 数据层（PersonalFact + subtitle + 4 facts）+ RC3.2 视觉重构（Facts Panel `<dl>`）+ RC3.3 Final Review（Code/Design/Performance/**IA Review** + P1 修复） |
 | **RC4** | ✅ Completed commit `6ab0a3b`（origin/master 已同步，不发新 tag） | 全局基础（.page__header/.page__subtitle 工具类）+ Skills 试点（SkillCategory + subtitle + 6 categories + 卡片网格）+ Playwright +10 项断言（65/65 通过）+ Final Review（P1 修复 --leading-relaxed） |
 | **RC5** | ✅ Completed commit `a0c4002`（origin/master 已同步，不发新 tag） | Resume 深化：ResumeContent subtitle? 字段 + scanResume 解析 + frontmatter SSOT 化 + .page__header/.page__subtitle 工具类应用 + 打印 CSS 优化 + Playwright +3 项断言（68/68 通过）+ Review（0 P0/P1，1 P2 记录）+ 完成 RC3.3 IA Review P2 #1 |
-| **RC6** | ✅ Completed（开发 + 验证 + Review 全部完成，待 commit + push） | Interview + AiPractice 深化：AiPracticeContent subtitle? 字段 + scanAiPractice 解析 + frontmatter SSOT 化 + AiPractice.vue 应用 .page__header/.page__subtitle + Interview.vue 应用 .page__header/.page__subtitle（动态计算）+ 两页移除 scoped .xxx__header + Playwright +6 项断言（74/74 通过）+ Review（0 P0/P1，2 P2 记录）+ 完成 RC3.3 IA Review P2 #3 + P2 #4 |
+| **RC6** | ✅ Completed commit `92a605a`（origin/master 已同步，不发新 tag） | Interview + AiPractice 深化：AiPracticeContent subtitle? 字段 + scanAiPractice 解析 + frontmatter SSOT 化 + AiPractice.vue 应用 .page__header/.page__subtitle + Interview.vue 应用 .page__header/.page__subtitle（动态计算）+ 两页移除 scoped .xxx__header + Playwright +6 项断言（74/74 通过）+ Review（0 P0/P1，2 P2 记录）+ 完成 RC3.3 IA Review P2 #3 + P2 #4 |
+| **RC7** | ✅ Completed（开发 + 验证 + Review 全部完成，待 commit + push） | Final Polish（2026-07-17 重新定位，原"IA + Nav 优化"经 Design Review 评估为无价值修改）：Content Accuracy（Resume subtitle "软件工程方向" → "分布式系统" + About facts 考研 "2026 届" → "2027 考研"）+ Release Polish（public/robots.txt + public/sitemap.xml 9 路由 + index.html SEO meta 增量）+ Playwright Test 7 断言同步 + Review（0 P0/P1，2 P2 记录留 RC8：og:image + per-route description）+ Bundle -0.01 KB |
 
 ### 6.2 剩余（按 Portfolio v3 Roadmap 顺序）
 
 | 阶段 | 状态 | 预期内容 |
 |---|---|---|
-| **RC7** | ⏳ 未开始 | 信息架构 + 全局导航优化（NavBar 顺序决策 + 跨页面职责确认 + .xxx__header 类名一致性决策 + eyebrow `//` 前缀统一决策） |
 | **RC8** | ⏳ 未开始 | Final Release v3.0.0（全站审计 + Core Web Vitals + WCAG AA + v3.0.0 发布） |
 
 **重要说明**：
@@ -945,7 +1009,7 @@ interface SkillsContent {
 | # | 建议 | 建议时机 | 当前状态 |
 |---|---|---|---|
 | 1 | 统一 About subtitle 与 Resume 开场白 framing | RC5（Resume 重构） | ✅ **RC5 已完成**（Resume subtitle 前缀与 About 一致，分隔符统一为 `·`，后缀差异合理） |
-| 2 | 评估 NavBar 顺序是否优先复试导师场景 | RC4+（用户决策） | ⏳ 待 RC7 处理 |
+| 2 | 评估 NavBar 顺序是否优先复试导师场景 | RC4+（用户决策） | ✅ **RC7 Design Review 已结论**：保持现状（详见 [RELEASE_REVIEW_REPORT.md §24](RELEASE_REVIEW_REPORT.md)）。三类用户路径（复试导师 / 技术面试官 / 普通访客）均可自然完成，调整无明确收益 |
 | 3 | 评估 4 个子页面（Skills/Interview/AiPractice/Resume）`page__hint` 是否应统一迁移至 SSOT 模式 | RC4-RC7（每页重构时） | ✅ **RC6 已完成**（Skills RC4.1 + Resume RC5 + AiPractice RC6 + Interview RC6 = 4/4 页全部消除 page__hint） |
 | 4 | 评估 3 个子页面 `.xxx__header` CSS 是否提取为 `.page__header` 工具类 | RC8（Final Review） | ✅ **RC6 已完成**（Skills RC4.1 + Resume RC5 + AiPractice RC6 + Interview RC6 = 4/4 页全部应用 .page__header；About.vue 保留 scoped，RC3 冻结） |
 | 5 | 监控 Skills 软件工程实践 vs Projects 技术亮点 vs Resume 工程能力 三处能力描述是否在 RC4+ 出现过度重复 | RC4-RC7（每页重构时） | ✅ **RC5 已比对**：Resume 工程能力 5 项与 Skills 软件工程实践分类无逐项重复，Resume 是 HR 友好摘要，Skills 是技术栈分类，角度互补，**无缺陷** |
@@ -1045,21 +1109,46 @@ interface SkillsContent {
 - ✅ page__hint 硬编码消除（4 子页面全部完成：Skills + Resume + AiPractice + Interview）
 - ✅ Review 无 P0/P1 问题（2 P2 已记录到 RELEASE_REVIEW_REPORT.md，留待 RC7）
 
-### 7.5 RC7 — 信息架构 + 全局导航优化
+### 7.5 RC7 — Final Polish（最终打磨）（已完成）
 
-**目标**：跨页面职责确认，NavBar 顺序决策，IA 全局审计。
+> **2026-07-17 用户重新定位**：原计划"信息架构 + 全局导航优化"经 RC7 Design Review 评估，当前 IA 与 NavBar 已合理，没有真正有价值的修改空间。用户批准将 RC7 调整为"Final Polish"，仅做 Content Accuracy + Release Polish，**不为了统一而统一、不为了重构而重构**。详见 [RELEASE_REVIEW_REPORT.md §24](RELEASE_REVIEW_REPORT.md) RC7 Design Review。
 
-**预期工作**：
-- NavBar 顺序评估（RC3.3 IA Review P2 #2：是否优先复试导师场景）
-- 跨页面信息重复审计（RC3.3 IA Review P2 #5：Skills vs Projects vs Resume 能力描述）
-- 全站 page__hint / .xxx__header 一致性最终确认
-- IA Review 报告
-- Code/Design/Performance Review（RC7 收尾）
+**目标**：修正真实存在的内容/事实问题，补充基础 SEO 资源，全站文案与可访问性最终打磨。
 
-**验收标准**：
-- typecheck + build + Playwright 三项全过
-- NavBar 顺序经用户确认
-- IA Review 无 P0/P1 问题
+**完整生命周期进度**：
+
+| 阶段 | 状态 |
+|---|---|
+| 开发 | ✅ 完成（6 个文件：2 新建 + 4 修改；不含文档 2 个） |
+| 验证 | ✅ 完成（typecheck + build + Playwright 74/74） |
+| Review | ✅ 完成（Code Review 0 P0/P1，2 P2 记录留 RC8 / Design Review 0 问题 / Performance Review 0 问题 / a11y 验证 0 问题） |
+| 文档更新 | ✅ 完成（HANDOFF.md + RELEASE_REVIEW_REPORT.md §24） |
+| Commit + Push | ⏳ 待执行（收尾 commit + 推送 origin/master） |
+| RC7 Final Report | ⏳ 待输出（等待批准进入 RC8 Final v3.0.0） |
+
+**允许的工作**：
+1. **Content Accuracy**：Resume/About 文案真实不一致修正 + About Facts 考研字段歧义消除
+2. **Release Polish**：
+   - 全站文案一致性（大小写、标点、术语、命名）
+   - SEO 基础资源（robots.txt + sitemap.xml + index.html meta 增量）
+   - 页面 Metadata 完整性
+   - 图片 alt / aria / 可访问性细节
+   - 移动端细节
+
+**明确不做**：
+- ❌ 不调整 NavBar 顺序（Design Review §2 结论：当前顺序三类用户路径均可自然完成）
+- ❌ 不统一 Header 类（Design Review §3 结论：各模式有合理理由）
+- ❌ 不给所有 eyebrow 加 `//`（Design Review §4 结论：当前 `//` 是有意的语义区分）
+- ❌ 不解除 About RC3 Freeze（Design Review §5 结论：facts 结构差异合理）
+- ❌ 不新增组件/动画/Design Token/颜色/字体（FROZEN INVENTORY）
+- ❌ 不进行无明确收益的 CSS 重构
+
+**验收标准**（全部达成）：
+- ✅ typecheck + build + Playwright 三项全过
+- ✅ Content Accuracy 修正完成（Resume subtitle "软件工程方向" → "分布式系统" + About facts 考研 "2026 届" → "2027 考研"）
+- ✅ SEO 基础资源补充完成（robots.txt + sitemap.xml + index.html meta 增量）
+- ✅ Review 无 P0/P1 问题（2 P2 记录到 RELEASE_REVIEW_REPORT.md §24，留 RC8 决策：og:image + per-route description）
+- ✅ Bundle 体积零回归（41.88 KB → 41.87 KB，-0.01 KB）
 
 ### 7.6 RC8 — Final Release v3.0.0
 
@@ -1097,9 +1186,15 @@ interface SkillsContent {
   RC4 ✅ 全局基础 + Skills 试点（.page__header 工具类 + Skills categories 卡片网格 + Final Review P1 修复）
   RC5 ✅ Resume 深化（subtitle SSOT 化 + .page__header 工具类应用 + 打印 CSS 优化 + 完成 IA P2 #1）
   RC6 ✅ Interview + AiPractice 深化（AiPractice SSOT + Interview 动态计算 + 两页 .page__header 应用 + page__hint 全站消除 + 完成 IA P2 #3 + P2 #4）
+  RC7 ✅ Final Polish（最终打磨）— 2026-07-17 用户重新定位，原"IA + Nav 优化"经 Design Review 评估为无价值修改
+            · Content Accuracy（Resume subtitle "软件工程方向" → "分布式系统" + About facts 考研 "2026 届" → "2027 考研"）
+            · Release Polish（robots.txt + sitemap.xml 9 路由 + index.html SEO meta 增量）
+            · 全站 a11y 验证（35 处 aria-* 全部合理使用）
+            · 完成 IA P2 #2（Design Review 结论：NavBar 保持现状）
+            · 不做：NavBar / Header 类 / eyebrow // / About 解冻 / 新增组件动画Token
+            · 验证：typecheck + build（1662 modules, 2.49s, gzip 41.87 KB -0.01）+ Playwright 74/74 + 0 P0/P1 + 2 P2 留 RC8
 
 【待推进】（每个 RC 完整生命周期，不再拆子阶段）
-  RC7 ──── 信息架构 + 全局导航优化（NavBar 顺序决策 + 跨页面职责确认 + .xxx__header 类名一致性决策 + eyebrow `//` 前缀统一决策）
   RC8 ──── Final Release v3.0.0
             · 全站一致性审计（Code/Design/Performance/IA）
             · Core Web Vitals 验证

@@ -247,10 +247,11 @@ try {
   check('Resume 页 h1 文本 = 赖睿轩 · 简历', resumeTitle?.trim() === '赖睿轩 · 简历', `actual: ${resumeTitle}`)
 
   // RC5: subtitle 渲染验证（从 frontmatter SSOT 读取，替换原硬编码 page__hint）
+  // RC7: subtitle 文案对齐 About（"软件工程方向" → "分布式系统"，消除语义重复）
   const resumeSubtitle = await page.locator('.page__subtitle').textContent()
   check(
-    'Resume 页 subtitle 渲染 = "软件工程学生 · 后端开发 · 软件工程方向"',
-    resumeSubtitle?.trim() === '软件工程学生 · 后端开发 · 软件工程方向',
+    'Resume 页 subtitle 渲染 = "软件工程学生 · 后端开发 · 分布式系统"',
+    resumeSubtitle?.trim() === '软件工程学生 · 后端开发 · 分布式系统',
     `actual: ${resumeSubtitle}`,
   )
 

@@ -2145,3 +2145,259 @@ interview/*.md (4 个分类文件，未修改)
 - eyebrow `//` 前缀统一决策（5 页是否加 `//` 前缀）
 
 **RC6 Final Review 结束。等待用户批准。**
+
+---
+
+## 24. RC7 Final Review — Final Polish（最终打磨）（2026-07-17）
+
+> **本节为 RC7 Final Review 报告**（按 2026-07-17 调整后的执行规则，Review 作为 RC7 收尾工作，不再单独拆子阶段）。
+>
+> **本节同时包含 RC7 Design Review 结论**——用户在 RC7 开发前要求先执行 Design Review 重新评估规划，结论驱动了 RC7 的重新定位。
+>
+> **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划。**RC7 定位于 2026-07-17 经用户调整**，从"信息架构 + 全局导航优化"改为"Final Polish（最终打磨）"，依据为本节 §24.2 RC7 Design Review 结论。
+
+### 24.1 RC7 重新定位说明
+
+**原 Roadmap 规划**：RC7 = 信息架构 + 全局导航优化（NavBar 顺序 + Header 类统一 + eyebrow `//` 前缀 + About RC3 Freeze 解除评估）。
+
+**重新定位决策**：用户在 RC7 开发前要求执行 Design Review（只分析、不修改代码），重新评估 RC7 规划。Design Review 结论显示原规划的 6 项评估项中无一项属于"建议必须修改"或"建议修改"等级——5 项为"建议保持现状"、1 项为"明确不要修改"。用户据此批准将 RC7 调整为 Final Polish，坚持"最小修改、最大价值"原则，仅做真正有价值的 Content Accuracy + Release Polish。
+
+**RC7 原则**（用户明确指示）：
+- 不为了统一而统一
+- 不为了重构而重构
+- 不修改已经被证明合理的设计
+- 不扩大修改范围
+- 保持 FROZEN INVENTORY
+
+### 24.2 RC7 Design Review 结论
+
+**评估范围**：6 项（IA / NavBar / Header 类 / eyebrow `//` / About RC3 Freeze / v3.0 成熟度）
+
+| # | 评估项 | 评估结论 | 等级 |
+|---|---|---|---|
+| 1 | Information Architecture 合理性 | 8 页（Home / 3 ProjectDetail / Skills / Interview / AiPractice / Resume / About）职责清晰，无信息重复，"3 分钟面试官快速浏览"目标已达成 | 【建议保持现状】 |
+| 2 | NavBar 调整必要性（复试导师 / 技术面试官 / 普通访客三路径） | 当前顺序（首页/项目/能力/面试/AI 实践/简历/关于）三类用户路径均可自然完成，调整无明确收益 | 【明确不要修改】 |
+| 3 | Header 类统一（3 种模式：仅 page__header / page__header + xxx__header 双类 / 独立 scoped） | 3 种模式各有合理理由：Skills 仅 page__header（YAGNI）/ Resume + AiPractice + Interview 双类（打印 CSS 钩子 + 语义钩子）/ About 独立 scoped（RC3 冻结 + facts 用 `<dl>` 结构） | 【建议保持现状】 |
+| 4 | eyebrow `//` 统一（5 处有 `//` + 6 处无 `//`） | `//` 是 section-level（页内 section eyebrow）与 page-level（子页 H1 eyebrow）的有意语义区分，非历史遗留不一致；强制统一反而破坏语义 | 【明确不要修改】 |
+| 5 | About RC3 Freeze 解除 | About facts 用 `<dl>` 结构与其他页 `.page__header` 不同，这是 RC3 的有意设计；解冻收益小、风险大（可能破坏 facts 语义结构） | 【建议保持现状】 |
+| 6 | v3.0 成熟度评估 | 当前已基本达到 v3.0 成熟度；真正值得投入的仅 Content Accuracy（Resume/About 文案）+ SEO 基础资源（robots.txt / sitemap.xml / index.html meta） | 【建议保持现状】 |
+
+**Design Review 总结论**：原 Roadmap 中 RC7 的"IA + Nav 优化"无真正有价值的修改空间。**RC7 重新定位为 Final Polish**，仅做 Content Accuracy + Release Polish。
+
+### 24.3 RC7 范围
+
+**允许的工作**：
+1. **Content Accuracy**：
+   - Resume/About 文案真实不一致修正
+   - About Facts 考研字段歧义消除（如存在歧义，先提出修改建议，再修改）
+
+2. **Release Polish**：
+   - 全站文案一致性（大小写、标点、术语、命名）
+   - SEO 基础资源（robots.txt + sitemap.xml + index.html meta 增量）
+   - 页面 Metadata 完整性
+   - 图片 alt / aria / 可访问性细节
+   - 移动端细节
+
+**明确不做**：
+- ❌ 不调整 NavBar 顺序（Design Review §2 结论）
+- ❌ 不统一 Header 类（Design Review §3 结论）
+- ❌ 不给所有 eyebrow 加 `//`（Design Review §4 结论）
+- ❌ 不解除 About RC3 Freeze（Design Review §5 结论）
+- ❌ 不新增组件 / 动画 / Design Token / 颜色 / 字体（FROZEN INVENTORY）
+- ❌ 不进行任何没有明确收益的 CSS 重构
+
+### 24.4 改动文件清单
+
+**6 个文件（2 新建 + 4 修改；不含文档 2 个）**：
+
+| 文件 | 类型 | 改动 |
+|---|---|---|
+| [src/content/resume/index.md](src/content/resume/index.md) | 修改 | frontmatter `subtitle: 软件工程学生 · 后端开发 · 软件工程方向` → `subtitle: 软件工程学生 · 后端开发 · 分布式系统`（Content Accuracy：消除语义重复，对齐 About） |
+| [src/content/personal/about.md](src/content/personal/about.md) | 修改 | frontmatter facts 考研字段 `408 计算机科学 · 2026 届` → `408 计算机科学 · 2027 考研`（Content Accuracy：消除"届"字歧义，用户 2027.06 毕业） |
+| [public/robots.txt](public/robots.txt) | 新建 | Release Polish：基础 SEO 资源（User-agent: * + Allow: / + Sitemap 指向） |
+| [public/sitemap.xml](public/sitemap.xml) | 新建 | Release Polish：基础 SEO 资源（9 条路由：1 首页 + 3 项目详情 + 5 子页面，priority 0.6~1.0） |
+| [index.html](index.html) | 修改 | Release Polish：SEO meta 增量（`<meta name="robots">` + `<link rel="canonical">` + `og:url` + `og:site_name` + `twitter:title` + `twitter:description`） |
+| [release-gate-task-005.mjs](release-gate-task-005.mjs) | 修改 | Test 7 Resume subtitle 断言更新（"软件工程方向" → "分布式系统"）+ 注释补充 RC7 来源 |
+
+**未修改文件说明**：
+- `src/types/*.ts` — RC7 未新增字段或类型，仅修改 frontmatter 文案
+- `src/utils/content.ts` — 解析逻辑不变（subtitle 字段已在 RC3-RC6 建立）
+- `src/pages/*.vue` — 不修改页面组件（SSOT 读取逻辑已在 RC3-RC6 建立，文案变更自动反映）
+- `src/styles/global.css` — RC7 不做无收益 CSS 重构
+- `src/content/interview/*.md` / `src/content/ai-practice/index.md` / `src/content/skills/index.md` — RC7 未发现内容真实性问题
+
+### 24.5 数据流变更
+
+**RC7 无结构变更**——仅修改 frontmatter 文案，解析逻辑与渲染逻辑完全复用 RC3-RC6 已建立的 SSOT 通道。
+
+**Resume subtitle 数据流（RC5 建立，RC7 仅文案变更）**：
+```
+resume/index.md (frontmatter.subtitle)  ← RC7 文案修正
+  → scanResume() 返回 ResumeContent { subtitle }
+  → Resume.vue 渲染 <p class="page__subtitle">{{ resume.subtitle }}</p>
+```
+
+**About facts 数据流（RC3 建立，RC7 仅文案变更）**：
+```
+about.md (frontmatter.facts[2].value)  ← RC7 文案修正（"2026 届" → "2027 考研"）
+  → scanPersonal() 返回 PersonalContent { facts: PersonalFact[] }
+  → About.vue 渲染 <dl class="about__facts"><div class="about__fact">...</div></dl>
+```
+
+**SEO 资源数据流（RC7 新建，纯静态）**：
+```
+public/robots.txt  → Vercel 直接 serve 为 /robots.txt
+public/sitemap.xml → Vercel 直接 serve 为 /sitemap.xml
+index.html <head>  → Vite 入口 HTML，构建时注入 dist/index.html
+```
+
+### 24.6 Code Review
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| 死代码 / 未使用导入 | ✅ 0 | RC7 未新增任何导入 |
+| TypeScript strict 合规 | ✅ 0 错误 | typecheck exit 0 |
+| CSS 重复 | ✅ 0 | RC7 未新增 CSS |
+| 文案真实性 | ✅ 已修正 | Resume subtitle + About facts 考研字段（用户确认） |
+| SEO 资源正确性 | ✅ 通过 | robots.txt / sitemap.xml / index.html meta 全部使用生产 URL `https://lai-portfolio-xi.vercel.app` |
+| 隐私扫描 | ✅ 清洁 | 0 手机号 / 0 真实密钥 / 0 个人身份信息 |
+
+**P0/P1 问题**：0 项
+
+**P2 问题（仅记录，留 RC8 决策）**：
+
+| # | 问题 | 严重度 | 处理建议 |
+|---|---|---|---|
+| 1 | `og:image` / `twitter:image` 缺失 | P2 | 项目无现成图片源（favicon.svg 不适合作为社交分享图）。建议 RC8 评估是否生成专用 OG 图（如 Hero 截图或品牌图） |
+| 2 | per-route description 未实施 | P2 | SPA 限制下，路由级 description 需在 router.afterEach 中动态注入 document.head，属于新功能而非打磨。建议 RC8 评估实施成本 |
+
+### 24.7 Design Review
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| 视觉一致性 | ✅ 维持现状 | RC7 未修改任何视觉元素（CSS / 字号 / 间距 / 颜色） |
+| eyebrow `//` 一致性 | ✅ 维持现状 | Design Review §4 结论：`//` 是有意语义区分，不强制统一 |
+| Header 类一致性 | ✅ 维持现状 | Design Review §3 结论：3 种模式各有合理理由 |
+| NavBar 顺序 | ✅ 维持现状 | Design Review §2 结论：三类用户路径均可自然完成 |
+| 文案一致性（大小写 / 标点 / 术语 / 命名） | ✅ 通过 | 全站文案扫描无问题（Resume subtitle 修正后与 About 一致；facts 4 项术语统一） |
+| 移动端细节 | ✅ 通过 | 现有响应式断点（桌面 / 平板 / 移动）无回归（Playwright Test 12 验证） |
+
+**P0/P1 问题**：0 项
+
+### 24.8 Performance Review
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| Bundle 体积 | ✅ 零回归 | 主包 index.js 107.78 KB / gzip 41.87 KB（RC6 是 41.88 KB，-0.01 KB 微减） |
+| 动态导入 | ✅ 维持现状 | RC7 未修改任何 import 语句 |
+| 未使用资源 | ✅ 0 | RC7 未新增 JS / CSS 资源 |
+| SEO 静态资源体积 | ✅ 极小 | robots.txt 76 字节 + sitemap.xml 1.4 KB（不进入 bundle，Vercel 直接 serve） |
+
+**P0/P1 问题**：0 项
+
+### 24.9 a11y 验证
+
+**全站 aria-* 使用情况扫描**（35 处）：
+
+| 类型 | 数量 | 用途 | 评估 |
+|---|---|---|---|
+| `aria-hidden` | 22 | 图标（Lucide）+ 装饰元素 | ✅ 合理（隐藏纯装饰元素给屏幕阅读器） |
+| `aria-labelledby` | 9 | section 与标题关联 | ✅ 合理（RC2.4 修复） |
+| `aria-label` | 4 | NavBar / ProjectNav / BackToTop / ThemeToggle | ✅ 合理（按钮无可见文字时提供 a11y name） |
+
+**P0/P1 问题**：0 项（35 处 aria-* 全部合理使用）
+
+**图片 alt 验证**：
+- `favicon.svg` — 装饰性 favicon，无需 alt
+- `ArchitectureDiagram` — 通过组件 `alt` prop 动态提供（RC2.4 修复）
+- 项目截图 — 项目详情页 Markdown 内联图片，markdown-it 默认渲染 alt 文本
+- OG image — 缺失（见 §24.6 P2 #1）
+
+### 24.10 验证结果
+
+| 验证项 | 结果 | 说明 |
+|---|---|---|
+| typecheck | ✅ 通过 | `vue-tsc --noEmit` exit 0 |
+| build | ✅ 通过 | 1662 模块，2.49s，gzip 主包 41.87 KB |
+| Playwright | ✅ 通过 | **74/74**（与 RC6 一致，仅 Test 7 Resume subtitle 断言文案同步更新） |
+
+**RC7 修改的 Playwright 断言**：
+- Test 7 Resume 页 subtitle 渲染断言：
+  - 变更前：`resumeSubtitle?.trim() === '软件工程学生 · 后端开发 · 软件工程方向'`
+  - 变更后：`resumeSubtitle?.trim() === '软件工程学生 · 后端开发 · 分布式系统'`
+  - 注释补充："RC7: subtitle 文案对齐 About（"软件工程方向" → "分布式系统"，消除语义重复）"
+
+**Playwright 测试基础设施验证**：
+- ✅ preview 服务器使用 `npm run preview -- --port 4180 --strictPort`（避免端口冲突）
+- ✅ 测试基线 74/74 通过（与 RC6 一致）
+- ✅ 控制台错误扫描全过（Shiki singleton 警告已通过 filter 处理，RC1 起即为此）
+
+### 24.11 约束遵守
+
+| 约束 | 状态 |
+|---|---|
+| 新增组件配额 ≤2 | ✅ RC7 未新增组件（剩余 1 个） |
+| 新增第三方依赖 | ✅ 0 |
+| 新增 Design Token / 颜色 / 字体 / 动画 | ✅ 0 |
+| Markdown SSOT 保持 | ✅ 仅修改 frontmatter 文案，未新增字段或迁移结构 |
+| RC 阶段禁止新增业务功能 / 页面 / 抽象 | ✅ RC7 是 Final Polish，无新功能 |
+| 子阶段串行执行 | ✅ RC7 完整生命周期一次完成（不再拆子阶段） |
+| 隐私扫描清洁 | ✅ 0 手机号 / 0 真实密钥 |
+| FROZEN INVENTORY | ✅ 未违反任何冻结项 |
+| RC3 Baseline 冻结 | ✅ 未修改 RC3 内容（about.md 仅修改 facts 文案，未改结构；未解冻 About.vue） |
+| RC4 Baseline 冻结 | ✅ 未修改 RC4 内容 |
+| RC5 Baseline 冻结 | ✅ 未修改 RC5 内容（resume/index.md 仅修改 subtitle 文案，未改结构） |
+| RC6 Baseline 冻结 | ✅ 未修改 RC6 内容 |
+| **RC7 明确不做项** | ✅ 全部遵守（未调整 NavBar / 未统一 Header 类 / 未加 eyebrow `//` / 未解冻 About / 未新增组件动画Token / 未做无收益 CSS 重构） |
+| **"最小修改、最大价值"原则** | ✅ 所有修改均有明确实际收益（Content Accuracy 修正真实问题 + SEO 基础资源零风险） |
+
+### 24.12 Bundle 体积对比
+
+| Chunk | RC6 | RC7 | 变化 |
+|---|---|---|---|
+| 主包 index.js | 107.78 kB / gzip 41.88 kB | 107.78 kB / gzip 41.87 kB | -0.01 kB（微减，可忽略） |
+| 总模块数 | 1662 | 1662 | 0 |
+| 构建时间 | 2.54s | 2.49s | -0.05s（环境噪声） |
+| 新增静态资源 | — | robots.txt 76 B + sitemap.xml 1.4 KB | 不进入 bundle（Vercel 直接 serve） |
+
+**结论**：✅ Bundle 体积零回归（微减 0.01 KB）
+
+### 24.13 RC3.3 IA Review P2 建议处理进度（RC7 最终更新）
+
+| # | 建议 | 建议时机 | RC7 处理 |
+|---|---|---|---|
+| 1 | 统一 About subtitle 与 Resume 开场白 framing | RC5（Resume 重构） | ✅ **RC5 已完成**（RC7 进一步对齐：Resume subtitle "软件工程方向" → "分布式系统"，与 About subtitle 完全一致） |
+| 2 | 评估 NavBar 顺序是否优先复试导师场景 | RC4+（用户决策） | ✅ **RC7 Design Review 已结论**：保持现状。三类用户路径均可自然完成，调整无明确收益 |
+| 3 | 4 子页面 page__hint → SSOT | RC4-RC7 | ✅ **RC6 已完成** |
+| 4 | 3 子页面 .xxx__header → .page__header | RC8（Final Review） | ✅ **RC6 已完成** |
+| 5 | 监控 Skills / Projects / Resume 三处能力描述重复 | RC4-RC7 | ✅ **RC5 已比对**：无缺陷 |
+
+**5 项 P2 建议全部处理完毕**。RC8 无遗留 IA P2 项。
+
+### 24.14 待用户批准事项
+
+1. **是否批准 RC7 Final Review 通过**？
+2. **是否立即 commit + 推送 origin/master**？（RC4~RC7 不发新版本，仅推送 origin）
+3. **是否进入 RC8（Final Release v3.0.0）**？RC8 预期工作：
+   - 全站一致性审计（Code/Design/Performance/IA 四维度）
+   - Core Web Vitals 验证（LCP < 2.5s / INP < 200ms / CLS < 0.1）
+   - WCAG AA 可访问性检查
+   - Bundle 体积最终对比
+   - 版本号 2.0.0 → 3.0.0
+   - 创建 v3.0.0 Git Tag
+   - 推送 origin/master
+   - Vercel 部署验证
+
+**RC8 待决策的 P2 项**（RC7 留下）：
+- og:image / twitter:image 是否生成（需要图片源）
+- per-route description 是否实施（需要路由守卫动态注入）
+
+### 24.15 下一步
+
+**等待用户批准 RC7 Final Review 后**：
+1. Git commit RC7 改动（8 个文件：6 个代码/资源 + HANDOFF.md + RELEASE_REVIEW_REPORT.md）
+2. 推送 origin/master
+3. 输出 RC7 Final Report
+4. 等待批准进入 RC8（Final Release v3.0.0）
+
+**RC7 Final Review 结束。等待用户批准。**

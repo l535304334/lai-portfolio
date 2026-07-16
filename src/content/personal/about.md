@@ -10,7 +10,7 @@ facts:
   - label: 方向
     value: 后端开发 / 分布式系统 / 软件工程实践
   - label: 考研
-    value: 408 计算机科学 · 2026 届
+    value: 408 计算机科学 · 2027 考研
   - label: GitHub
     value: github.com/l535304334
 ---

@@ -207,6 +207,33 @@ try {
   const aboutTitle = await page.locator('h1').textContent()
   check('About 页 h1 文本 = 关于我', aboutTitle?.trim() === '关于我', `actual: ${aboutTitle}`)
 
+  // RC3.2: subtitle 渲染验证（从 frontmatter SSOT 读取，替换原硬编码 page__hint）
+  const aboutSubtitle = await page.locator('.about__subtitle').textContent()
+  check(
+    'About 页 subtitle 渲染 = "软件工程学生 · 后端开发 · 分布式系统"',
+    aboutSubtitle?.trim() === '软件工程学生 · 后端开发 · 分布式系统',
+    `actual: ${aboutSubtitle}`,
+  )
+
+  // RC3.2: Facts Panel <dl> 语义结构验证
+  const aboutFactsDl = await page.locator('dl.about__facts').count()
+  check('About 页 Facts Panel <dl> 存在', aboutFactsDl === 1, `dl count: ${aboutFactsDl}`)
+
+  const aboutFactsCount = await page.locator('.about__fact').count()
+  check('About 页 Facts Panel 渲染 4 项 facts', aboutFactsCount === 4, `facts count: ${aboutFactsCount}`)
+
+  // 验证 4 项 facts label 全部存在（教育/方向/考研/GitHub）
+  const expectedFactLabels = ['教育', '方向', '考研', 'GitHub']
+  const factLabelContents = await page.locator('.about__fact-label').allTextContents()
+  const normalizedFactLabels = factLabelContents.map((s) => s.trim())
+  for (const label of expectedFactLabels) {
+    check(
+      `About 页 Fact label "${label}" 存在`,
+      normalizedFactLabels.includes(label),
+      `labels: ${JSON.stringify(normalizedFactLabels)}`,
+    )
+  }
+
   const aboutH2 = await page.locator('h2').count()
   check('About 页 h2 >= 3（工程定位/成长轨迹/关于本站）', aboutH2 >= 3, `h2 count: ${aboutH2}`)
 

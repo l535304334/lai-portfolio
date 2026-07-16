@@ -23,16 +23,16 @@
 | **当前阶段** | **RC8 Completed（Final Release v3.0.0）** — 全站最终审计通过，v3.0.0 已发布 |
 | **下一阶段** | **无** — Roadmap 全部完成，进入维护模式（仅 P0/P1 + 安全问题修复） |
 | **项目版本** | `3.0.0`（[package.json](package.json)）— RC8 Final Release |
-| **最新 Commit** | RC8 release commit（待创建） |
-| **最新 Tag** | `v3.0.0`（RC8 Final Release，待创建并推送 origin） |
-| **本地 vs 远程** | RC8 改动待 commit + push（package.json + HANDOFF.md + RELEASE_REVIEW_REPORT.md） |
-| **工作区状态** | dirty（3 个文件：package.json 版本号 + HANDOFF.md + RELEASE_REVIEW_REPORT.md，待 commit） |
+| **最新 Commit** | `3d485c9` chore(rc8): final release v3.0.0 with full audit and tag |
+| **最新 Tag** | `v3.0.0`（RC8 Final Release，已推送 origin） |
+| **本地 vs 远程** | ✅ **完全同步**（origin/master = `3d485c9`，tag `v3.0.0` 已推送） |
+| **工作区状态** | **clean**（v3.0.0 Final Release 已发布） |
 | **当前分支** | `master`（受保护，禁止直接 push 历史） |
 | **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC5~RC8 均未消耗） |
 | **虚拟模块数** | 8 个（已定型，不再新增） |
 | **测试基线** | Playwright **74/74** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC8 零代码改动，基线与 RC7 一致 |
-| **构建基线** | 1662 模块，2.74s（gzip 主包 41.87 KB）— RC8 零代码改动，基线与 RC7 一致 |
-| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，origin/master 触发） |
+| **构建基线** | 1662 模块，2.39s（gzip 主包 41.87 KB）— RC8 零代码改动，基线与 RC7 一致 |
+| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，v3.0.0 已上线） |
 | **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
 | **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
 | **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每 RC 完整生命周期 |
@@ -41,9 +41,9 @@
 | **RC5 Baseline** | ✅ **冻结**（不再修改 RC5 内容，除非后续发现 P0/P1 缺陷） |
 | **RC6 Baseline** | ✅ **冻结**（不再修改 RC6 内容，除非后续发现 P0/P1 缺陷） |
 | **RC7 Baseline** | ✅ **冻结**（不再修改 RC7 内容，除非后续发现 P0/P1 缺陷） |
-| **RC8 状态** | ✅ **完成**（Final Release v3.0.0：全站最终审计 0 P0/P1，4 P2 记录；版本号升级 + Git Tag + push） |
-| **下一步动作** | push commit + push tag → Vercel 部署验证 → 输出 RC8 Final Release Report → 项目进入维护模式 |
-| **完整 Roadmap** | RC4（全局基础+Skills）→ RC5（Resume）→ RC6（Interview+AiPractice）→ RC7（Final Polish）→ RC8（Final v3.0.0）— **全部完成**（详见 §七） |
+| **RC8 状态** | ✅ **完成并发布**（Final Release v3.0.0：全站最终审计 0 P0/P1，4 P2 记录；版本号升级 + Git Tag v3.0.0 + push + Vercel 部署验证通过） |
+| **下一步动作** | **无** — 项目进入维护模式，仅修复 P0/P1 + 安全问题。如需新功能/重构需用户重新批准新 Roadmap |
+| **完整 Roadmap** | RC4（全局基础+Skills）→ RC5（Resume）→ RC6（Interview+AiPractice）→ RC7（Final Polish）→ RC8（Final v3.0.0）— **全部完成并发布**（详见 §七） |
 | **执行规则** | 每个 RC 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆 RC.x 子阶段） |
 | **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 | **RC3.3 Final Review** | 详见 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md)（Code/Design/Performance/IA Review + P1 修复 + 5 项 P2 建议） |
@@ -82,10 +82,10 @@
 
 ### 1.4 当前版本
 
-- **项目版本**：`3.0.0`（见 [package.json](package.json)）— RC8 Final Release
-- **当前 Tag**：`v3.0.0`（RC8 Final Release，待推送 origin）
+- **项目版本**：`3.0.0`（见 [package.json](package.json)）— RC8 Final Release，已发布
+- **当前 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）
 - **历史 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0`
-- **状态**：Roadmap 全部完成，进入维护模式
+- **状态**：Roadmap 全部完成并发布，进入维护模式
 
 ### 1.5 技术栈
 
@@ -111,34 +111,31 @@
 ### 1.6 当前分支
 
 - **分支**：`master`（生产分支，受保护）
-- **本地与远程**：RC7 已同步（origin/master = `e31e0b8`）；RC8 改动待 commit + push（package.json + HANDOFF.md + RELEASE_REVIEW_REPORT.md）
-- **远程 `origin/master`**：`e31e0b8`（RC7 Final Polish commit，已包含 RC1~RC7 全部内容）
-- **最新 Tag**：`v3.0.0`（RC8 Final Release，待创建并推送 origin）— 历史最大版本 tag，v2.0.0 之后跳版本至 v3.0.0 以标志 Roadmap 完成
+- **本地与远程**：✅ **完全同步**（origin/master = `3d485c9`，tag `v3.0.0` 已推送）
+- **远程 `origin/master`**：`3d485c9`（RC8 Final Release commit，已包含 RC1~RC8 全部内容）
+- **最新 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）
 
 ### 1.7 Git 状态
 
 ```
 On branch master
-Your branch is up to date with 'origin/master'.   ← RC7 已同步，RC8 待 commit
-Changes not staged for commit:
-        modified:   package.json                    ← RC8 版本号 2.0.0 → 3.0.0
-        modified:   HANDOFF.md                      ← RC8 文档同步（§0 + §1.4/1.6/1.7 + §6.1/6.2 + §7.6/7.7）
-        modified:   RELEASE_REVIEW_REPORT.md        ← RC8 §25 Final Release Report（待追加）
+Your branch is up to date with 'origin/master'.   ← RC8 已同步，工作区 clean
+nothing to commit, working tree clean
 ```
 
 **最近 6 个 commit**：
 ```
-e31e0b8 feat(rc7): final polish with content accuracy and seo basics  ← origin/master = HEAD
+3d485c9 chore(rc8): final release v3.0.0 with full audit and tag  ← origin/master = HEAD
+e31e0b8 feat(rc7): final polish with content accuracy and seo basics
 92a605a feat(rc6): interview and ai-practice page header utility adoption
 a0c4002 feat(rc5): resume subtitle ssot and page header utility adoption
 6ab0a3b docs(rc4): final review with P1 fix and execution rule adjustment
 caff817 feat(rc4.1): rebuild skills page with structured categories and global page header utility
-bfb070e docs: append RC3 Release Summary (Section 19)
 ```
 
-**所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0`（待创建）
+**所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0` ✅ 全部已推送 origin
 
-**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）— RC8 未解冻
+**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）
 
 **RC4 Baseline 状态**：✅ **冻结**（不再修改 RC4 内容，除非后续发现 P0/P1 缺陷）
 
@@ -148,7 +145,7 @@ bfb070e docs: append RC3 Release Summary (Section 19)
 
 **RC7 Baseline 状态**：✅ **冻结**（不再修改 RC7 内容，除非后续发现 P0/P1 缺陷）
 
-**RC8 状态**：✅ **完成**（Final Release v3.0.0：全站审计 0 P0/P1，4 P2 记录；版本号升级 + Git Tag v3.0.0 + push）
+**RC8 状态**：✅ **完成并发布**（Final Release v3.0.0：commit `3d485c9` + tag `v3.0.0` 已推送 origin/master，Vercel 部署验证通过）
 
 ---
 

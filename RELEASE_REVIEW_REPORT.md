@@ -1376,3 +1376,85 @@ c8b7913          feat(rc3.1): refactor About data layer to character-profile mod
 - [x] 隐私扫描清洁：0 手机号 / 0 真实密钥
 
 **RC3 Local Baseline 已冻结。未 push。等待用户批准后进入 RC4 或决定推送/发布策略。**
+
+---
+
+## 19. RC3 Release Summary（2026-07-17）
+
+> **本节为 RC3 最终发布确认。**
+
+### 19.1 发布决策
+
+用户于 2026-07-17 批准 RC3.3 通过并执行以下发布操作：
+
+| 决策项 | 结果 |
+|---|---|
+| RC3.1 + RC3.2 + RC3.3 + HANDOFF 更新推送到 origin/master | ✅ 已推送 |
+| 创建 v2.1.0 Tag | ❌ 不创建（用户决定保持 v2.0.0） |
+| 升级版本号 | ❌ 不升级（项目版本仍为 `2.0.0`，RC3 内容作为 v2.0.0 迭代） |
+| RC3 Baseline 冻结 | ✅ 冻结（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷） |
+| 进入 RC4 | ⏸ 不提前进入（等待用户批准范围） |
+
+### 19.2 Git 最终状态
+
+```
+On branch master
+Your branch is up to date with 'origin/master'.
+nothing to commit, working tree clean
+```
+
+**Push 范围：** `20598ae..8b45a28  master -> master`（共 5 个 commit）
+
+**RC3 全部 commit（按时间顺序）：**
+
+| Commit | Type | 描述 |
+|---|---|---|
+| `c8b7913` | feat(rc3.1) | refactor About data layer to character-profile model |
+| `6706630` | docs | upgrade HANDOFF.md to project-lifecycle handoff document |
+| `42a21dc` | feat(rc3.2) | rebuild About header with subtitle and Facts Panel |
+| `16b68d2` | fix(rc3.3) | unify DecisionSection eyebrow to Chinese |
+| `8b45a28` | docs | mark RC3 baseline frozen and origin/master synced |
+
+**origin/master = `8b45a28`**（包含 RC1 + RC2 + RC3 全部内容）
+**最新 Tag = `v2.0.0`**（RC2 Release，RC3 不发新 tag）
+**项目版本 = `2.0.0`**（[package.json](package.json) 未变）
+
+### 19.3 Vercel 部署
+
+- origin/master push 后，Vercel 自动触发部署
+- 线上地址：https://lai-portfolio-xi.vercel.app
+- 预期部署状态：✅ 成功（RC3 全量验证已通过 typecheck + build + Playwright 55/55）
+
+### 19.4 RC3 Baseline 冻结确认
+
+✅ **RC3 Baseline 正式冻结**
+
+- 不再修改 RC3 任何内容（代码 / 文档 / 测试 / 资源）
+- 除非后续在 RC4+ 开发中发现 RC3 遗留的 P0/P1 缺陷
+- 若发现 P0/P1 缺陷，必须经用户批准后才能回填修复
+- P2 建议（5 项 IA + 6 项 Code/Design）已记录在 §18，供 RC4+ 决策参考
+
+### 19.5 当前开发阶段
+
+**当前阶段：RC4（待用户批准范围）**
+
+候选页面（顺序可由用户调整）：
+- Skills 页深化重构
+- Resume 页深化重构
+- Interview 页深化重构
+- AiPractice 页深化重构
+
+**RC4 开始前必须由用户决定：**
+1. RC4 的具体页面与范围
+2. 是否参考 RC3.3 IA Review 的 5 项 P2 建议（详见 §18.7.5）
+3. 是否在 RC4 子阶段间推送 commit（RC3 全程本地，RC4 策略可调整）
+
+### 19.6 后续 AI 接手指引
+
+新 AI 接手时：
+1. 阅读 [HANDOFF.md §0 SNAPSHOT](HANDOFF.md) 快速恢复上下文
+2. 阅读 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md) 了解 RC3.3 Final Review 详情
+3. 等待用户批准 RC4 范围后开始工作
+4. **禁止**提前进入 RC4 或修改任何 RC4 内容
+
+**RC3 发布完成。等待用户批准 RC4。**

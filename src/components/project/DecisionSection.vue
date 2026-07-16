@@ -35,7 +35,7 @@ defineProps<{
   display: block;
   font-size: var(--text-xs);
   color: var(--color-accent);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: var(--space-3);
 }

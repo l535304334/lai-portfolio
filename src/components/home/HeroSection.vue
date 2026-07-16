@@ -85,7 +85,7 @@ const stats: HeroStat[] = [
 .hero__eyebrow {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.08em;
   margin-bottom: var(--space-5);
 }
 

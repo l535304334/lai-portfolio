@@ -693,3 +693,252 @@ nothing to commit, working tree clean
 ```
 
 **RC1 Local Release Baseline 已冻结。未 push。**
+
+---
+
+## 16. Task 010 RC2 — Portfolio v2.0 项目详情页与视觉强化（2026-07-16）
+
+> **本节为 RC2 Final Review Report，记录 RC2.1 ~ RC2.5 五个子阶段的完整实现。**
+> **Date：** 2026-07-16
+> **Status：** ✅ Released (Local) — RC2 完成
+
+### 16.1 RC2 概述
+
+RC2 聚焦项目详情页与整体视觉强化，遵循"克制、信息层级、Developer Academic 风格"原则。RC2 全程严格遵守 RC 阶段约束：不新增业务功能、不扩展设计范围、新增组件配额 ≤ 2、不新增第三方依赖。
+
+**RC2 范围（5 个子阶段）：**
+
+| 子阶段 | 名称 | 状态 | 主要交付物 |
+|--------|------|------|-----------|
+| RC2.1 | ProjectHeader 视觉重构 | ✅ | 抽取 status/role 至 header，flex-wrap 移动端保护 |
+| RC2.2 | ArchitectureDiagram 组件集成 | ✅ | 新增 1 个组件（消耗 1 个配额），SVG 按需 lazy 加载 |
+| RC2.3 | CSS-only 视觉强化 | ✅ | MetricCard/MarkdownContent/DecisionSection/ProjectNav 视觉层级 |
+| RC2.4 | 可访问性修复 | ✅ | aria-labelledby / aria-label / 描述性 alt 文本 |
+| RC2.5 | Final Review & Release Candidate | ✅ | Code Review / Design Audit / Performance Audit / 文档同步 |
+
+### 16.2 子阶段详细记录
+
+#### 16.2.1 RC2.1 — ProjectHeader 视觉重构
+
+**Commit：** `2233883` + `9de992f`（flex-wrap 修复）
+
+**变更：**
+- 抽取 `project.status` 和 `project.role` 至 ProjectHeader 展示
+- ProjectHeader frontmatter 新增 `status?` 和 `role?` 可选字段
+- 三个项目 Markdown frontmatter 添加 status/role 字段
+- meta 行添加 `flex-wrap: wrap` 保护移动端布局
+
+**修改文件：**
+- `src/types/project.ts` — 新增 `status?` 和 `role?` 字段
+- `src/utils/content.ts` — 解析新字段
+- `src/components/project/ProjectHeader.vue` — 渲染 status/role
+- `src/content/projects/{jiangnan-travel,love-letter,exam-system}.md` — frontmatter
+
+**新增组件配额：** 0
+**向后兼容：** 是（可选字段，不破坏现有 ProjectSummary）
+
+#### 16.2.2 RC2.2 — ArchitectureDiagram 组件集成
+
+**Commit：** `2b39f33` + `d9e315d`（lazy 加载修正）
+
+**变更：**
+- 新增 `ArchitectureDiagram.vue` 组件（消耗 1 个新增组件配额）
+- frontmatter 新增 `architecture?` 字段，对应 `src/assets/projects/{slug}.svg`
+- 使用 `import.meta.glob` + `query: '?url'` + `import: 'default'` 实现严格按需加载
+- 初版使用 `eager: true`，收尾检查发现语义偏差，改为默认 lazy + `watchEffect` + `ref` 异步加载模式
+- 组件在无 architecture 字段时自动隐藏（无 placeholder）
+
+**关键设计决策：**
+- SVG 资源放置 `src/assets/projects/`，通过 Vite 静态资源机制引用
+- URL 字符串不进入主 bundle，每个 SVG 作为独立 chunk
+- 修正后 ProjectDetail.js 仅增 0.18 KB（watchEffect 运行时代码）
+
+**修改文件：**
+- `src/types/project.ts` — 新增 `architecture?` 字段
+- `src/utils/content.ts` — 解析新字段
+- `src/components/project/ArchitectureDiagram.vue` — 新增组件
+- `src/pages/ProjectDetail.vue` — 集成组件
+- `src/content/projects/*.md` — 添加 architecture 字段
+- `src/assets/projects/{jiangnan-travel,love-letter,exam-system}.svg` — 新增 3 个 SVG
+
+**新增组件配额：** 1（剩余 1）
+
+#### 16.2.3 RC2.3 — CSS-only 视觉强化
+
+**Commit：** `2563e38`
+
+**变更（4 个组件，CSS-only，不修改业务逻辑）：**
+
+| 组件 | 关键变化 |
+|------|---------|
+| MetricCard | value 字号 text-3xl → text-4xl，hover transform translateY(-2px)，移动端响应式 |
+| MarkdownContent | h2 左侧 accent 装饰条（::before 伪元素），间距节奏强化，表格 thead 背景 + 行 hover |
+| DecisionSection | 容器边界强化（border-top 2px, padding-top space-12, margin-top space-20），决策项 h2 字号差异化（text-2xl → text-xl），取消装饰条 |
+| ProjectNav | 顶部视觉分隔强化（border-top 1px → 2px, padding-top space-8 → space-10, margin-top space-16 → space-20） |
+
+**约束遵守：**
+- ✅ CSS-only，未修改业务逻辑
+- ✅ 未新增组件
+- ✅ 未新增 Design Token / 颜色 / 字体 / 动画 / 依赖
+- ✅ 保持 Developer Academic 风格
+
+**新增组件配额：** 0（剩余 1）
+
+#### 16.2.4 RC2.4 — 可访问性修复
+
+**Commit：** `4d9c1e6`
+
+**变更（8 文件，+17 / −12 行）：**
+
+| 文件 | 修改 |
+|------|------|
+| `src/pages/Home.vue` | `<section id="projects">` 添加 `aria-labelledby="projects-title"`，h2 添加 `id` |
+| `src/components/home/HeroSection.vue` | `<section class="hero">` 添加 `aria-labelledby="hero-title"`，h1 添加 `id` |
+| `src/components/home/TimelineSection.vue` | `<section class="timeline">` 添加 `aria-labelledby="timeline-title"`，h2 添加 `id` |
+| `src/components/home/ContactSection.vue` | `<section class="contact">` 添加 `aria-labelledby="contact-title"`，h2 添加 `id` |
+| `src/components/interview/InterviewCategory.vue` | `<section>` 使用动态 `:aria-label`（v-for 渲染避免重复 id） |
+| `src/components/project/ProjectNav.vue` | `<nav>` 添加 `aria-label="项目导航"` |
+| `src/components/project/ArchitectureDiagram.vue` | 新增 `projectTitle?` prop，alt 改为 `${projectTitle} 架构图` 动态 fallback |
+| `src/pages/ProjectDetail.vue` | 向 ArchitectureDiagram 传递 `:project-title` |
+
+**已确认良好（无需修改）：**
+- 全局 `:focus-visible` 样式已存在
+- `.sr-only` 工具类已定义
+- NavBar 汉堡按钮 `aria-expanded` + `aria-label`
+- ThemeToggle / BackToTop `aria-label` + `title`
+- InterviewQuestion 使用原生 `<details>` / `<summary>`
+- ProjectCard 使用 `<article>` + `<dl>` 语义结构
+- 各页面统一 `.page` + `.page__eyebrow` + `.page__title` 结构
+- 每页有且仅有一个 `<h1>`
+
+**新增组件配额：** 0（剩余 1）
+
+#### 16.2.5 RC2.5 — Final Review & Release Candidate
+
+**Commit：** 见本节末尾
+
+**范围：** Code Review / Design Audit / Performance Audit / Documentation / Final Validation
+
+**变更：**
+- `src/components/home/HeroSection.vue` — eyebrow `letter-spacing: 0.02em` → `0.08em`（统一为多数派）
+- `src/components/project/DecisionSection.vue` — eyebrow `letter-spacing: 0.12em` → `0.08em`（统一为多数派；RC2.3 差异化已通过其他方式实现）
+- `RELEASE_REVIEW_REPORT.md` — 追加本节 §16 RC2 Final Review Report
+
+**新增组件配额：** 0（剩余 1）
+
+### 16.3 Code Review 结果
+
+| 检查项 | 结果 | 说明 |
+|--------|------|------|
+| Dead Code | ✅ 0 | 所有 .vue 文件 import 均被使用 |
+| 未使用 import | ✅ 0 | 63 个 import 全部使用 |
+| 重复 CSS | ✅ 0 | `.home__projects` / `.contact` / `.timeline` 重复 `padding: var(--space-20) 0` 是 section 级别独立设置，非真正重复（无法用 `.page` 类替代） |
+| TypeScript 类型 | ✅ 0 错误 | strict + noUncheckedIndexedAccess 通过 |
+| Vue 最佳实践 | ✅ 合规 | 所有组件 `<script setup lang="ts">` + Composition API + 块顺序正确 |
+| `as any` / `@ts-ignore` / `@ts-nocheck` | ✅ 0 匹配 | 全项目扫描 |
+| `TODO` / `FIXME` / `console.log` / `debugger` | ✅ 0 匹配 | 全项目扫描 |
+| 硬编码颜色/间距 | ✅ 0 | 所有 CSS 使用 `var(--*)` 设计令牌 |
+
+### 16.4 Design Audit 结果
+
+**eyebrow letter-spacing 一致性扫描：**
+
+| 位置 | 修改前 | 修改后 | 说明 |
+|------|--------|--------|------|
+| global.css `.page__eyebrow` | 0.08em | 0.08em | 标准（多数派） |
+| Home.vue `.home__eyebrow` | 0.08em | 0.08em | 保持 |
+| TimelineSection.vue `.timeline__eyebrow` | 0.08em | 0.08em | 保持 |
+| ContactSection.vue `.contact__eyebrow` | 0.08em | 0.08em | 保持 |
+| InterviewCategory.vue `.category__eyebrow` | 0.08em | 0.08em | 保持 |
+| ArchitectureDiagram.vue `.__caption` | 0.08em | 0.08em | 保持 |
+| ProjectHeader.vue `.__date` | 0.08em | 0.08em | 保持 |
+| MetricCard.vue `.__label` | 0.08em | 0.08em | 保持 |
+| **HeroSection.vue `.hero__eyebrow`** | **0.02em** | **0.08em** | ❌ 历史偏差，统一 |
+| **DecisionSection.vue `.__eyebrow`** | **0.12em** | **0.08em** | ⚠️ RC2.3 差异化 → RC2.5 统一 |
+
+**冲突权衡说明（规则 7）：**
+- RC2.3 决策：DecisionSection eyebrow `letter-spacing: 0.08em → 0.12em`，作为视觉差异化
+- RC2.5 要求：统一所有 eyebrow `letter-spacing`
+- 解决：统一到 0.08em（多数派）。DecisionSection 视觉差异化已通过更强的方式实现（`border-top: 2px solid` / `padding-top: var(--space-12)` / `margin-top: var(--space-20)` / 决策项 h2 字号差异化 `text-2xl → text-xl`），letter-spacing 0.04em 差异视觉上几乎无感知
+
+**次级标签 letter-spacing（非 eyebrow，按语义层级区分，保持差异）：**
+- `0.05em` — `.timeline__date` / `.timeline__capability-label` / `.timeline__section-label` / `.project-card__stack` / `.category__count` / `.contact__method-key` / `.project-nav__label`
+- `0.02em` — `.hero__eyebrow`（已修复）/ `.project-header__role`（role 文本，非 eyebrow，保持）
+
+**其他设计一致性（已确认良好）：**
+- ✅ spacing：所有组件使用 `var(--space-*)` 令牌
+- ✅ border：`1px solid var(--color-border)` 统一
+- ✅ radius：`var(--radius-sm/md/lg)` 三级使用正确
+- ✅ shadow：`var(--shadow-sm/md/lg)` 三级使用正确
+- ✅ hover：所有交互元素有 hover 状态
+- ✅ transition：`var(--transition-fast/normal)` 统一
+- ✅ focus：全局 `:focus-visible` + Resume 下载按钮局部强化
+
+### 16.5 Performance Audit 结果
+
+| 检查项 | 结果 | 说明 |
+|--------|------|------|
+| Bundle 初始加载 | ✅ ~50 KB gzip | index.js 41.89 KB + Home.js 4.93 KB + Home.css 2.02 KB |
+| 动态导入 | ✅ 正确 | router 使用 `() => import()`；ArchitectureDiagram 使用 `import.meta.glob` lazy |
+| 重复 CSS | ✅ 0 | 见 §16.3 |
+| 未使用资源 | ✅ 0 | 3 个 SVG 均被 frontmatter architecture 字段引用 |
+| 构建警告 | ⚠️ Shiki singleton | 已知非阻塞警告，每个 scan 函数创建独立 highlighter，不影响功能 |
+| 行尾警告 | ⚠️ CRLF | Windows 系统正常，`.gitattributes` 已配置 `* text=auto eol=lf` |
+| 新增依赖 | ✅ 0 | RC2 全程未新增第三方依赖 |
+
+### 16.6 Documentation 更新
+
+- ✅ `RELEASE_REVIEW_REPORT.md` — 追加本节 §16 RC2 Final Review Report
+
+### 16.7 Final Validation 结果
+
+| 验证项 | 命令 | 结果 |
+|--------|------|------|
+| TypeScript 类型检查 | `npm run typecheck` | ✅ exit 0，0 错误 |
+| 生产构建 | `npm run build` | ✅ exit 0，1664 modules transformed，build 2.76s |
+| Playwright E2E | `npm test` | ✅ **49 通过 / 0 失败 / 49 总计** |
+
+### 16.8 Bundle 最终统计
+
+| Chunk | RC2.4 gzip | RC2.5 gzip | 变化 |
+|-------|------------|------------|------|
+| index.js | 41.89 kB | 41.89 kB | **0** |
+| Home.js | 4.93 kB | 4.93 kB | **0** |
+| ProjectDetail.js | 11.91 kB | 11.91 kB | **0** |
+| Interview.js | 6.90 kB | 6.90 kB | **0** |
+| Home.css | 2.02 kB | 2.02 kB | **0** |
+| index.css | 2.55 kB | 2.55 kB | **0** |
+| ProjectDetail.css | 1.15 kB | 1.15 kB | **0** |
+| **总计（前 7 大 chunk）** | **67.35 kB** | **67.35 kB** | **0** |
+
+**Bundle 增量 = 0 KB**：letter-spacing 调整是 CSS 字符串字面量修改，gzip 后无增量。
+
+**RC2 全程 Bundle 增量统计（RC1 → RC2.5）：**
+- RC2.1：+0 KB（仅添加可选字段）
+- RC2.2：+0.18 KB（ProjectDetail.js watchEffect 运行时代码）
+- RC2.3：+0.10 KB（CSS 增量）
+- RC2.4：+0 KB（aria-* 字符串字面量）
+- RC2.5：+0 KB（letter-spacing 字面量）
+- **RC2 总增量：~0.28 KB gzip**
+
+### 16.9 RC2 最终完成确认
+
+✅ **RC2 全部 5 个子阶段完成**
+
+- [x] RC2.1 ProjectHeader 视觉重构
+- [x] RC2.2 ArchitectureDiagram 组件集成（lazy 加载）
+- [x] RC2.3 CSS-only 视觉强化
+- [x] RC2.4 可访问性修复
+- [x] RC2.5 Final Review & Release Candidate
+
+**约束遵守：**
+- [x] 新增组件配额：1/2（仅 ArchitectureDiagram）
+- [x] 新增第三方依赖：0
+- [x] 新增 Design Token / 颜色 / 字体 / 动画：0
+- [x] Markdown SSOT 保持：是
+- [x] 每个子阶段完成时执行 typecheck + build + Playwright 全部通过
+- [x] 每个 commit 符合 `<type>: <description>` 格式
+
+**Git 状态：** clean，14 commits ahead of origin/master（按 RC 规则未 push）
+
+**RC2 Local Release Baseline 已冻结。未 push。等待用户批准后进入 RC3 或后续阶段。**

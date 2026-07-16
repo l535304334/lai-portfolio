@@ -47,9 +47,9 @@ defineProps<{
   display: flex;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-16);
-  padding-top: var(--space-8);
-  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-20);
+  padding-top: var(--space-10);
+  border-top: 2px solid var(--color-border);
 }
 
 .project-nav__item {

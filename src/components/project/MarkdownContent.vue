@@ -16,14 +16,25 @@ defineProps<{
 
 /* ===== 标题 ===== */
 .markdown :deep(h2) {
+  position: relative;
   font-size: var(--text-2xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin-top: var(--space-12);
-  margin-bottom: var(--space-4);
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-5);
+  padding-left: var(--space-4);
   letter-spacing: -0.01em;
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.markdown :deep(h2::before) {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-sm);
 }
 
 .markdown :deep(h2:first-child) {
@@ -34,7 +45,7 @@ defineProps<{
   font-size: var(--text-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  margin-top: var(--space-8);
+  margin-top: var(--space-10);
   margin-bottom: var(--space-3);
 }
 
@@ -111,6 +122,7 @@ defineProps<{
   text-align: left;
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
+  background-color: var(--color-surface);
   padding: var(--space-3);
   border-bottom: 2px solid var(--color-border);
 }
@@ -119,6 +131,10 @@ defineProps<{
   padding: var(--space-3);
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-secondary);
+}
+
+.markdown :deep(tbody tr:hover td) {
+  background-color: var(--color-bg);
 }
 
 .markdown :deep(tbody tr:last-child td) {

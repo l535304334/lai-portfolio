@@ -208,18 +208,15 @@ try {
   check('About 页 h1 文本 = 关于我', aboutTitle?.trim() === '关于我', `actual: ${aboutTitle}`)
 
   const aboutH2 = await page.locator('h2').count()
-  check('About 页 h2 >= 4（个人简介/教育/方向/关于本站）', aboutH2 >= 4, `h2 count: ${aboutH2}`)
+  check('About 页 h2 >= 3（工程定位/成长轨迹/关于本站）', aboutH2 >= 3, `h2 count: ${aboutH2}`)
 
   // Markdown 渲染验证
   const aboutP = await page.locator('.markdown p').count()
   check('About 页段落存在', aboutP >= 3, `p count: ${aboutP}`)
 
-  const aboutUl = await page.locator('.markdown ul').count()
-  check('About 页无序列表存在（联系方式）', aboutUl >= 1, `ul count: ${aboutUl}`)
-
-  // GitHub 链接验证
-  const aboutGithub = await page.locator('.markdown a[href*="github.com"]').count()
-  check('About 页 GitHub 链接存在', aboutGithub >= 1, `github links: ${aboutGithub}`)
+  // 成长轨迹 section 引导访问 Timeline（验证指向首页锚点链接）
+  const timelineLink = await page.locator('.markdown a[href*="#timeline"]').count()
+  check('About 页包含 Timeline 引导链接', timelineLink >= 1, `timeline links: ${timelineLink}`)
 
   await screenshot(page, '08-about')
 

@@ -306,6 +306,15 @@ async function scanPersonal(root: string): Promise<PersonalContent | null> {
     slug: String(data.slug),
     title: String(data.title),
     date: String(data.date ?? ''),
+    subtitle: data.subtitle ? String(data.subtitle) : undefined,
+    facts: Array.isArray(data.facts)
+      ? data.facts
+          .map((f: Record<string, unknown>) => ({
+            label: String(f.label ?? ''),
+            value: String(f.value ?? ''),
+          }))
+          .filter((f) => f.label && f.value)
+      : undefined,
     html,
   }
 }

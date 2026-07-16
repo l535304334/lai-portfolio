@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <section class="decision-section">
     <header class="decision-section__header">
-      <span class="decision-section__eyebrow mono">TECH DECISIONS</span>
+      <span class="decision-section__eyebrow mono">// 关键决策</span>
       <h2 class="decision-section__title">技术决策</h2>
       <p class="decision-section__hint">
         不是"我做了什么"，而是"为什么这样做而不那样做"。

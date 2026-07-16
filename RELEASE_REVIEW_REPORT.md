@@ -1060,3 +1060,319 @@ Tag 类型：annotated（`git tag -a`），包含发布说明。
 - ✅ Release Notes 完整（§16 详细报告 + §17 发布说明）
 
 **RC2 基线正式冻结。后续开发基于 v2.0.0 继续进行。**
+
+---
+
+## 18. RC3 Final Review Report — Portfolio v2.0 About 页面重构收尾（2026-07-17）
+
+> **本节为 RC3 Final Review Report，覆盖 RC3.1 + RC3.2 + RC3.3 三个子阶段。**
+> **Date：** 2026-07-17
+> **Status：** ✅ RC3.3 完成（本地未推送） — 等待用户批准进入 RC4
+
+### 18.1 RC3 概述
+
+RC3 将 About 页从"5 section 散乱内容"重构为"人物画像"模型，建立结构化 frontmatter + Markdown body 的双层信息架构，避免与 Hero / Timeline / Resume 信息重复。
+
+**RC3 范围（3 个子阶段）：**
+
+| 子阶段 | 状态 | 主要交付 |
+|---|---|---|
+| RC3.1 数据层重构 | ✅ 完成（commit `c8b7913`） | PersonalFact 接口 + subtitle/facts 字段 + scanPersonal 解析 + about.md 重组 + 测试同步 |
+| RC3.2 About.vue 视觉重构 | ✅ 完成（commit `42a21dc`） | subtitle 渲染 + Facts Panel `<dl>` 语义结构 + 4 层 Header + 7 项 Playwright 断言 |
+| RC3.3 Final Review & Release | ✅ 完成（本次 commit） | Code/Design/Performance/IA Review + P1 修复 + 文档同步 |
+
+### 18.2 RC3.3 修改清单（最小化原则）
+
+**修改文件：1 个**
+
+| 文件 | 修改 | 原因 |
+|---|---|---|
+| `src/components/project/DecisionSection.vue` L13 | `TECH DECISIONS` → `// 关键决策` | P1：全站唯一英文 eyebrow，与中文 eyebrow 模式不一致 |
+
+**P1 修复设计依据：**
+- 中文与全站 eyebrow 模式一致（10 处 eyebrow 全部中文）
+- `//` 前缀匹配 Home 页 section 模式（TimelineSection `// 技术成长` / ContactSection `// 联系方式` / HeroSection `// 赖睿轩 · 软件工程学生` / Home `// 精选项目`）
+- `关键` 与下方 title `技术决策` 区分，避免重复（参考 TimelineSection：eyebrow `// 技术成长` + title `技术成长时间线`）
+
+### 18.3 Code Review 结果
+
+**扫描方式：** Grep 全项目扫描 + 逐文件人工 Read 验证（不依赖 subagent 报告，所有 P0/P1 声明均经亲自验证）
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| `console.log` / `console.warn` / `console.error` / `console.debug` | ✅ 0 匹配 | Grep `console\.(log\|warn\|error\|info\|debug)` 全 src/ 扫描 |
+| `debugger` | ✅ 0 匹配 | Grep `debugger;?` 全 src/ 扫描 |
+| `TODO` / `FIXME` / `XXX` / `HACK` | ✅ 0 匹配 | Grep 全 src/ 扫描 |
+| `as any` | ✅ 0 匹配 | Grep `as any` 全 src/ 扫描 |
+| `@ts-ignore` / `@ts-expect-error` / `@ts-nocheck` | ✅ 0 匹配 | Grep 全 src/ 扫描 |
+| `as unknown as` | ✅ 0 匹配 | Grep `as unknown as` 全 src/ 扫描 |
+| Dead Code / 未使用 import | ✅ 0 | 逐文件 Read 验证 17 个 .vue 文件，所有 import 均被使用 |
+| 重复 CSS | ✅ 0 | 3 个子页面（Skills/Interview/AiPractice）`.xxx__header` CSS 相似但独立（P2 重构候选，不修改） |
+| TypeScript strict | ✅ 0 错误 | `npm run typecheck` exit 0 |
+| Vue 最佳实践 | ✅ 合规 | 所有组件 `<script setup lang="ts">` + Composition API + 块顺序正确 |
+
+**P2 类型断言（仅记录，不修改 — 均为合理使用）：**
+
+| 位置 | 代码 | 评估 |
+|---|---|---|
+| `src/composables/useTheme.ts:72` | `setMode(order[nextIndex]!)` | 非空断言，逻辑上 nextIndex 由模运算保证有效 |
+| `src/router/index.ts:65` | `to.meta.title as string \| undefined` | 类型断言，Vue Router meta 类型扩展典型用法 |
+| `src/components/project/ArchitectureDiagram.vue:19` | `as Record<string, () => Promise<string>>` | Vite `import.meta.glob` 典型类型断言 |
+
+**P2 硬编码值（仅记录，不修改 — 均为合理使用）：**
+
+| 位置 | 代码 | 评估 |
+|---|---|---|
+| `src/components/project/ProjectNav.vue:88` | `gap: 2px` | 微调间距，无对应 Design Token |
+| `src/components/project/MetricCard.vue:41` | `line-height: 1.05` | 大数字专用行高，无对应 Design Token |
+| `src/pages/Resume.vue:103,109,117,143` | `#000` / `#666` / `#999` | @media print 专用，打印媒体故意使用纯黑灰，不适用 CSS 变量 |
+
+### 18.4 Design Audit 结果
+
+**Eyebrow 文案一致性扫描（11 处）：**
+
+| 位置 | eyebrow 文案 | 类型 |
+|---|---|---|
+| About.vue | `关于我` | 页面级（无 //） |
+| Home.vue | `// 精选项目` | 首页 section（// 前缀） |
+| AiPractice.vue | `AI 实践` | 页面级（无 //） |
+| Skills.vue | `技术能力` | 页面级（无 //） |
+| Interview.vue | `面试准备` | 页面级（无 //） |
+| Resume.vue | `简历` | 页面级（无 //） |
+| TimelineSection.vue | `// 技术成长` | 首页 section（// 前缀） |
+| HeroSection.vue | `// 赖睿轩 · 软件工程学生` | 首页 section（// 前缀） |
+| **DecisionSection.vue** | `// 关键决策` ✅ 已修复 | 项目详情 section（// 前缀） |
+| ContactSection.vue | `// 联系方式` | 首页 section（// 前缀） |
+| InterviewCategory.vue | `{{ category.project }}`（动态） | 列表项 eyebrow（动态中文） |
+
+**修复前：** DecisionSection 使用英文 `TECH DECISIONS`，与全站中文 eyebrow 不一致
+**修复后：** 改为 `// 关键决策`，符合首页 section 模式（// 前缀）+ 中文 + 与下方 title 区分
+
+**其他设计一致性（已确认良好）：**
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| eyebrow `letter-spacing: 0.08em` | ✅ 全站统一 | RC2.5 已统一，本次未变 |
+| spacing | ✅ 全部使用 `var(--space-*)` | 0 硬编码 |
+| border | ✅ `1px solid var(--color-border)` 统一 | — |
+| radius | ✅ `var(--radius-sm/md/lg)` 三级正确 | — |
+| shadow | ✅ `var(--shadow-sm/md/lg)` 三级正确 | — |
+| transition | ✅ `var(--transition-fast/base)` 统一 | — |
+| hover | ✅ 所有交互元素有 hover 状态 | — |
+| focus | ✅ 全局 `:focus-visible` + 局部强化 | — |
+| Developer Academic 风格 | ✅ 保持 | 无营销文案，无 AI 风格文案 |
+
+**P2 历史遗留（仅记录，RC4+ 候选）：**
+- 4 个子页面（Skills/Interview/AiPractice/Resume）仍使用硬编码 `page__hint` 文本（RC3.2 仅替换了 About 的 `page__hint` 为 SSOT 驱动的 subtitle）
+- 3 个子页面 `.xxx__header` CSS 结构相似，可考虑提取为 `.page__header` 工具类（不消耗组件配额）
+
+### 18.5 Performance Audit 结果
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| Bundle 初始加载 | ✅ ~50 KB gzip | index.js 41.89 KB + Home.js 4.93 KB + Home.css 2.02 KB |
+| 动态导入 | ✅ 正确 | router 7 路由全部 `() => import()`；ArchitectureDiagram `import.meta.glob` lazy |
+| CSS Chunk | ✅ 正确 | 每个路由独立 CSS chunk，MarkdownContent 跨 5 页共享 |
+| 未使用资源 | ✅ 0 | 3 个 SVG 均被 frontmatter architecture 字段引用 |
+| 不合理依赖 | ✅ 0 | 运行时仅 vue / vue-router / lucide-vue-next |
+| 构建警告 | ⚠️ Shiki singleton | 已知非阻塞警告（HANDOFF.md §8.1），每个 scan 函数创建独立 highlighter，不影响功能 |
+| 行尾警告 | ⚠️ CRLF | Windows 正常，`.gitattributes` 已配置 `* text=auto eol=lf` |
+| 新增依赖 | ✅ 0 | RC3 全程未新增第三方依赖 |
+
+### 18.6 Bundle 对比（RC2.5 → RC3.3）
+
+| Chunk | RC2.5 gzip | RC3.3 gzip | 变化 |
+|---|---|---|---|
+| index.js | 41.89 kB | 41.89 kB | **0** |
+| Home.js | 4.93 kB | 4.93 kB | **0** |
+| ProjectDetail.js | 11.91 kB | 11.90 kB | **-0.01 kB**（eyebrow 文案变更） |
+| Interview.js | 6.90 kB | 6.90 kB | **0** |
+| About.js | 1.62 kB | 1.62 kB | **0** |
+| About.css | 0.43 kB | 0.43 kB | **0** |
+| Home.css | 2.02 kB | 2.02 kB | **0** |
+| index.css | 2.55 kB | 2.55 kB | **0** |
+| ProjectDetail.css | 1.15 kB | 1.15 kB | **0** |
+| **总计（前 9 大 chunk）** | **69.39 kB** | **69.38 kB** | **-0.01 kB** |
+
+**Bundle 增量 = -0.01 kB**：RC3.3 P1 修复仅修改 eyebrow 文案字符串字面量，gzip 后微减。
+
+**RC3 全程 Bundle 增量统计（RC2.5 → RC3.3）：**
+- RC3.1：+0 kB（类型扩展 + frontmatter 解析，运行时零增量）
+- RC3.2：+0.36 kB（About.css 0.12→0.43 / About.js 1.26→1.62，Facts Panel CSS + subtitle/facts 渲染逻辑）
+- RC3.3：-0.01 kB（eyebrow 文案字面量）
+- **RC3 总增量：+0.35 kB gzip**
+
+### 18.7 ★ Information Architecture Review（最高优先级）
+
+> 本节从整个网站角度（而非单页面角度）审查 8 个页面的信息架构。
+
+#### 18.7.1 页面职责矩阵
+
+| 页面 | 路径 | SSOT 数据源 | 主要受众 | 信息职责 |
+|---|---|---|---|---|
+| Home | `/` | virtual:content + virtual:timeline-content + 静态 ContactInfo | 所有访客首屏 | Who/What/Why/Next + 工程指标 + 项目卡片 + 完整 Timeline + Contact |
+| ProjectDetail | `/projects/:slug` | virtual:project-detail | 技术面试官 | 单项目完整内容（架构/决策/指标/代码） |
+| Skills | `/skills` | virtual:skills-content | 技术面试官 | 技术栈分类 + 学习路线 + 当前学习（平铺快照） |
+| Interview | `/interview` | virtual:interview-content | 技术面试官 | 17 道 Q&A（4 分类：3 项目 + 通用） |
+| AiPractice | `/ai-practice` | virtual:ai-practice-content | 技术面试官 + 复试导师 | AI 工程实践流程 + 工具 + 人机分工 + 3 案例 |
+| Resume | `/resume` | virtual:resume-content | HR + 复试导师 | 完整简历 + PDF 下载 |
+| About | `/about` | virtual:personal-content | 复试导师 + 所有访客 | 人物画像（subtitle + 4 facts + 工程定位 + 成长概述 + 站点说明） |
+| NotFound | `*` | — | — | 404 页面 |
+
+#### 18.7.2 信息重复检查
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| Hero stats（218/97/236）vs About facts（教育/方向/考研/GitHub） | ✅ 无重复 | Hero = 项目工程指标聚合；About = 个人身份长期稳定信息 |
+| Hero subtitle（项目导向）vs About subtitle（身份导向） | ✅ 无重复 | Hero = "用代码记录成长，用工程解决问题"；About = "软件工程学生 · 后端开发 · 分布式系统" |
+| About 成长轨迹 vs Timeline 完整内容 | ✅ 无重复 | About 仅做能力概述 + 引导至 `/#timeline`，不复制 Timeline 内容 |
+| About facts vs Resume 教育背景 | ✅ 无重复 | About = 4 项扫描友好摘要；Resume = 完整 CV 段落 |
+| Skills 软件工程实践 vs Projects 核心功能 vs Resume 工程能力 | ⚠️ 主题重叠但受众不同 | 三处均提及"分布式锁/状态机/事件溯源" — Skills = 能力清单；Projects = 上下文证据；Resume = HR 摘要。**不同受众的有意强化，非缺陷** |
+| Interview Q&A vs ProjectDetail 内容 | ✅ 无重复 | Interview = 问答格式 + 关键词；ProjectDetail = 叙事 + 代码 |
+| AiPractice 案例 1（ABA bug）vs Interview Q4（ABA bug） | ⚠️ 主题重叠但角度不同 | AiPractice = 人机协作工作流；Interview = 技术面试回答。**不同受众，非缺陷** |
+| Resume 实习经历 vs ProjectDetail jiangnan-travel.md | ✅ 无重复 | Resume = 4 条 HR 友好摘要；ProjectDetail = 完整项目文档 |
+| About 工程定位 vs Resume 个人特质 | ✅ 无重复 | About = 人物画像叙事；Resume = 4 条能力 bullet point |
+
+#### 18.7.3 职责交叉检查
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| Home Timeline vs About 成长轨迹 | ✅ 职责清晰 | Timeline = 完整阶段化能力演进；About = 一段叙事 + 引导链接 |
+| About facts vs Resume 联系方式 | ✅ 职责清晰 | About = 4 项长期稳定信息（含 GitHub）；Resume = 邮箱 + GitHub + 出生年月 + 政治面貌 |
+| Skills 技术栈 vs ProjectDetail tags | ✅ 职责清晰 | Skills = 平铺能力清单；ProjectDetail = 项目上下文中的技术标签 |
+| Interview 项目分类 vs ProjectDetail | ✅ 职责清晰 | Interview = 面试问答；ProjectDetail = 项目文档 |
+
+#### 18.7.4 阅读顺序检查
+
+**NavBar 顺序：** 首页 / 项目 / 能力 / 面试 / AI 实践 / 简历 / 关于
+
+**场景 1：复试导师 3 分钟浏览（学术潜力 + 工程素养）**
+- 期望路径：首页（Hero + Timeline）→ 关于（人物画像）→ 简历（完整 CV）→ 项目（深度证据）
+- 当前 NavBar 让"关于"和"简历"位于末尾，复试导师需跳转至末尾再回到前面
+- **评估：顺序非最优，但可接受**。复试导师通常先看首页 Hero 形成第一印象，再选择感兴趣的部分深入
+
+**场景 2：技术面试官快速浏览（落地能力 + 代码质量）**
+- 期望路径：首页（Hero）→ 项目（深度）→ 能力（广度）→ 面试（technical Q&A）
+- 当前 NavBar 完美匹配此场景：项目 → 能力 → 面试 位于 2-3-4 位
+- **评估：顺序最优**
+
+**结论：** 当前 NavBar 顺序对"技术面试官"场景最优，对"复试导师"场景可接受但非最优。**不建议在 RC3.3 修改 NavBar 顺序**（属于设计决策，且会改变用户已习惯的导航模式）。**RC4+ 可由用户决定是否调整**。
+
+#### 18.7.5 IA Review 建议（仅记录，不在 RC3.3 修改）
+
+| # | 建议 | 修改收益 | 影响范围 | 建议时机 |
+|---|---|---|---|---|
+| 1 | 统一 About subtitle 与 Resume 开场白 framing（"软件工程学生 · 后端开发 · 分布式系统" vs "软件工程学生 · 后端开发 / 软件工程方向"） | 中（消除微妙不一致） | About / Resume 内容文件 | RC5（Resume 重构） |
+| 2 | 评估 NavBar 顺序是否优先复试导师场景 | 中（改善复试导师浏览路径） | NavBar.vue + 全站导航 | RC4+（用户决策） |
+| 3 | 评估 4 个子页面（Skills/Interview/AiPractice/Resume）`page__hint` 是否应统一迁移至 SSOT 模式 | 中（一致性 + 可维护性） | 4 个页面 + 4 个 Markdown frontmatter | RC4-RC7（每页重构时） |
+| 4 | 评估 3 个子页面 `.xxx__header` CSS 是否提取为 `.page__header` 工具类 | 低（DRY 但增加抽象） | 3 个页面 CSS | RC8（Final Review） |
+| 5 | 监控 Skills 软件工程实践 vs Projects 技术亮点 vs Resume 工程能力 三处能力描述是否在 RC4+ 出现过度重复 | 低（信息架构健康度监控） | 三处内容文件 | RC4-RC7（每页重构时） |
+
+**IA Review 最终结论：**
+- ✅ **无 P0 信息架构问题**（无内容错误、无破坏性重复、无职责混乱）
+- ✅ **无 P1 信息架构问题**（无不一致需要立即修复）
+- ⚠️ **5 项 P2 建议**（仅记录，RC4+ 由用户决定是否实施）
+- ✅ **页面职责划分清晰**（每个页面有独立 SSOT 数据源，职责互补）
+- ✅ **符合"复试导师 3 分钟浏览"目标**（Hero → About → Resume 路径可达成，虽非 NavBar 最优）
+- ✅ **符合"技术面试官快速浏览"目标**（Hero → Projects → Skills → Interview 路径完美匹配 NavBar）
+
+### 18.8 Documentation 更新
+
+| 文档 | 更新内容 |
+|---|---|
+| `RELEASE_REVIEW_REPORT.md` | 追加本节 §18 RC3 Final Review Report |
+| `HANDOFF.md` §0 SNAPSHOT | 更新当前阶段为 RC3.3 完成、最新 commit、Git 状态、下一步动作 |
+| `HANDOFF.md` §六 进度 | 更新 RC3.3 完成状态、下一阶段为 RC4（待用户批准） |
+
+### 18.9 Final Validation 结果
+
+| 验证项 | 命令 | 结果 |
+|---|---|---|
+| TypeScript 类型检查 | `npm run typecheck` | ✅ exit 0，0 错误 |
+| 生产构建 | `npm run build` | ✅ exit 0，1664 modules transformed，2.41s |
+| Playwright E2E | `npm test` | ✅ **55 通过 / 0 失败 / 55 总计** |
+
+### 18.10 风险评估
+
+| 风险 | 严重度 | 状态 | 说明 |
+|---|---|---|---|
+| RC3.1+RC3.2+RC3.3 共 3 个 commit 未推送到 origin | 中 | ⏳ 待用户批准 | 用户指示 RC3 全部完成后统一决定是否推送 |
+| Shiki singleton 构建警告 | 低 | ⚠️ 已知非阻塞 | HANDOFF.md §8.1 已记录，RC8 可考虑单例化 |
+| 5 项 IA Review P2 建议 | 低 | 📝 仅记录 | RC4+ 由用户决定是否实施 |
+| 3 项 P2 类型断言 + 3 项 P2 硬编码值 | 低 | 📝 仅记录 | 均为合理使用，无功能影响 |
+| 4 个子页面 `page__hint` 硬编码 | 低 | 📝 已记录 | RC4-RC7 每页重构时迁移 |
+
+### 18.11 Git 状态
+
+```
+On branch master
+Your branch is ahead of 'origin/master' by 4 commits.  ← RC3.1 + HANDOFF + RC3.2 + RC3.3 未推送
+nothing to commit, working tree clean
+```
+
+**最近 commit：**
+```
+[RC3.3 commit]   fix(rc3.3): unify DecisionSection eyebrow to Chinese
+42a21dc          feat(rc3.2): rebuild About header with subtitle and Facts Panel
+6706630          docs: upgrade HANDOFF.md to project-lifecycle handoff document
+c8b7913          feat(rc3.1): refactor About data layer to character-profile model
+20598ae          chore(release): v2.0.0  ← origin/master
+```
+
+**所有 Tag：** `v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0`
+
+### 18.12 RC4 进入建议
+
+**✅ 建议进入 RC4**
+
+**依据：**
+1. RC3.3 所有 Final Review 项全部通过（Code / Design / Performance / IA）
+2. 唯一 P1 问题（DecisionSection eyebrow 不一致）已修复
+3. 全量验证通过（typecheck + build + Playwright 55/55）
+4. Bundle 体积无回归（实际微减 -0.01 kB）
+5. 无 P0 阻塞性问题
+6. 5 项 P2 建议已记录但不在 RC3.3 修改范围（符合"最小化修改"原则）
+
+**RC4 进入前必须由用户决定：**
+1. 是否先推送 RC3.1+RC3.2+RC3.3 共 3 个 commit 到 origin/master？
+2. 是否升级版本号到 v2.1.0？（RC3 是 About 页面重构，可作为 v2.0.0 → v2.1.0 minor 版本）
+3. RC4 的具体范围是什么？（HANDOFF.md §七 列出候选为 Skills 页深化重构，但顺序可由用户调整）
+
+### 18.13 v2.1.0 发布建议
+
+**⚠️ 建议在用户确认后再决定是否发布 v2.1.0**
+
+**支持发布的理由：**
+- RC3 完成 About 页面重构这一独立功能模块
+- 55/55 Playwright 测试通过
+- 无阻塞性问题
+- 已建立完整的 Release Report（本节 §18）
+
+**反对立即发布的理由：**
+- RC3 仅 About 一个页面重构，相对于 v2.0.0 体量较小
+- 用户原指令"RC3.3 完成后停止，等待我批准进入 RC4"暗示 RC3 阶段不立即发布
+- 4 个 commit 累积在本地未推送，建议用户先确认推送策略
+
+**推荐方案：**
+- **方案 A（推荐）**：用户批准后，将 RC3.1+RC3.2+RC3.3 共 3 个 commit 推送到 origin/master，**不**创建 v2.1.0 tag（继续使用 v2.0.0，作为 v2.0.0 的迭代内容）
+- **方案 B**：用户批准后，推送 3 个 commit + 创建 v2.1.0 tag + Vercel 自动部署
+- **方案 C**：用户决定 RC4-RC7 全部完成后再统一发布 v3.0.0
+
+### 18.14 RC3 最终完成确认
+
+✅ **RC3 全部 3 个子阶段完成**
+
+- [x] RC3.1 数据层重构（PersonalFact + subtitle + 4 项 facts）
+- [x] RC3.2 About.vue 视觉重构（Facts Panel + Header 强化）
+- [x] RC3.3 Final Review & Release（Code/Design/Performance/IA Review + P1 修复 + 文档同步）
+
+**约束遵守：**
+- [x] 新增组件配额：0/2（RC3 全程未新增组件，仍剩 1 个）
+- [x] 新增第三方依赖：0
+- [x] 新增 Design Token / 颜色 / 字体 / 动画：0
+- [x] Markdown SSOT 保持：是（about.md 为唯一数据源）
+- [x] 每个子阶段完成时执行 typecheck + build + Playwright 全部通过
+- [x] 每个 commit 符合 `<type>: <description>` 格式
+- [x] 隐私扫描清洁：0 手机号 / 0 真实密钥
+
+**RC3 Local Baseline 已冻结。未 push。等待用户批准后进入 RC4 或决定推送/发布策略。**

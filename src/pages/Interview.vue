@@ -11,11 +11,11 @@ const totalQuestions = interviewCategories.reduce(
 <template>
   <div class="page">
     <div class="container container--narrow">
-      <header class="interview__header">
+      <header class="page__header interview__header">
         <p class="page__eyebrow mono">面试准备</p>
         <h1 class="page__title">基于三个真实项目的面试问题</h1>
-        <p class="page__hint mono">
-          // {{ interviewCategories.length }} 个分类 · {{ totalQuestions }} 道问题 · 点击展开查看回答思路
+        <p class="page__subtitle">
+          {{ interviewCategories.length }} 个分类 · {{ totalQuestions }} 道问题 · 点击展开查看回答思路
         </p>
       </header>
 
@@ -27,11 +27,3 @@ const totalQuestions = interviewCategories.reduce(
     </div>
   </div>
 </template>
-
-<style scoped>
-.interview__header {
-  margin-bottom: var(--space-12);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--color-border);
-}
-</style>

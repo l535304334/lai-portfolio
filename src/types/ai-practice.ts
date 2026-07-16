@@ -8,5 +8,7 @@ export interface AiPracticeContent {
   slug: string
   title: string
   date: string
+  /** 一句话定位（如 "不是 AI 帮我写代码，是我用 AI 加速了哪些环节"） */
+  subtitle?: string
   html: string
 }

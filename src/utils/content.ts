@@ -257,6 +257,7 @@ async function scanAiPractice(root: string): Promise<AiPracticeContent | null> {
     slug: String(data.slug),
     title: String(data.title),
     date: String(data.date ?? ''),
+    subtitle: data.subtitle ? String(data.subtitle) : undefined,
     html,
   }
 }

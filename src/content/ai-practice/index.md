@@ -3,6 +3,7 @@ slug: ai-practice
 type: ai-practice
 title: AI 辅助软件工程实践
 date: 2026-07
+subtitle: 不是 AI 帮我写代码，是我用 AI 加速了哪些环节，我独立完成了哪些决策
 ---
 
 ## 我的 AI 开发流程

@@ -87,7 +87,7 @@ try {
   check('详情页表格存在', detailTable >= 1)
   await screenshot(page, '02-project-detail')
 
-  // ===== Test 3: 面试页（Task 003 回归）=====
+  // ===== Test 3: 面试页（Task 003 回归 + RC6 重构）=====
   log('\n=== Test 3: 面试准备页 ===')
   await page.goto(`${BASE}/interview`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1000)
@@ -100,6 +100,23 @@ try {
 
   const qaDetails = await page.locator('details').count()
   check('面试页 Q&A 数 >= 17', qaDetails >= 17, `details count: ${qaDetails}`)
+
+  // RC6: page__subtitle 渲染验证（动态计算分类数 + 问题数 + 静态提示）
+  const interviewSubtitle = await page.locator('.page__subtitle').textContent()
+  check(
+    '面试页 subtitle 渲染包含 "个分类" 与 "道问题"',
+    interviewSubtitle?.includes('个分类') && interviewSubtitle?.includes('道问题'),
+    `actual: ${interviewSubtitle}`,
+  )
+
+  // RC6: page__hint 硬编码消除验证
+  const interviewHintCount = await page.locator('.page__hint').count()
+  check('面试页 page__hint 硬编码已消除', interviewHintCount === 0, `hint count: ${interviewHintCount}`)
+
+  // RC6: .page__header 工具类应用验证
+  const interviewPageHeader = await page.locator('.page__header').count()
+  check('面试页应用 .page__header 工具类', interviewPageHeader === 1, `page__header count: ${interviewPageHeader}`)
+
   await screenshot(page, '03-interview')
 
   // ===== Test 4: 面试页折叠面板交互（Task 003 回归）=====
@@ -121,13 +138,29 @@ try {
   const isOpenAfter2 = await firstDetails.getAttribute('open')
   check('再次点击折叠', isOpenAfter2 === null)
 
-  // ===== Test 5: AI 实践页（Task 004 回归）=====
+  // ===== Test 5: AI 实践页（Task 004 回归 + RC6 重构）=====
   log('\n=== Test 5: AI 实践页 ===')
   await page.goto(`${BASE}/ai-practice`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(1000)
 
   const aiH1 = await page.locator('h1').count()
   check('AI 实践页 h1 存在', aiH1 >= 1)
+
+  // RC6: subtitle 渲染验证（从 frontmatter SSOT 读取，替换原硬编码 page__hint）
+  const aiSubtitle = await page.locator('.page__subtitle').textContent()
+  check(
+    'AI 实践页 subtitle 渲染 = "不是 AI 帮我写代码，是我用 AI 加速了哪些环节，我独立完成了哪些决策"',
+    aiSubtitle?.trim() === '不是 AI 帮我写代码，是我用 AI 加速了哪些环节，我独立完成了哪些决策',
+    `actual: ${aiSubtitle}`,
+  )
+
+  // RC6: page__hint 硬编码消除验证
+  const aiHintCount = await page.locator('.page__hint').count()
+  check('AI 实践页 page__hint 硬编码已消除', aiHintCount === 0, `hint count: ${aiHintCount}`)
+
+  // RC6: .page__header 工具类应用验证
+  const aiPageHeader = await page.locator('.page__header').count()
+  check('AI 实践页应用 .page__header 工具类', aiPageHeader === 1, `page__header count: ${aiPageHeader}`)
 
   const aiH2 = await page.locator('h2').count()
   check('AI 实践页 h2 >= 5', aiH2 >= 5, `h2 count: ${aiH2}`)

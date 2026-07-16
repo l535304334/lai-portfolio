@@ -942,3 +942,121 @@ RC2 聚焦项目详情页与整体视觉强化，遵循"克制、信息层级、
 **Git 状态：** clean，14 commits ahead of origin/master（按 RC 规则未 push）
 
 **RC2 Local Release Baseline 已冻结。未 push。等待用户批准后进入 RC3 或后续阶段。**
+
+---
+
+## 17. RC2 Release Summary — Portfolio v2.0.0
+
+> **本节为 RC2 正式发布说明，面向用户与未来维护者。**
+> **Release Date：** 2026-07-16
+> **Version：** v2.0.0
+> **Status：** ✅ Released (Public) — 已 push 至 origin/master
+
+### 17.1 版本信息
+
+| 项 | 值 |
+|----|-----|
+| 版本号 | `2.0.0`（package.json） |
+| Git Tag | `v2.0.0`（指向 commit `12992da`） |
+| 上一版本 | `v1.0.0`（2026-07-15，Task 008 隐私修复） |
+| 发布类型 | Major（Portfolio v2.0 全面体验升级） |
+| 包含阶段 | RC2.1 ~ RC2.5（5 个子阶段） |
+| Commit 数 | 7（RC2.1: 2 + RC2.2: 2 + RC2.3: 1 + RC2.4: 1 + RC2.5: 1） |
+
+### 17.2 主要改进摘要
+
+#### 🎨 视觉强化（Visual Improvements）
+
+- **ProjectHeader 重构**：抽取 status / role 字段至独立 header 展示，强化项目元信息层级
+- **MetricCard 强化**：数值字号升级（text-3xl → text-4xl），hover transform 提升交互感，移动端响应式
+- **MarkdownContent 视觉锚点**：h2 左侧 accent 装饰条（::before 伪元素），间距节奏优化，表格 thead 背景与行 hover 高亮
+- **DecisionSection 容器边界**：border-top 2px + padding-top space-12 + margin-top space-20，决策项 h2 字号差异化（text-2xl → text-xl）
+- **ProjectNav 顶部视觉分隔**：border-top 1px → 2px，padding-top / margin-top 加大
+- **eyebrow letter-spacing 统一**：全站 10 处 eyebrow 统一为 0.08em（修复 HeroSection 0.02em 历史偏差、DecisionSection 0.12em RC2.3 差异化）
+
+#### 🧩 新增功能（Functional Improvements）
+
+- **ArchitectureDiagram 组件**：项目详情页集成架构图展示能力
+  - frontmatter 新增 `architecture` 字段，对应 `src/assets/projects/{slug}.svg`
+  - 使用 `import.meta.glob` + lazy 加载，URL 字符串不进入主 bundle
+  - 无 architecture 字段时组件自动隐藏（无 placeholder）
+- **ProjectHeader frontmatter 扩展**：新增 `status` 和 `role` 可选字段，向后兼容
+
+#### ♿ 可访问性改进（Accessibility Improvements）
+
+- **Landmark 标记**：5 个 `<section>` 添加 `aria-labelledby`（hero / projects / timeline / contact）或 `aria-label`（InterviewCategory v-for 避免重复 id）
+- **Navigation 标记**：ProjectNav `<nav>` 添加 `aria-label="项目导航"`
+- **图片 alt 改进**：ArchitectureDiagram 由静态 "项目架构图" 改为 `${projectTitle} 架构图` 动态 fallback
+- **已确认良好**：全局 `:focus-visible`、`.sr-only`、NavBar `aria-expanded`、ThemeToggle/BackToTop `aria-label`、InterviewQuestion 原生 `<details>/<summary>`
+
+#### ⚡ 性能改进（Performance Improvements）
+
+- **SVG 按需加载**：`import.meta.glob` lazy 模式，每个 SVG 作为独立 chunk，访问项目详情页时仅下载对应 SVG
+- **Bundle 增量控制**：RC2 全程仅 +0.28 KB gzip（watchEffect 运行时代码 + CSS 字面量）
+- **无新增依赖**：RC2 全程 0 个新增第三方依赖
+- **新增组件配额**：1/2（仅 ArchitectureDiagram）
+
+### 17.3 质量保证
+
+| 验证项 | 结果 |
+|--------|------|
+| TypeScript 类型检查 | ✅ exit 0，0 错误 |
+| 生产构建 | ✅ 1664 modules transformed |
+| Playwright E2E | ✅ 49 通过 / 0 失败 |
+| Code Review | ✅ 0 dead code / 0 未使用 import / 0 TODO / 0 as any |
+| Design Audit | ✅ eyebrow letter-spacing 统一，spacing/border/radius/shadow/transition/focus 一致 |
+| Performance Audit | ✅ Bundle 67.35 KB gzip（前 7 chunk），动态导入正确，无未使用资源 |
+
+### 17.4 Bundle 最终统计
+
+| Chunk | gzip 大小 |
+|-------|----------|
+| index.js | 41.89 KB |
+| Home.js | 4.93 KB |
+| ProjectDetail.js | 11.91 KB |
+| Interview.js | 6.90 KB |
+| Home.css | 2.02 KB |
+| index.css | 2.55 KB |
+| ProjectDetail.css | 1.15 KB |
+| **总计（前 7 chunk）** | **67.35 KB** |
+
+### 17.5 Git Tag 信息
+
+```
+Tag: v2.0.0
+Commit: 12992da
+Subject: docs(rc2.5): final review and design consistency
+Date: 2026-07-16
+```
+
+Tag 类型：annotated（`git tag -a`），包含发布说明。
+
+### 17.6 约束遵守确认
+
+- [x] 新增组件配额：1/2（仅 ArchitectureDiagram）
+- [x] 新增第三方依赖：0
+- [x] 新增 Design Token / 颜色 / 字体 / 动画：0
+- [x] Markdown SSOT 保持：是（frontmatter 为唯一数据源）
+- [x] 每个子阶段执行 typecheck + build + Playwright 全部通过
+- [x] 每个 commit 符合 `<type>: <description>` 格式
+- [x] 隐私扫描清洁：0 手机号 / 0 真实密钥
+
+### 17.7 部署信息
+
+- **远程仓库**：`git@github.com:l535304334/lai-portfolio.git`
+- **分支**：master
+- **Push 状态**：14 commits + tag v2.0.0 已 push 至 origin/master
+- **Vercel 部署**：自动触发（master 分支 push 后自动部署）
+
+### 17.8 RC2 正式发布确认
+
+✅ **Portfolio v2.0.0 正式发布**
+
+- ✅ 5 个子阶段（RC2.1 ~ RC2.5）全部完成
+- ✅ 所有约束遵守（组件配额、依赖、Design Token、SSOT）
+- ✅ 全部验证通过（typecheck / build / Playwright 49/49）
+- ✅ Git Tag v2.0.0 已创建
+- ✅ 已 push 至 origin/master
+- ✅ Release Notes 完整（§16 详细报告 + §17 发布说明）
+
+**RC2 基线正式冻结。后续开发基于 v2.0.0 继续进行。**

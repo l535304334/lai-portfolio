@@ -11,10 +11,10 @@ function downloadPdf() {
 <template>
   <div v-if="resume" class="page">
     <div class="container container--narrow">
-      <header class="resume__header">
+      <header class="page__header resume__header">
         <p class="page__eyebrow mono">简历</p>
         <h1 class="page__title">{{ resume.title }}</h1>
-        <p class="page__hint mono">// 可在线查看 · 可下载 PDF</p>
+        <p v-if="resume.subtitle" class="page__subtitle">{{ resume.subtitle }}</p>
         <button
           type="button"
           class="resume__download-btn"
@@ -33,12 +33,6 @@ function downloadPdf() {
 </template>
 
 <style scoped>
-.resume__header {
-  margin-bottom: var(--space-12);
-  padding-bottom: var(--space-8);
-  border-bottom: 1px solid var(--color-border);
-}
-
 .resume__download-btn {
   display: inline-flex;
   align-items: center;
@@ -86,7 +80,7 @@ function downloadPdf() {
   .footer,
   .back-to-top,
   .resume__header .page__eyebrow,
-  .resume__header .page__hint,
+  .resume__header .page__subtitle,
   .resume__download-btn {
     display: none !important;
   }

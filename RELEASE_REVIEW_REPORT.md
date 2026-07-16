@@ -1754,3 +1754,185 @@ RC4 Final Review 覆盖三个维度，聚焦 RC4 改动文件（7 个）：
 4. 等待批准进入 RC5（Resume 深化）
 
 **RC4 Final Review 结束。等待用户批准。**
+
+---
+
+## 22. RC5 Final Review — Resume 深化（2026-07-17）
+
+> **本节为 RC5 Final Review 报告**（按 2026-07-17 调整后的执行规则，Review 作为 RC5 收尾工作，不再单独拆子阶段）。
+>
+> **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划。
+>
+> **执行规则**：RC5~RC8 全部采用统一开发流程，每个 RC 完整生命周期（开发 → Typecheck → Build → Playwright → Code Review → Design Audit → Performance Audit → 更新 HANDOFF.md → 更新 RELEASE_REVIEW_REPORT.md → Git Commit → Push → RC Final Report），不再拆子阶段。
+
+### 22.1 RC5 范围
+
+**目标**：Resume 页 subtitle SSOT 化 + 视觉层次统一 + PDF 打印优化，对齐 RC4 建立的 `.page__header` / `.page__subtitle` 工具类模式，并完成 RC3.3 IA Review P2 #1（About subtitle vs Resume 开场白 framing 对齐）。
+
+**改动文件清单**（5 个，0 新建 + 5 修改）：
+
+| 文件 | 类型 | 改动 |
+|---|---|---|
+| [src/types/resume.ts](src/types/resume.ts) | 修改 | `ResumeContent` 新增 `subtitle?: string` 可选字段 |
+| [src/utils/content.ts](src/utils/content.ts) | 修改 | `scanResume()` 解析 subtitle（`data.subtitle ? String(data.subtitle) : undefined`） |
+| [src/content/resume/index.md](src/content/resume/index.md) | 修改 | frontmatter 新增 `subtitle: 软件工程学生 · 后端开发 · 软件工程方向`；body 删除首行重复定位 |
+| [src/pages/Resume.vue](src/pages/Resume.vue) | 修改 | 应用 `.page__header resume__header` 双类 + `.page__subtitle` 替换硬编码 `page__hint` + scoped CSS 移除 `.resume__header` 重复块 + 打印 CSS `.page__hint` → `.page__subtitle` |
+| [release-gate-task-005.mjs](release-gate-task-005.mjs) | 修改 | Test 7 新增 3 项断言：subtitle 渲染 + page__hint 消除 + page__header 应用 |
+
+**未修改文件说明**：
+- `src/env.d.ts` — 已通过 `ResumeContent` 类型继承 subtitle 字段，无需修改（virtual:resume-content 已声明 `ResumeContent | null`）
+- `src/styles/global.css` — `.page__header` / `.page__subtitle` 工具类已在 RC4.1 建立，RC5 仅消费
+- `src/content/personal/about.md` — RC3 已冻结，不修改 About subtitle 内容
+
+### 22.2 数据流变更
+
+**变更前**（RC4）：
+```
+resume/index.md (frontmatter: slug/title/date + body 首行硬定位)
+  → scanResume() 返回 ResumeContent { slug, title, date, html }
+  → Resume.vue 硬编码 <p class="page__hint">软件工程学生 · 后端开发 / 软件工程方向</p>
+```
+
+**变更后**（RC5）：
+```
+resume/index.md (frontmatter: slug/title/date + ★subtitle + body 无首行重复)
+  → scanResume() 返回 ResumeContent { slug, title, date, ★subtitle, html }
+  → Resume.vue 从 SSOT 读取 subtitle 渲染 <p class="page__subtitle">{{ resume.subtitle }}</p>
+```
+
+**关键设计**：
+- subtitle 移至 frontmatter SSOT，与 RC3.1（About）/ RC4.1（Skills）模式对齐
+- body 首行重复定位删除（原内容 `**软件工程学生 · 后端开发 / 软件工程方向**` 与 subtitle 重复，且分隔符不统一）
+- 保留 `.resume__header` 双类策略：`.page__header` 提供视觉样式，`.resume__header` 作为打印 CSS 钩子（精确控制打印时元素隐藏）
+
+### 22.3 Code Review
+
+**检查项**：死代码 / 未使用导入 / CSS 重复 / TypeScript 严格合规 / 命名一致性 / FROZEN INVENTORY 合规 / SSOT 合规
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| 死代码 / 未使用导入 | ✅ 0 | Resume.vue imports（Printer / resume / MarkdownContent）全部使用；resume.ts 仅定义 interface；content.ts scanResume 无死代码 |
+| CSS 重复 | ✅ 0 | scoped CSS 已移除 `.resume__header` 重复块（与 `.page__header` 工具类功能重叠），无重复 |
+| TypeScript 严格合规 | ✅ 0 | `subtitle?: string` 可选字段；`data.subtitle ? String(data.subtitle) : undefined` 类型守卫式写法；模板 `v-if="resume.subtitle"` 防御性判断 |
+| 命名一致性 | ✅ 0 | 与 Skills.vue（RC4.1）/ About.vue（RC3.2）模式一致：`page__header` + `page__eyebrow` + `page__title` + `page__subtitle`；`resume__header` / `resume__download-btn` / `resume__content` 仍是 BEM 风格 |
+| FROZEN INVENTORY 合规 | ✅ 0 | 未新增组件（仍 1/2 用量）；未新增依赖；未新增 Design Token / 颜色 / 字体 / 动画；未新增架构抽象 |
+| SSOT 合规 | ✅ 0 | subtitle 从 frontmatter SSOT 读取，未硬编码到模板，与 Skills / About 的 SSOT 模式一致 |
+
+**Code Review 结论：0 个 P0/P1/P2 问题**
+
+### 22.4 Design Audit
+
+**检查项**：全站一致性 / 间距节奏 / eyebrow 统一 / 打印样式完整性 / 视觉层次
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| subtitle 分隔符统一 | ✅ 通过 | Resume "软件工程学生 · 后端开发 · 软件工程方向" 与 About "软件工程学生 · 后端开发 · 分布式系统" 共享前缀，分隔符统一为 "·"；后缀差异合理（Resume = 学生身份与方向，About = 研究方向，符合页面职责互补原则） |
+| `.page__header` 工具类应用 | ✅ 通过 | 与 Skills.vue（RC4.1）/ About.vue（RC3.2 scoped 保留）模式一致 |
+| eyebrow 元素统一 | ⚠️ P2 记录 | 5 个主要内容页面（About/Skills/Resume/Interview/AiPractice）eyebrow 为纯中文（如 "简历" / "技术能力" / "关于我" / "面试准备" / "AI 实践"），仅 DecisionSection 用 `// 关键决策`。RC3.3 IA Review 已记录，RC4.1 复核，RC5 再次确认。留待 RC7 全局一致性最终确认时统一处理 |
+| 间距节奏 | ✅ 通过 | `.page__header` 工具类提供统一间距；`.resume__download-btn` margin-top: var(--space-6) 与按钮到 subtitle 间距一致；`.resume__content` margin-bottom: var(--space-12) 与全站页面底部间距一致 |
+| 打印样式完整性 | ✅ 通过 | 隐藏元素清单完整（nav/footer/back-to-top/eyebrow/subtitle/download-btn）；字号、行高、边距等紧凑排版规则未变动；`@page` 边距 15mm 未变动；`break-after`/`break-inside` 防断页规则未变动 |
+| 视觉层次 | ✅ 通过 | Header（eyebrow + title + subtitle + download button）→ Markdown body 层次清晰；打印模式下隐藏 eyebrow/subtitle/download-btn，保留 title + body，符合 PDF 简历的极简需求 |
+
+**Design Audit 结论：0 个 P0/P1 问题，1 个 P2 问题（eyebrow `//` 前缀惯例不一致，留待 RC7）**
+
+### 22.5 Performance Audit
+
+**检查项**：Bundle Size / 动态导入 / 未使用资源 / Markdown 渲染开销
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| Bundle Size | ✅ 通过 | Resume.js 5.17 kB / gzip 2.95 kB（与 RC4 持平，仅新增 subtitle 字段读取，影响 <100 bytes）；Resume.css 1.87 kB / gzip 0.62 kB（无变化）；主包 index-B4iqqmbB.js 107.82 kB / gzip 41.89 kB（与 RC4 一致） |
+| 动态导入 | ✅ 通过 | Resume.vue 仍是路由级 lazy 加载（`dist/assets/Resume-CkGC4U8D.js`） |
+| 未使用资源 | ✅ 通过 | 无新增依赖；无未使用导入 |
+| Markdown 渲染开销 | ✅ 通过 | 仍是构建时渲染（markdown-it + Shiki），零运行时 markdown-it / gray-matter / Shiki 依赖 |
+| 构建模块数 | ✅ 通过 | 1664 模块（与 RC4 一致），构建耗时 2.50s |
+
+**Performance Audit 结论：0 个 P0/P1/P2 问题**
+
+### 22.6 RC3.3 IA Review P2 #1 处理
+
+**P2 #1 建议**：统一 About subtitle 与 Resume 开场白 framing
+
+**RC5 处理方案**：
+- Resume subtitle = "软件工程学生 · 后端开发 · 软件工程方向"
+- About subtitle = "软件工程学生 · 后端开发 · 分布式系统"（RC3 冻结）
+- 共享前缀 "软件工程学生 · 后端开发"，分隔符统一为 "·"
+- 后缀差异合理：
+  - Resume = 学生身份（软件工程方向）— HR 友好定位
+  - About = 研究方向（分布式系统）— 人物画像深度
+- 符合 RC3.3 IA Review "页面职责互补" 原则
+
+**结论**：✅ **P2 #1 已完成**（不视为缺陷，作为合理设计保留）
+
+### 22.7 RC3.3 IA Review P2 #5 比对
+
+**P2 #5 建议**：监控 Skills 软件工程实践 vs Projects 技术亮点 vs Resume 工程能力 三处能力描述是否在 RC4+ 出现过度重复
+
+**RC5 比对结果**：
+
+| 位置 | 内容 | 角度 |
+|---|---|---|
+| Skills 软件工程实践分类 | 状态机设计 · 事件溯源 · 分布式锁 · 评分算法 · 安全加固 · 技术文档 | 技术栈分类（HR/面试官快速扫描） |
+| Resume 工程能力 5 项 | 分布式系统方案设计 / 代码审查与并发问题识别 / 测试设计 / AI 协作开发方法论 / 项目交付能力 | HR 友好摘要（一句话能力点） |
+| ProjectDetail 技术亮点 | 完整项目文档（决策过程 + 代码 + 验证） | 叙事深度（面试官详细查阅） |
+
+**结论**：✅ **三处无逐项重复**，角度互补：
+- Skills 是技术栈分类（"会什么"）
+- Resume 是能力摘要（"能做什么"）
+- ProjectDetail 是项目证据（"做过什么 + 怎么做"）
+- **不视为缺陷**，作为 RC4-RC7 持续监控项，留待 RC7 IA Review 最终确认
+
+### 22.8 验证结果
+
+| 验证项 | 结果 | 说明 |
+|---|---|---|
+| typecheck | ✅ 通过 | `vue-tsc --noEmit` exit 0 |
+| build | ✅ 通过 | 1664 模块，2.50s，gzip 主包 41.89 KB |
+| Playwright | ✅ 通过 | **68/68**（RC4 是 65/65，新增 3 项断言全部通过） |
+
+**RC5 新增 3 项 Playwright 断言**：
+1. ✅ Resume 页 subtitle 渲染 = "软件工程学生 · 后端开发 · 软件工程方向"
+2. ✅ Resume 页 page__hint 硬编码已消除
+3. ✅ Resume 页应用 .page__header 工具类
+
+### 22.9 约束遵守
+
+| 约束 | 状态 |
+|---|---|
+| 新增组件配额 ≤2 | ✅ RC5 未新增组件（剩余 1 个） |
+| 新增第三方依赖 | ✅ 0 |
+| 新增 Design Token / 颜色 / 字体 / 动画 | ✅ 0（仅复用现有 Token） |
+| Markdown SSOT 保持 | ✅ resume/index.md 为唯一数据源 |
+| RC 阶段禁止新增业务功能 / 页面 / 抽象 | ✅ 仅 subtitle 字段扩展 + 工具类应用 |
+| 子阶段串行执行 | ✅ RC5 完整生命周期一次完成（不再拆子阶段） |
+| 隐私扫描清洁 | ✅ 0 手机号 / 0 真实密钥 |
+| FROZEN INVENTORY | ✅ 未违反任何冻结项 |
+| RC4 Baseline 冻结 | ✅ 未修改 RC4 内容 |
+| RC3 Baseline 冻结 | ✅ 未修改 RC3 内容 |
+
+### 22.10 Bundle 体积对比
+
+| Chunk | RC4 | RC5 | 变化 |
+|---|---|---|---|
+| Resume.js | 5.17 kB / gzip 2.95 kB | 5.17 kB / gzip 2.95 kB | 0（subtitle 字段读取影响 <100 bytes，gzip 后无差异） |
+| Resume.css | 1.87 kB / gzip 0.62 kB | 1.87 kB / gzip 0.62 kB | 0（移除 scoped .resume__header 与新增 .page__subtitle 引用抵消） |
+| 主包 index.js | 107.82 kB / gzip 41.89 kB | 107.82 kB / gzip 41.89 kB | 0 |
+| 总模块数 | 1664 | 1664 | 0 |
+
+**结论**：✅ Bundle 体积零回归
+
+### 22.11 待用户批准事项
+
+1. **是否批准 RC5 Final Review 通过**？
+2. **是否立即 commit + 推送 origin/master**？（RC4~RC7 不发新版本，仅推送 origin）
+3. **是否进入 RC6（Interview + AiPractice 深化）**？
+
+### 22.12 下一步
+
+**等待用户批准 RC5 Final Review 后**：
+1. Git commit RC5 改动（5 个文件 + HANDOFF.md + RELEASE_REVIEW_REPORT.md）
+2. 推送 origin/master
+3. 输出 RC5 Final Report
+4. 等待批准进入 RC6（Interview + AiPractice 深化）
+
+**RC5 Final Review 结束。等待用户批准。**

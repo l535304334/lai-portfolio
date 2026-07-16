@@ -350,6 +350,7 @@ async function scanResume(root: string): Promise<ResumeContent | null> {
     slug: String(data.slug),
     title: String(data.title),
     date: String(data.date ?? ''),
+    subtitle: data.subtitle ? String(data.subtitle) : undefined,
     html,
   }
 }

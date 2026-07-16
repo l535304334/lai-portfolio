@@ -202,7 +202,7 @@ try {
 
   await screenshot(page, '06-skills')
 
-  // ===== Test 7: Resume 页（Task 005.2 ★）=====
+  // ===== Test 7: Resume 页（Task 005.2 ★ + RC5 重构）=====
   log('\n=== Test 7: Resume 页（新增）===')
   await page.goto(`${BASE}/resume`, { waitUntil: 'networkidle' })
   await page.waitForTimeout(500)
@@ -212,6 +212,22 @@ try {
 
   const resumeTitle = await page.locator('h1').textContent()
   check('Resume 页 h1 文本 = 赖睿轩 · 简历', resumeTitle?.trim() === '赖睿轩 · 简历', `actual: ${resumeTitle}`)
+
+  // RC5: subtitle 渲染验证（从 frontmatter SSOT 读取，替换原硬编码 page__hint）
+  const resumeSubtitle = await page.locator('.page__subtitle').textContent()
+  check(
+    'Resume 页 subtitle 渲染 = "软件工程学生 · 后端开发 · 软件工程方向"',
+    resumeSubtitle?.trim() === '软件工程学生 · 后端开发 · 软件工程方向',
+    `actual: ${resumeSubtitle}`,
+  )
+
+  // RC5: page__hint 硬编码消除验证（不应再出现 .page__hint）
+  const resumeHintCount = await page.locator('.page__hint').count()
+  check('Resume 页 page__hint 硬编码已消除', resumeHintCount === 0, `hint count: ${resumeHintCount}`)
+
+  // RC5: .page__header 工具类应用验证
+  const resumePageHeader = await page.locator('.page__header').count()
+  check('Resume 页应用 .page__header 工具类', resumePageHeader === 1, `page__header count: ${resumePageHeader}`)
 
   // Markdown 内容渲染
   const resumeContent = await page.locator('.resume__content .markdown').count()

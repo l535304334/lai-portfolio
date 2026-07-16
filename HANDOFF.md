@@ -7,7 +7,7 @@
 > 以后所有开发均以本文件作为唯一项目上下文。
 >
 > 最后更新：2026-07-17
-> 当前阶段：**RC3.3 已完成（本地未推送），等待用户批准进入 RC4**
+> 当前阶段：**RC3 Completed（origin/master 已同步），等待用户批准进入 RC4**
 
 ---
 
@@ -18,12 +18,12 @@
 | 项 | 值 |
 |---|---|
 | **项目名称** | 软件工程学生技术作品集（Portfolio v2.0） |
-| **当前阶段** | RC3.3 已完成 |
+| **当前阶段** | **RC3 Completed**（origin/master 已同步） |
 | **下一阶段** | RC4（候选：Skills 页深化重构）— **待用户批准范围** |
-| **项目版本** | `2.0.0`（[package.json](package.json)） |
-| **最新 Commit** | RC3.3 commit（`fix(rc3.3): unify DecisionSection eyebrow to Chinese`）— 本地未推送 |
+| **项目版本** | `2.0.0`（[package.json](package.json)）— RC3 不发新版本，仍属 v2.0.0 范畴 |
+| **最新 Commit** | `16b68d2` — `fix(rc3.3): unify DecisionSection eyebrow to Chinese`（已推送 origin） |
 | **最新 Tag** | `v2.0.0`（RC2 Release，commit `20598ae`，已推送 origin） |
-| **本地 vs 远程** | 本地领先 `origin/master` **4 commits**（RC3.1 + HANDOFF + RC3.2 + RC3.3 未推送） |
+| **本地 vs 远程** | **同步**（origin/master = `16b68d2`） |
 | **工作区状态** | clean（HANDOFF.md 更新后会再次 clean） |
 | **当前分支** | `master`（受保护，禁止直接 push 历史） |
 | **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2** |
@@ -34,7 +34,8 @@
 | **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
 | **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
 | **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每子阶段三项验证 |
-| **下一步动作** | 询问用户：「是否批准进入 RC4？RC4 范围是什么？是否先推送 RC3 的 3 个 commit 到 origin？是否升级版本号到 v2.1.0？」 |
+| **RC3 Baseline** | ✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷） |
+| **下一步动作** | 等待用户批准 RC4 范围（候选：Skills 页深化重构，顺序可调整） |
 | **完整 Roadmap** | RC4 → RC5 → RC6 → RC7 → RC8（详见 §七） |
 | **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 | **RC3.3 Final Review** | 详见 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md)（Code/Design/Performance/IA Review + P1 修复 + 5 项 P2 建议） |
@@ -96,33 +97,37 @@
 ### 1.6 当前分支
 
 - **分支**：`master`（生产分支，受保护）
-- **本地领先远程**：4 commits（RC3.1 `c8b7913` + HANDOFF `6706630` + RC3.2 `42a21dc` + RC3.3 commit 未推送）
-- **远程 `origin/master`**：已包含 RC2 完整内容（commit `20598ae` + tag `v2.0.0`）
+- **本地与远程**：**同步**（RC3 全部 commit 已推送）
+- **远程 `origin/master`**：`16b68d2`（RC3.3 commit，已包含 RC1 + RC2 + RC3 全部内容）
+- **最新 Tag**：`v2.0.0`（RC2 Release，RC3 不发新 tag，仍属 v2.0.0 范畴）
 
 ### 1.7 Git 状态
 
 ```
 On branch master
-Your branch is ahead of 'origin/master' by 4 commits.  ← RC3.1 + HANDOFF + RC3.2 + RC3.3 待推送
+Your branch is up to date with 'origin/master'.  ← RC3 已同步
 nothing to commit, working tree clean
 ```
 
-**最近 5 个 commit**：
+**最近 6 个 commit**：
 ```
-[RC3.3 hash]   fix(rc3.3): unify DecisionSection eyebrow to Chinese              ← 本地未推送
-42a21dc        feat(rc3.2): rebuild About header with subtitle and Facts Panel   ← 本地未推送
-6706630        docs: upgrade HANDOFF.md to project-lifecycle handoff document    ← 本地未推送
-c8b7913        feat(rc3.1): refactor About data layer to character-profile model ← 本地未推送
-20598ae        chore(release): v2.0.0                                             ← origin/master
+16b68d2 fix(rc3.3): unify DecisionSection eyebrow to Chinese              ← origin/master = HEAD
+42a21dc feat(rc3.2): rebuild About header with subtitle and Facts Panel
+6706630 docs: upgrade HANDOFF.md to project-lifecycle handoff document
+c8b7913 feat(rc3.1): refactor About data layer to character-profile model
+20598ae chore(release): v2.0.0                                             ← v2.0.0 tag
+12992da docs(rc2.5): final review and design consistency
 ```
 
 **所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0`
+
+**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）
 
 ---
 
 ## 二、开发历史
 
-项目经历 **Task 001~010** → **RC1** → **RC2** → **RC3.1** 三个阶段。
+项目经历 **Task 001~010** → **RC1** → **RC2** → **RC3** 四个阶段。
 
 ### 2.1 Task 001~010（项目奠基，2026-07-08 ~ 2026-07-15）
 
@@ -689,7 +694,7 @@ interface TimelineStage {
 | Task 001~010 | ✅ 全部完成 | 项目奠基（v0.3.0 → v1.0.0） |
 | **RC1** | ✅ Released (Local) commit `1ad444a` | Timeline SSOT + Hero 重构 + P0 真实性修复 + .gitattributes |
 | **RC2** | ✅ Released (Origin) commit `20598ae` + tag `v2.0.0` | ProjectHeader 提取 + ArchitectureDiagram 集成 + 视觉层次强化 + 可访问性修复 + Design Audit |
-| **RC3** | ✅ 完成（本地未推送）3 个 commit | About 页面重构：RC3.1 数据层（PersonalFact + subtitle + 4 facts）+ RC3.2 视觉重构（Facts Panel `<dl>`）+ RC3.3 Final Review（Code/Design/Performance/**IA Review** + P1 修复） |
+| **RC3** | ✅ Released (Origin) commit `16b68d2`（origin/master 已同步，不发新 tag，仍属 v2.0.0） | About 页面重构：RC3.1 数据层（PersonalFact + subtitle + 4 facts）+ RC3.2 视觉重构（Facts Panel `<dl>`）+ RC3.3 Final Review（Code/Design/Performance/**IA Review** + P1 修复） |
 
 ### 6.2 剩余（按规划顺序）
 

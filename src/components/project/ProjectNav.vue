@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <nav class="project-nav">
+  <nav class="project-nav" aria-label="项目导航">
     <RouterLink
       v-if="prev"
       :to="`/projects/${prev.slug}`"

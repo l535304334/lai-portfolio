@@ -4,6 +4,8 @@ import { ref, watchEffect } from 'vue'
 const props = defineProps<{
   /** 架构图标识（对应 frontmatter.architecture，匹配 src/assets/projects/{architecture}.svg） */
   architecture?: string
+  /** 项目标题，用于生成无障碍 alt 文本 */
+  projectTitle?: string
 }>()
 
 /**
@@ -42,7 +44,7 @@ watchEffect(async () => {
     <figcaption class="architecture-diagram__caption mono">架构图</figcaption>
     <img
       :src="svgUrl"
-      alt="项目架构图"
+      :alt="projectTitle ? `${projectTitle} 架构图` : '项目架构图'"
       class="architecture-diagram__image"
       loading="lazy"
     />

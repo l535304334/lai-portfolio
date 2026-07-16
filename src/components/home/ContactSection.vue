@@ -13,12 +13,12 @@ const githubHandle = computed(() =>
 </script>
 
 <template>
-  <section class="contact">
+  <section class="contact" aria-labelledby="contact-title">
     <div class="container">
       <div class="contact__grid">
         <div class="contact__main">
           <p class="contact__eyebrow mono">// 联系方式</p>
-          <h2 class="contact__title">赖睿轩</h2>
+          <h2 id="contact-title" class="contact__title">赖睿轩</h2>
           <p class="contact__lead">软件工程学生</p>
         </div>
 

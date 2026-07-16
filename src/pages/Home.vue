@@ -20,11 +20,11 @@ const contact: ContactInfo = {
   <div class="home">
     <HeroSection />
 
-    <section id="projects" class="home__projects">
+    <section id="projects" class="home__projects" aria-labelledby="projects-title">
       <div class="container">
         <header class="home__projects-head">
           <p class="home__eyebrow mono">// 精选项目</p>
-          <h2 class="home__section-title">三个完整项目，三种工程挑战</h2>
+          <h2 id="projects-title" class="home__section-title">三个完整项目，三种工程挑战</h2>
         </header>
 
         <div class="home__projects-grid">

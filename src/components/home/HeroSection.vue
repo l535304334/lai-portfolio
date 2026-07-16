@@ -15,12 +15,12 @@ const stats: HeroStat[] = [
 </script>
 
 <template>
-  <section class="hero">
+  <section class="hero" aria-labelledby="hero-title">
     <div class="container hero__grid">
       <div class="hero__main">
         <p class="hero__eyebrow mono">// 赖睿轩 · 软件工程学生</p>
 
-        <h1 class="hero__title">
+        <h1 id="hero-title" class="hero__title">
           客户端 · Serverless · 分布式系统<br />
           <span class="hero__title-accent">三类工程实践</span>
         </h1>

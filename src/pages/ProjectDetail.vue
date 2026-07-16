@@ -56,7 +56,10 @@ onMounted(() => {
 
       <MarkdownContent :html="project.html" />
 
-      <ArchitectureDiagram :architecture="project.architecture" />
+      <ArchitectureDiagram
+        :architecture="project.architecture"
+        :project-title="project.title"
+      />
 
       <DecisionSection v-if="project.decision" :decision="project.decision" />
 

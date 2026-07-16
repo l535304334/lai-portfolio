@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="category">
+  <section class="category" :aria-label="`${category.project} · ${category.title}`">
     <header class="category__header">
       <span class="category__eyebrow mono">{{ category.project }}</span>
       <h2 class="category__title">{{ category.title }}</h2>

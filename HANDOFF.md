@@ -7,8 +7,9 @@
 > 以后所有开发均以本文件作为唯一项目上下文。
 >
 > 最后更新：2026-07-17
-> 当前阶段：**RC4.1 Completed（本地未 commit），等待用户批准进入 RC4.2**
+> 当前阶段：**RC4 Completed（Final Review 已完成，待 commit + push），等待批准进入 RC5**
 > **开发计划**：《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划（详见 §七）
+> **执行规则**（2026-07-17 用户调整）：每个 RC 包含完整生命周期（开发 → 验证 → Review → 文档 → Commit → Push → Report），Review 作为收尾工作不再单独拆分子阶段
 
 ---
 
@@ -19,29 +20,30 @@
 | 项 | 值 |
 |---|---|
 | **项目名称** | 软件工程学生技术作品集（Portfolio v2.0） |
-| **当前阶段** | **RC4.1 Completed**（本地未 commit，等待批准进入 RC4.2） |
-| **下一阶段** | RC4.2 — Skills 页 Final Review（Code/Design/Performance 局部审计 + 文档同步） |
+| **当前阶段** | **RC4 Completed**（Final Review 已完成，待 commit + push） |
+| **下一阶段** | RC5 — Resume 深化（视觉层次 + PDF 优化 + subtitle 统一） |
 | **项目版本** | `2.0.0`（[package.json](package.json)）— RC4~RC7 不发新版本，RC8 统一发 v3.0.0 |
-| **最新 Commit** | `bfb070e` — `docs: append RC3 Release Summary (Section 19)`（origin/master HEAD，已推送） |
+| **最新 Commit** | `caff817` — `feat(rc4.1): rebuild Skills page with structured categories and global page header utility`（已推送 origin） |
 | **最新 Tag** | `v2.0.0`（RC2 Release，commit `20598ae`，已推送 origin） |
-| **本地 vs 远程** | **同步**（origin/master = `bfb070e`）；RC4.1 改动尚未 commit |
-| **工作区状态** | dirty（7 个文件改动：1 新建 + 6 修改，等待 commit） |
+| **本地 vs 远程** | **同步**（origin/master = `caff817`）；RC4 收尾 Review 待 commit |
+| **工作区状态** | dirty（Skills.vue P1 修复 + HANDOFF.md + RELEASE_REVIEW_REPORT.md 更新待 commit） |
 | **当前分支** | `master`（受保护，禁止直接 push 历史） |
-| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC4.1 未消耗） |
+| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC4 未消耗） |
 | **虚拟模块数** | 8 个（已定型，不再新增） |
-| **测试基线** | Playwright **65/65** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC4.1 新增 10 项断言 |
+| **测试基线** | Playwright **65/65** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC4 新增 10 项断言 |
 | **构建基线** | 1664 模块，约 2.4s（gzip 主包 41.89 KB）— Skills chunk 2.67 KB / gzip 1.53 KB |
 | **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，origin/master 触发） |
 | **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
 | **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
-| **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每子阶段三项验证 |
+| **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每 RC 完整生命周期 |
 | **RC3 Baseline** | ✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷） |
-| **RC4.1 状态** | ✅ **完成**（本地验证通过，待 commit + 推送 origin/master） |
-| **下一步动作** | 等待用户批准进入 RC4.2（Skills 页 Final Review） |
-| **完整 Roadmap** | RC4（全局基础+Skills）→ RC5（Resume）→ RC6（Interview+AiPractice）→ RC7（IA+Nav）→ RC8（Final v3.0.0）（详见 §七） |
+| **RC4 状态** | ✅ **完成**（开发 + 验证 + Review 全部完成，待 commit + push） |
+| **下一步动作** | commit + push RC4 收尾 → 输出 RC4 Final Report → 等待批准进入 RC5 |
+| **完整 Roadmap** | RC4（全局基础+Skills，已完成）→ RC5（Resume）→ RC6（Interview+AiPractice）→ RC7（IA+Nav）→ RC8（Final v3.0.0）（详见 §七） |
+| **执行规则** | 每个 RC 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆 RC.x 子阶段） |
 | **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 | **RC3.3 Final Review** | 详见 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md)（Code/Design/Performance/IA Review + P1 修复 + 5 项 P2 建议） |
-| **RC4.1 Report** | 详见 [RELEASE_REVIEW_REPORT.md §20](RELEASE_REVIEW_REPORT.md)（Skills 页数据层 + 视觉重构 + 全局工具类） |
+| **RC4 Report** | 详见 [RELEASE_REVIEW_REPORT.md §20](RELEASE_REVIEW_REPORT.md)（RC4 开发报告）+ [§21](RELEASE_REVIEW_REPORT.md)（RC4 Final Review） |
 
 ---
 
@@ -100,41 +102,36 @@
 ### 1.6 当前分支
 
 - **分支**：`master`（生产分支，受保护）
-- **本地与远程**：**同步**（origin/master = `bfb070e`）；RC4.1 改动尚未 commit
-- **远程 `origin/master`**：`bfb070e`（RC3 Release Summary，已包含 RC1 + RC2 + RC3 全部内容）
+- **本地与远程**：**同步**（origin/master = `caff817`）；RC4 收尾 Review 尚未 commit
+- **远程 `origin/master`**：`caff817`（RC4 开发阶段 commit，已包含 RC1 + RC2 + RC3 + RC4 开发内容）
 - **最新 Tag**：`v2.0.0`（RC2 Release，RC3 + RC4 均不发新 tag，RC8 时统一升级 v3.0.0）
 
 ### 1.7 Git 状态
 
 ```
 On branch master
-Your branch is up to date with 'origin/master'.   ← RC3 已同步，RC4.1 待 commit
+Your branch is up to date with 'origin/master'.   ← RC4 开发已同步，收尾 Review 待 commit
 Changes not staged for commit:
-        modified:   release-gate-task-005.mjs       ← RC4.1 测试同步
-        modified:   src/content/skills/index.md     ← RC4.1 frontmatter 扩展
-        modified:   src/env.d.ts                    ← RC4.1 类型声明同步
-        modified:   src/pages/Skills.vue            ← RC4.1 视觉重构
-        modified:   src/styles/global.css           ← RC4.1 .page__header/.page__subtitle
-        modified:   src/utils/content.ts            ← RC4.1 scanSkills 扩展
-Untracked files:
-        src/types/skills.ts                         ← RC4.1 新建类型文件
+        modified:   src/pages/Skills.vue            ← RC4 收尾 P1 修复（--leading-relaxed → --leading-normal）
+        modified:   HANDOFF.md                      ← RC4 收尾 + 执行规则调整
+        modified:   RELEASE_REVIEW_REPORT.md        ← 追加 §21 RC4 Final Review
 ```
 
 **最近 6 个 commit**：
 ```
-bfb070e docs: append RC3 Release Summary (Section 19)                    ← origin/master = HEAD
+caff817 feat(rc4.1): rebuild Skills page with structured categories       ← origin/master = HEAD
+bfb070e docs: append RC3 Release Summary (Section 19)
 8b45a28 docs: mark RC3 baseline frozen and origin/master synced
 16b68d2 fix(rc3.3): unify DecisionSection eyebrow to Chinese
 42a21dc feat(rc3.2): rebuild About header with subtitle and Facts Panel
 6706630 docs: upgrade HANDOFF.md to project-lifecycle handoff document
-c8b7913 feat(rc3.1): refactor About data layer to character-profile model
 ```
 
 **所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0`
 
 **RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）
 
-**RC4.1 状态**：✅ **完成**（typecheck + build + Playwright 65/65 全部通过，待 commit + 推送 origin/master）
+**RC4 状态**：✅ **完成**（开发 + 验证 + Review 全部完成，待 commit + push）
 
 ---
 
@@ -298,20 +295,24 @@ c8b7913 feat(rc3.1): refactor About data layer to character-profile model
 - **Email 不公开**。隐私考虑，About 仅保留 GitHub
 - **RC3.3 新增 Information Architecture Review**。重点检查 Hero / Timeline / Resume / About 之间的信息重复，确保每个页面职责清晰
 
-### 2.5 RC4 — 全局基础 + Skills 试点（2026-07-17，进行中）
+### 2.5 RC4 — 全局基础 + Skills 试点（2026-07-17，已完成）
 
 **设计目标**：以《Portfolio v3 Roadmap》为唯一开发计划，RC4 承担"全局基础设施 + Skills 试点"双重职责：
 1. **全局基础**：建立 `.page__header` / `.page__subtitle` 工具类（CSS utility，非新组件），为 RC5/RC6 子页面统一 Header 模式铺路；同时消除 Skills 页 `page__hint` 硬编码，验证 SSOT 模式可推广
 2. **Skills 试点**：将技术栈从 Markdown body 迁移至 frontmatter.categories（结构化数据），建立"frontmatter 结构化 + body 叙事"的双层信息架构，与 About.md 模式对齐
 
-**子阶段与最终成果**：
+**RC4 完整生命周期**（按 2026-07-17 调整后的执行规则）：
 
-| 子阶段 | 状态 | 主要交付 |
+| 阶段 | 状态 | 主要交付 |
 |---|---|---|
-| RC4.1 数据层 + 视觉重构 | ✅ 完成（本地未 commit） | SkillsContent 类型扩展（subtitle + categories）+ scanSkills 解析 + skills/index.md 重组 + .page__header/.page__subtitle 工具类 + Skills.vue 重构 + Playwright Test 6 扩展（+10 项断言） |
-| RC4.2 Final Review | ⏳ 待批准 | Code/Design/Performance 局部审计 + 文档同步 |
+| 开发 | ✅ 完成（commit `caff817`） | SkillsContent 类型扩展（subtitle + categories）+ scanSkills 解析 + skills/index.md 重组 + .page__header/.page__subtitle 工具类 + Skills.vue 重构 + Playwright Test 6 扩展（+10 项断言） |
+| 验证 | ✅ 完成 | typecheck + build + Playwright 65/65 全过 |
+| Review | ✅ 完成 | Code Review（0 问题）+ Design Audit（P1 修复：--leading-relaxed → --leading-normal；P2 记录：5 页 eyebrow 缺 `//` 前缀，留 RC7）+ Performance Audit（0 问题） |
+| 文档更新 | ✅ 完成 | HANDOFF.md + RELEASE_REVIEW_REPORT.md §21 同步 |
+| Commit + Push | ⏳ 待执行 | 收尾 commit + 推送 origin/master |
+| RC4 Final Report | ⏳ 待输出 | 等待批准进入 RC5 |
 
-**RC4.1 修改文件（7 个，1 新建 + 6 修改）：**
+**RC4 开发阶段修改文件（7 个，1 新建 + 6 修改）：**
 
 | 文件 | 类型 | 改动 |
 |---|---|---|
@@ -323,15 +324,14 @@ c8b7913 feat(rc3.1): refactor About data layer to character-profile model
 | `src/pages/Skills.vue` | 修改 | 完全重写：应用工具类 + categories 卡片网格（6 个分类）+ 移除 scoped header CSS |
 | `release-gate-task-005.mjs` | 修改 | Test 6 扩展：subtitle 渲染 + page__hint 消除 + page__header 应用 + 6 分类卡片 + 6 分类名称验证 |
 
-**RC4.1 全程约束遵守：**
-- 新增组件配额：0/2（RC4.1 未新增组件，仍剩 1 个）
+**RC4 全程约束遵守：**
+- 新增组件配额：0/2（RC4 未新增组件，仍剩 1 个）
 - 新增第三方依赖：0
 - 新增 Design Token / 颜色 / 字体 / 动画：0
 - Markdown SSOT 保持：是（skills/index.md 为唯一数据源）
-- 每个子阶段完成时执行 typecheck + build + Playwright 全部通过
 - 隐私扫描清洁：0 手机号 / 0 真实密钥
 
-**RC4.1 验证结果：**
+**RC4 验证结果：**
 - ✅ typecheck 通过（exit 0）
 - ✅ build 通过（1664 模块，2.40s，gzip 主包 41.89 KB — 与 RC3 一致）
 - ✅ Playwright **65/65** 通过（RC3 是 55/55，新增 10 项断言全部通过）
@@ -796,14 +796,13 @@ interface SkillsContent {
 | **RC1** | ✅ Released (Local) commit `1ad444a` | Timeline SSOT + Hero 重构 + P0 真实性修复 + .gitattributes |
 | **RC2** | ✅ Released (Origin) commit `20598ae` + tag `v2.0.0` | ProjectHeader 提取 + ArchitectureDiagram 集成 + 视觉层次强化 + 可访问性修复 + Design Audit |
 | **RC3** | ✅ Released (Origin) commit `bfb070e`（origin/master 已同步，不发新 tag，仍属 v2.0.0） | About 页面重构：RC3.1 数据层（PersonalFact + subtitle + 4 facts）+ RC3.2 视觉重构（Facts Panel `<dl>`）+ RC3.3 Final Review（Code/Design/Performance/**IA Review** + P1 修复） |
-| **RC4.1** | ✅ 完成（本地未 commit，待推送 origin/master） | Skills 数据层（SkillCategory + subtitle + 6 categories）+ 视觉重构（.page__header/.page__subtitle 工具类 + categories 卡片网格）+ Playwright +10 项断言（65/65 通过） |
+| **RC4** | ✅ Completed（开发 commit `caff817` 已推送，收尾 Review 待 commit） | 全局基础（.page__header/.page__subtitle 工具类）+ Skills 试点（SkillCategory + subtitle + 6 categories + 卡片网格）+ Playwright +10 项断言（65/65 通过）+ Final Review（P1 修复 --leading-relaxed） |
 
 ### 6.2 剩余（按 Portfolio v3 Roadmap 顺序）
 
 | 阶段 | 状态 | 预期内容 |
 |---|---|---|
-| **RC4.2** | ⏳ 待批准 | Skills 页 Final Review（Code/Design/Performance 局部审计 + 文档同步） |
-| **RC5** | ⏳ 未开始 | Resume 深化（视觉层次 + PDF 优化 + subtitle 统一） |
+| **RC5** | ⏳ 待批准 | Resume 深化（视觉层次 + PDF 优化 + subtitle 统一） |
 | **RC6** | ⏳ 未开始 | Interview + AiPractice 深化（共用 .page__header + Q&A/案例展示） |
 | **RC7** | ⏳ 未开始 | 信息架构 + 全局导航优化（NavBar 顺序决策 + 跨页面职责确认） |
 | **RC8** | ⏳ 未开始 | Final Release v3.0.0（全站审计 + Core Web Vitals + WCAG AA + v3.0.0 发布） |
@@ -832,27 +831,50 @@ interface SkillsContent {
 > **《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划**（2026-07-17 批准）。
 >
 > RC4~RC8 全程严格按照 Roadmap 顺序推进，除非遇到 P0/P1 问题或用户明确要求，否则不得自行修改 Roadmap 或重新规划开发路线。
+>
+> **执行规则**（2026-07-17 用户调整）：每个 RC 包含完整生命周期（开发 → 验证 → Review → 文档 → Commit → Push → Report），Review 作为收尾工作不再单独拆分子阶段。后续 RC5/RC6/RC7/RC8 保持结构一致，不再拆分 RC5.1/RC5.2/RC6.1/RC6.2 等子阶段，除非用户明确要求。
+
+### 7.0 执行规则（2026-07-17 调整）
+
+**每个 RC 的完整生命周期**：
+
+```
+开发 → 验证（Typecheck/Build/Playwright）→ Review（Code/Design/Performance）→ 文档更新 → Git Commit → Push → RC Report → 等待批准
+```
+
+**关键原则**：
+1. Review 属于当前 RC 的收尾工作，**不再单独作为新的 RC.x 子阶段**
+2. 后续 RC5/RC6/RC7/RC8 保持结构一致，**不再拆分 RC5.1/RC5.2/RC6.1/RC6.2 等子阶段**，除非用户明确要求
+3. 每个 RC 完成后输出 **RC Final Report**（不是子阶段报告），等待用户批准进入下一 RC
+4. RC4~RC7 不发布新版本，仅推送 origin/master；RC8 统一发 v3.0.0 Final Release
+5. 如发现 Roadmap 与实际情况存在冲突，不得直接修改设计，应先分析影响、提出建议并等待用户批准
+6. 每次开始新的 RC 前，先根据 §0 SNAPSHOT 和本章节自动恢复上下文
 
 ### 7.1 总目标
 
 将 Portfolio v2.0（已发布）演进为 v3.0.0（RC8 Final Release），通过 RC4~RC7 的逐页深化与全局基础升级，建立"问题类型 + 页面协同"的优化模式，避免"一页一 RC"的线性低效。RC8 作为 Final Release 统一发布 v3.0.0。
 
-### 7.2 RC4 — 全局基础 + Skills 试点（进行中）
+### 7.2 RC4 — 全局基础 + Skills 试点（已完成）
 
 **目标**：建立子页面 Header 工具类（`.page__header` / `.page__subtitle`），消除 Skills 页 `page__hint` 硬编码，将技术栈迁移至 frontmatter.categories 结构化数据，为 RC5/RC6 铺路。
 
-**子阶段**：
+**完整生命周期进度**：
 
-| 子阶段 | 状态 | 主要交付 |
-|---|---|---|
-| RC4.1 数据层 + 视觉重构 | ✅ 完成（本地未 commit） | SkillsContent 类型扩展 + scanSkills 解析 + skills/index.md 重组 + .page__header/.page__subtitle 工具类 + Skills.vue 重构 + Playwright +10 项断言 |
-| RC4.2 Final Review | ⏳ 待用户批准 | Code/Design/Performance 局部审计 + 文档同步 |
+| 阶段 | 状态 |
+|---|---|
+| 开发 | ✅ 完成（commit `caff817`） |
+| 验证 | ✅ 完成（typecheck + build + Playwright 65/65） |
+| Review | ✅ 完成（Code Review 0 问题 / Design Audit P1 修复 / Performance Audit 0 问题） |
+| 文档更新 | ✅ 完成（HANDOFF.md + RELEASE_REVIEW_REPORT.md §21） |
+| Commit + Push | ⏳ 待执行（收尾 commit + 推送 origin/master） |
+| RC4 Final Report | ⏳ 待输出（等待批准进入 RC5） |
 
-**验收标准**：
-- typecheck + build + Playwright 三项全过
-- Skills 页 categories 卡片网格渲染正确（6 个分类）
-- `.page__header` / `.page__subtitle` 工具类在 global.css 中建立
-- page__hint 硬编码消除（仅 Skills 页，其他页在 RC5/RC6 处理）
+**验收标准**（全部达成）：
+- ✅ typecheck + build + Playwright 三项全过
+- ✅ Skills 页 categories 卡片网格渲染正确（6 个分类）
+- ✅ `.page__header` / `.page__subtitle` 工具类在 global.css 中建立
+- ✅ page__hint 硬编码消除（仅 Skills 页，其他页在 RC5/RC6 处理）
+- ✅ Code/Design/Performance Review 无 P0/P1 问题（P1 已修复）
 
 ### 7.3 RC5 — Resume 深化
 
@@ -863,11 +885,13 @@ interface SkillsContent {
 - Resume.vue 应用 `.page__header` / `.page__subtitle` 工具类
 - PDF 打印样式优化（print CSS）
 - 与 About subtitle 的 framing 对齐（RC3.3 IA Review P2 #1）
+- Code/Design/Performance Review（RC5 收尾）
 
 **验收标准**：
 - typecheck + build + Playwright 三项全过
 - Resume 页 subtitle 从 SSOT 读取
 - PDF 打印输出排版正确
+- Review 无 P0/P1 问题（或已修复）
 
 ### 7.4 RC6 — Interview + AiPractice 深化
 
@@ -879,11 +903,13 @@ interface SkillsContent {
 - 两页 .vue 应用 `.page__header` / `.page__subtitle` 工具类
 - Interview Q&A 折叠面板视觉强化（如需要）
 - AiPractice 案例展示卡片化（如需要）
+- Code/Design/Performance Review（RC6 收尾）
 
 **验收标准**：
 - typecheck + build + Playwright 三项全过
 - 两页 subtitle 从 SSOT 读取
 - page__hint 硬编码消除（4 子页面全部完成）
+- Review 无 P0/P1 问题（或已修复）
 
 ### 7.5 RC7 — 信息架构 + 全局导航优化
 
@@ -894,6 +920,7 @@ interface SkillsContent {
 - 跨页面信息重复审计（RC3.3 IA Review P2 #5：Skills vs Projects vs Resume 能力描述）
 - 全站 page__hint / .xxx__header 一致性最终确认
 - IA Review 报告
+- Code/Design/Performance Review（RC7 收尾）
 
 **验收标准**：
 - typecheck + build + Playwright 三项全过
@@ -926,19 +953,16 @@ interface SkillsContent {
 ```
 ═══════════════════════════════════════════════════════════════
   Portfolio v3 Roadmap（RC4 → RC8，2026-07-17 用户批准）
+  执行规则：每个 RC 完整生命周期，不再拆子阶段（2026-07-17 调整）
 ═══════════════════════════════════════════════════════════════
 
 【已完成】
   RC1 ✅ 真实性 + 架构稳定（Timeline SSOT）
   RC2 ✅ 视觉升级 + 组件化（ProjectDetail / v2.0.0 已发布）
   RC3 ✅ About 页面重构（人物画像：RC3.1 数据层 + RC3.2 视觉 + RC3.3 Final Review + IA Review）
-  RC4.1 ✅ 全局基础 + Skills 试点（.page__header 工具类 + Skills categories 卡片网格）
+  RC4 ✅ 全局基础 + Skills 试点（.page__header 工具类 + Skills categories 卡片网格 + Final Review P1 修复）
 
-【进行中】RC4 — 全局基础 + Skills 试点
-  RC4.1 ✅ 数据层 + 视觉重构（本地未 commit）
-  RC4.2 ⏳ Final Review（待用户批准）
-
-【待推进】
+【待推进】（每个 RC 完整生命周期，不再拆子阶段）
   RC5 ──── Resume 深化（视觉层次 + PDF 优化 + subtitle 统一）
   RC6 ──── Interview + AiPractice 深化（共用 .page__header + Q&A/案例展示）
   RC7 ──── 信息架构 + 全局导航优化（NavBar 顺序决策 + 跨页面职责确认）
@@ -954,8 +978,8 @@ interface SkillsContent {
 ### 7.8 关键原则
 
 1. **《Portfolio v3 Roadmap》为唯一开发计划**，禁止自行修改或重新规划
-2. **每个 RC 子阶段完成后必须执行三项验证**（typecheck + build + Playwright）
-3. **每个 RC 子阶段完成后必须输出 Report**，等待用户批准才能进入下一子阶段
+2. **每个 RC 完整生命周期**：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆子阶段）
+3. **每个 RC 完成后必须输出 RC Final Report**，等待用户批准才能进入下一 RC
 4. **RC4~RC7 不发布新版本**，仅推送 origin/master；**RC8 统一发 v3.0.0 Final Release**
 5. **冲突必须暴露**：如发现 Roadmap 与实际情况存在冲突，不得直接修改设计，应先分析影响、提出建议并等待用户批准
 6. **每次开始新的 RC 前**，先根据 §0 SNAPSHOT 和本章节自动恢复上下文，不需要用户重复说明项目状态

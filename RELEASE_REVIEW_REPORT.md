@@ -1602,3 +1602,155 @@ skills/index.md (frontmatter: slug/title/date + ★subtitle + ★categories[6] +
 4. RC4.2 完成后输出 RC4 整体报告，等待用户批准进入 RC5
 
 **RC4.1 报告结束。等待用户批准。**
+
+---
+
+## 21. RC4 Final Review — 全局基础 + Skills 试点收尾（2026-07-17）
+
+> **本节为 RC4 收尾 Review 报告。**
+>
+> **执行规则**（2026-07-17 用户调整）：Review 作为 RC 收尾工作，不再单独拆分子阶段。每个 RC 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report。
+>
+> **RC4 范围**：全局基础（.page__header / .page__subtitle 工具类）+ Skills 试点（categories 结构化数据 + 卡片网格）。
+
+### 21.1 Review 范围
+
+RC4 Final Review 覆盖三个维度，聚焦 RC4 改动文件（7 个）：
+
+| 维度 | 检查项 | 范围 |
+|---|---|---|
+| Code Review | 死代码 / 未使用导入 / CSS 重复 / TypeScript strict 合规 | skills.ts / content.ts / env.d.ts / Skills.vue / global.css |
+| Design Audit | .page__header 一致性 / categories 卡片视觉规范 / Token 使用 | Skills.vue / global.css / tokens.css / About.vue（对比） |
+| Performance Audit | Bundle 体积 / 动态导入 / 未使用资源 / 动画性能 | dist/ 输出 / router/index.ts / Skills.vue hover transition |
+
+### 21.2 Code Review
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| 死代码 | ✅ 通过 | 无死代码；`.page__hint` 仍被 AiPractice/Resume/Interview 3 页使用，保留合理 |
+| 未使用导入 | ✅ 通过 | skills.ts 无导入；content.ts 新增 `SkillsContent` 导入已被 scanSkills 使用；Skills.vue 仅 2 个导入均使用 |
+| CSS 重复 | ✅ 通过 | `.page__header` / `.page__subtitle` 为新增工具类，无重复；`.page__hint` 保留是合理的历史样式 |
+| TypeScript strict | ✅ 通过 | 无 `any` / `as any` / `@ts-ignore`；scanSkills 使用 `Record<string, unknown>` + 类型守卫式 filter；与 scanPersonal 模式对齐 |
+| 接口设计 | ✅ 通过 | subtitle + categories 均为可选字段（`?`），向后兼容；SkillCategory 接口单一职责 |
+
+**Code Review 结论**：0 个 P0/P1 问题。
+
+### 21.3 Design Audit
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| `.page__header` 与 `.about__header` 一致性 | ✅ 通过 | 两者样式值完全一致（margin-bottom: space-12 / padding-bottom: space-10 / border-bottom: 1px solid color-border） |
+| `.page__subtitle` 与 `.about__subtitle` 差异 | ✅ 通过 | 差异合理：About 多 margin-bottom: space-8（因有 Facts Panel 紧跟）；Skills 无 Facts Panel，不需要 margin-bottom |
+| categories 卡片 Design Token 使用 | ✅ 通过 | 全部使用 Token：padding space-5 / background color-surface / border color-border / radius radius-lg / shadow shadow-sm / transition transition-fast |
+| categories 卡片 hover 效果 | ✅ 通过 | border-color + box-shadow 过渡，符合 compositor 友好属性规范 |
+| eyebrow `//` 前缀一致性 | ⚠️ P2 | 5 个页面 page__eyebrow 都缺 `//` 前缀（About/AiPractice/Skills/Resume/Interview），与 project_memory 约束不符。**历史遗留问题，非 RC4 引入**，留给 RC7（IA + 全局导航优化）统一处理 |
+| **`--leading-relaxed` 变量未定义** | 🔴 **P1** | Skills.vue L82 引用了 `--leading-relaxed`，但 tokens.css 只定义了 `--leading-normal` / `--leading-heading` / `--leading-code`。**已在 RC4 收尾修复**：改为 `var(--leading-normal)`，不新增 Design Token（遵守 FROZEN INVENTORY） |
+
+**Design Audit 结论**：
+- P0：0 个
+- P1：1 个（已修复）— `--leading-relaxed` → `--leading-normal`
+- P2：1 个（记录，留 RC7）— 5 页 eyebrow 缺 `//` 前缀
+
+### 21.4 Performance Audit
+
+| 检查项 | 结果 | 说明 |
+|---|---|---|
+| 动态导入 | ✅ 通过 | 所有 8 路由使用 `() => import(...)`，Skills.vue 是独立 chunk |
+| Bundle 体积对比 | ✅ 通过 | Skills CSS +0.04 kB（1.09 kB / gzip 0.43 kB）；Skills JS +0.44 kB（2.67 kB / gzip 1.53 kB）；主包 index.js 0 变化（107.82 kB / gzip 41.89 kB）；总模块数 0 变化（1664） |
+| 未使用资源 | ✅ 通过 | skills.ts 新文件已被 content.ts + env.d.ts 引用；Skills.vue 重写后无残留代码；global.css 新增工具类都被 Skills.vue 使用 |
+| Core Web Vitals 影响 | ✅ 通过 | Skills 页是懒加载路由，不影响首屏 LCP；categories 卡片有明确尺寸无 CLS；hover transition 使用 compositor 友好属性 |
+| 动画性能 | ✅ 通过 | hover 仅动画 `border-color` + `box-shadow`，未动画 layout 绑定属性（width/height/top/left/margin/padding） |
+
+**Performance Audit 结论**：0 个 P0/P1 问题。Bundle 体积变化可忽略。
+
+### 21.5 P1 修复详情
+
+**问题**：Skills.vue L82 `line-height: var(--leading-relaxed)` 引用了未定义的 CSS 变量。
+
+**影响**：浏览器会 fallback 到 `line-height: normal`（≈1.2），导致 categories items 段落行高比预期紧凑，与全局 body line-height（`--leading-normal: 1.6`）不一致。
+
+**修复方案对比**：
+
+| 方案 | 优点 | 缺点 | 决策 |
+|---|---|---|---|
+| A: 在 tokens.css 新增 `--leading-relaxed: 1.7` | 语义清晰 | 违反 FROZEN INVENTORY（不新增 Design Token） | ❌ 拒绝 |
+| B: 改用已有的 `var(--leading-normal)` | 最小修改，遵守 FROZEN INVENTORY | 语义略弱（normal vs relaxed） | ✅ **采纳** |
+
+**修复实施**：
+```diff
+-.skills__category-items {
+-  line-height: var(--leading-relaxed);
+-}
++.skills__category-items {
++  line-height: var(--leading-normal);
++}
+```
+
+**修复后验证**：
+- ✅ typecheck 通过
+- ✅ build 通过（Bundle 体积不变）
+- ✅ Playwright 65/65 通过
+
+### 21.6 P2 建议记录（留 RC7 处理）
+
+| # | 问题 | 严重度 | 处理时机 |
+|---|---|---|---|
+| 1 | 5 个页面 page__eyebrow 都缺 `//` 前缀（About/AiPractice/Skills/Resume/Interview） | P2 | RC7（IA + 全局导航优化）统一处理 |
+
+**说明**：此问题非 RC4 引入，是历史遗留。RC4 Skills.vue 的 eyebrow "技术能力"与其他 4 个页面保持一致（都无 `//` 前缀），未引入新的不一致。统一修复应留给 RC7 全局 IA 优化时处理，避免 RC4 越界修改其他页面。
+
+### 21.7 验证结果（P1 修复后重新验证）
+
+| 验证项 | 结果 |
+|---|---|
+| `npm run typecheck` | ✅ 通过（exit 0，0 错误） |
+| `npm run build` | ✅ 通过（1664 模块，2.40s，gzip 主包 41.89 KB — 与 P1 修复前一致） |
+| `npm test`（Playwright） | ✅ **65/65** 通过（与 P1 修复前一致） |
+
+### 21.8 RC4 完整生命周期总结
+
+| 阶段 | 状态 | 关键交付 |
+|---|---|---|
+| 开发 | ✅ 完成（commit `caff817`） | SkillsContent 类型 + scanSkills 解析 + skills/index.md 重组 + .page__header/.page__subtitle 工具类 + Skills.vue 重构 + Playwright +10 项断言 |
+| 验证 | ✅ 完成 | typecheck + build + Playwright 65/65 全过 |
+| Review | ✅ 完成 | Code Review（0 问题）+ Design Audit（P1 修复 + P2 记录）+ Performance Audit（0 问题） |
+| 文档更新 | ✅ 完成 | HANDOFF.md（执行规则调整 + RC4 状态）+ RELEASE_REVIEW_REPORT.md §21 |
+| Commit + Push | ⏳ 待执行 | 收尾 commit + 推送 origin/master |
+| RC4 Final Report | ⏳ 待输出 | 等待批准进入 RC5 |
+
+### 21.9 RC4 收尾修改文件清单（3 个）
+
+| 文件 | 类型 | 改动 |
+|---|---|---|
+| [src/pages/Skills.vue](src/pages/Skills.vue) | 修改 | P1 修复：L82 `--leading-relaxed` → `--leading-normal` |
+| [HANDOFF.md](HANDOFF.md) | 修改 | §0 SNAPSHOT + §1.7 + §2.5 + §六 + §七 反映 RC4 完成 + 执行规则调整 |
+| [RELEASE_REVIEW_REPORT.md](RELEASE_REVIEW_REPORT.md) | 修改 | 追加 §21 RC4 Final Review |
+
+### 21.10 约束遵守
+
+| 约束 | 状态 |
+|---|---|
+| 新增组件配额 ≤2 | ✅ RC4 未新增组件（剩余 1 个） |
+| 新增第三方依赖 | ✅ 0 |
+| 新增 Design Token / 颜色 / 字体 / 动画 | ✅ 0（P1 修复改用已有 Token，未新增） |
+| Markdown SSOT 保持 | ✅ skills/index.md 为唯一数据源 |
+| frontmatter 字段向后兼容 | ✅ subtitle + categories 均为可选 |
+| 隐私扫描 | ✅ 0 手机号 / 0 真实密钥 |
+| 外科手术式修改 | ✅ 仅触碰必要文件 |
+| FROZEN INVENTORY | ✅ 未违反任何冻结项 |
+
+### 21.11 待用户批准事项
+
+1. **是否批准 RC4 Final Review 通过**？
+2. **是否立即 commit + 推送 origin/master**？（RC4~RC7 不发新版本，仅推送 origin）
+3. **是否进入 RC5（Resume 深化）**？
+
+### 21.12 下一步
+
+**等待用户批准 RC4 Final Review 后**：
+1. Git commit RC4 收尾改动（3 个文件：Skills.vue P1 修复 + HANDOFF.md + RELEASE_REVIEW_REPORT.md）
+2. 推送 origin/master
+3. 输出 RC4 Final Report
+4. 等待批准进入 RC5（Resume 深化）
+
+**RC4 Final Review 结束。等待用户批准。**

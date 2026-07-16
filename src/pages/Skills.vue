@@ -79,7 +79,7 @@ import MarkdownContent from '@/components/project/MarkdownContent.vue'
 .skills__category-items {
   font-size: var(--text-sm);
   color: var(--color-text-primary);
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-normal);
 }
 
 @media (min-width: 768px) {

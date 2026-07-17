@@ -18,6 +18,8 @@ export interface TimelineStage {
   capability: string
   /** 是否为未来计划阶段 */
   upcoming?: boolean
+  /** Phase 4: 是否为主项目（放大 1.2x 强调），可选字段，向后兼容（READINESS §3.6/§4.5） */
+  isMainProject?: boolean
 }
 
 /** virtual:timeline-content 导出形状 */

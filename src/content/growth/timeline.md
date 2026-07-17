@@ -37,6 +37,7 @@ stages:
     learned: "并发控制（二阶分布式锁）、形式化状态机、可观测性、企业级开发流程"
     nextStage: "实习结束，回归学术，准备考研"
     capability: "从单机 → 分布式；从个人 → 企业工程"
+    isMainProject: true
   - date: "下一步"
     title: "持续学习"
     stack: "持续学习中"

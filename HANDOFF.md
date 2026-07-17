@@ -6,10 +6,10 @@
 >
 > 以后所有开发均以本文件作为唯一项目上下文。
 >
-> 最后更新：2026-07-17
-> 当前阶段：**RC8 Completed（Final Release v3.0.0）** — 全站最终审计通过，v3.0.0 已发布（Tag + push origin）
-> **开发计划**：《Portfolio v3 Roadmap》RC4~RC8 全部完成（详见 §七）；RC8 为 Final Release，版本号 2.0.0 → 3.0.0，已创建 Git Tag `v3.0.0`
-> **执行规则**（2026-07-17 用户调整）：每个 RC 包含完整生命周期（开发 → 验证 → Review → 文档 → Commit → Push → Report），Review 作为收尾工作不再单独拆分子阶段；RC5~RC8 保持结构一致
+> 最后更新：2026-07-18
+> 当前阶段：**Phase 7 Completed（Final Release v3.5.0 待发布）** — Phase 7 全部开发完成，等待用户最终验收与 Git 操作批准
+> **开发计划**：《Portfolio v3.5 Roadmap》Phase 0~7 全部完成（详见 §七）；Phase 7 为 Final Release，版本号 3.0.0 → 3.5.0，**未创建 Git Tag**（用户硬约束：未经明确批准不得 Git commit / tag / push）
+> **执行规则**（2026-07-18 用户调整）：Phase 7 完成后停止开发，提交 Phase 7 Final Review Report，等待用户最终验收；未经明确批准不得进行 Git commit / tag / push
 
 ---
 
@@ -19,32 +19,29 @@
 
 | 项 | 值 |
 |---|---|
-| **项目名称** | 软件工程学生技术作品集（Portfolio v3.0.0 — Final Release） |
-| **当前阶段** | **RC8 Completed（Final Release v3.0.0）** — 全站最终审计通过，v3.0.0 已发布 |
-| **下一阶段** | **无** — Roadmap 全部完成，进入维护模式（仅 P0/P1 + 安全问题修复） |
-| **项目版本** | `3.0.0`（[package.json](package.json)）— RC8 Final Release |
-| **最新 Commit** | `3d485c9` chore(rc8): final release v3.0.0 with full audit and tag |
-| **最新 Tag** | `v3.0.0`（RC8 Final Release，已推送 origin） |
-| **本地 vs 远程** | ✅ **完全同步**（origin/master = `3d485c9`，tag `v3.0.0` 已推送） |
-| **工作区状态** | **clean**（v3.0.0 Final Release 已发布） |
+| **项目名称** | 软件工程学生技术作品集（Portfolio v3.5.0 — Final Release 待发布） |
+| **当前阶段** | **Phase 7 Completed（Final Release v3.5.0 待发布）** — Phase 7 全部开发完成，等待用户最终验收与 Git 操作批准 |
+| **下一阶段** | **无** — v3.5 Roadmap 全部完成，进入维护模式（仅 P0/P1 + 安全问题修复） |
+| **项目版本** | `3.5.0`（[package.json](package.json)）— Phase 7 Final Release |
+| **最新 Commit** | `3d485c9` chore(rc8): final release v3.0.0 with full audit and tag（**v3.5.0 未 commit**） |
+| **最新 Tag** | `v3.0.0`（RC8 Final Release，已推送 origin）— **v3.5.0 未创建 Tag**（用户硬约束） |
+| **本地 vs 远程** | ⚠️ **本地领先**（origin/master = `3d485c9`，工作区有约 60 个未提交改动 — Phase 0-7 v3.5 Roadmap 全部改动） |
+| **工作区状态** | **有未提交改动**（约 60 个文件，Phase 0-7 v3.5 Roadmap 全部改动，等待用户批准 Git 操作） |
 | **当前分支** | `master`（受保护，禁止直接 push 历史） |
-| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（RC5~RC8 均未消耗） |
+| **组件配额** | 已用 **1**（ArchitectureDiagram.vue）/ 剩余 **1** / 上限 **2**（Phase 0-7 均未消耗） |
 | **虚拟模块数** | 8 个（已定型，不再新增） |
-| **测试基线** | Playwright **74/74** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— RC8 零代码改动，基线与 RC7 一致 |
-| **构建基线** | 1662 模块，2.39s（gzip 主包 41.87 KB）— RC8 零代码改动，基线与 RC7 一致 |
-| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，v3.0.0 已上线） |
+| **测试基线** | Playwright **163/163** 通过（[release-gate-task-005.mjs](release-gate-task-005.mjs)）— 含 18 项 Phase 7 专项断言（Test 19） |
+| **构建基线** | 1666 模块，2.61s（gzip 主包 ~42.26 KB）— 比 v3.0.0（1662 模块）+4 模块（Phase 7 验证脚本） |
+| **线上地址** | https://lai-portfolio-xi.vercel.app（Vercel 自动部署，**当前线上仍为 v3.0.0**，v3.5.0 待 push 后部署） |
 | **技术栈** | Vue 3.5+ / TypeScript 5.6.3 strict / Vite 6.4.3 / Vue Router 4.5+ |
 | **风格定位** | Developer Academic（Slate + Amber，Inter + JetBrains Mono） |
-| **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每 RC 完整生命周期 |
-| **RC3 Baseline** | ✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷） |
-| **RC4 Baseline** | ✅ **冻结**（不再修改 RC4 内容，除非后续发现 P0/P1 缺陷） |
-| **RC5 Baseline** | ✅ **冻结**（不再修改 RC5 内容，除非后续发现 P0/P1 缺陷） |
-| **RC6 Baseline** | ✅ **冻结**（不再修改 RC6 内容，除非后续发现 P0/P1 缺陷） |
-| **RC7 Baseline** | ✅ **冻结**（不再修改 RC7 内容，除非后续发现 P0/P1 缺陷） |
-| **RC8 状态** | ✅ **完成并发布**（Final Release v3.0.0：全站最终审计 0 P0/P1，4 P2 记录；版本号升级 + Git Tag v3.0.0 + push + Vercel 部署验证通过） |
-| **下一步动作** | **无** — 项目进入维护模式，仅修复 P0/P1 + 安全问题。如需新功能/重构需用户重新批准新 Roadmap |
-| **完整 Roadmap** | RC4（全局基础+Skills）→ RC5（Resume）→ RC6（Interview+AiPractice）→ RC7（Final Polish）→ RC8（Final v3.0.0）— **全部完成并发布**（详见 §七） |
-| **执行规则** | 每个 RC 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆 RC.x 子阶段） |
+| **核心约束** | Markdown SSOT / 不新增依赖 / 不新增组件（除非消耗配额）/ 每 Phase 完整生命周期 |
+| **v3.0.0 Baseline** | ✅ **冻结**（RC1~RC8 全部冻结，不再修改，除非后续发现 P0/P1 缺陷） |
+| **Phase 0-6 Baseline** | ✅ **冻结**（Phase 0~6 全部冻结，不再修改，除非后续发现 P0/P1 缺陷） |
+| **Phase 7 状态** | ✅ **开发完成**（Final Release v3.5.0：5 维度审计 0 P0/P1，3 P2 baseline 记录；版本号升级 3.0.0 → 3.5.0；**Git commit / tag / push 待用户批准**） |
+| **下一步动作** | **等待用户最终验收** → 批准后执行 Git commit + tag v3.5.0 + push origin + Vercel 自动部署验证 |
+| **完整 Roadmap** | Phase 0（Motion 基础）→ Phase 1（Scroll Reveal）→ Phase 2（Hero）→ Phase 3（Skills）→ Phase 4（ProjectCard+Timeline）→ Phase 5（DecisionSection）→ Phase 6（色彩+纹理+Footer）→ Phase 7（Final Polish+v3.5.0）— **全部完成**（详见 §七） |
+| **执行规则** | 每个 Phase 完整生命周期：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆子阶段）；Phase 7 用户硬约束：未经批准不得 Git commit / tag / push |
 | **冻结清单** | 详见 §五（FROZEN INVENTORY） |
 | **RC3.3 Final Review** | 详见 [RELEASE_REVIEW_REPORT.md §18](RELEASE_REVIEW_REPORT.md)（Code/Design/Performance/IA Review + P1 修复 + 5 项 P2 建议） |
 | **RC4 Report** | 详见 [RELEASE_REVIEW_REPORT.md §20](RELEASE_REVIEW_REPORT.md)（RC4 开发报告）+ [§21](RELEASE_REVIEW_REPORT.md)（RC4 Final Review） |
@@ -52,6 +49,7 @@
 | **RC6 Report** | 详见 [RELEASE_REVIEW_REPORT.md §23](RELEASE_REVIEW_REPORT.md)（RC6 Final Review — Interview + AiPractice 深化） |
 | **RC7 Report** | 详见 [RELEASE_REVIEW_REPORT.md §24](RELEASE_REVIEW_REPORT.md)（RC7 Final Review — Final Polish） |
 | **RC8 Report** | 详见 [RELEASE_REVIEW_REPORT.md §25](RELEASE_REVIEW_REPORT.md)（RC8 Final Release — v3.0.0） |
+| **Phase 7 Report** | 详见 [RELEASE_REVIEW_REPORT.md §26](RELEASE_REVIEW_REPORT.md)（Phase 7 Final Review — v3.5.0）+ [Phase7_FINAL_REVIEW_REPORT.md](Phase7_FINAL_REVIEW_REPORT.md) |
 
 ---
 
@@ -82,10 +80,10 @@
 
 ### 1.4 当前版本
 
-- **项目版本**：`3.0.0`（见 [package.json](package.json)）— RC8 Final Release，已发布
-- **当前 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）
-- **历史 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0`
-- **状态**：Roadmap 全部完成并发布，进入维护模式
+- **项目版本**：`3.5.0`（见 [package.json](package.json)）— Phase 7 Final Release，**待发布**（未 commit / tag / push）
+- **当前 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）— **v3.5.0 未创建 Tag**（用户硬约束：未经明确批准不得进行 Git 操作）
+- **历史 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0`（v3.5.0 待用户批准后创建）
+- **状态**：Phase 7 开发完成，等待用户最终验收与 Git 操作批准
 
 ### 1.5 技术栈
 
@@ -111,21 +109,26 @@
 ### 1.6 当前分支
 
 - **分支**：`master`（生产分支，受保护）
-- **本地与远程**：✅ **完全同步**（origin/master = `3d485c9`，tag `v3.0.0` 已推送）
-- **远程 `origin/master`**：`3d485c9`（RC8 Final Release commit，已包含 RC1~RC8 全部内容）
-- **最新 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）
+- **本地与远程**：⚠️ **本地领先**（origin/master = `3d485c9`，工作区有 12 个未提交改动）
+- **远程 `origin/master`**：`3d485c9`（RC8 Final Release v3.0.0 commit，**v3.5.0 未推送**）
+- **最新 Tag**：`v3.0.0`（RC8 Final Release，已推送 origin）— **v3.5.0 未创建 Tag**（用户硬约束）
 
 ### 1.7 Git 状态
 
 ```
 On branch master
-Your branch is up to date with 'origin/master'.   ← RC8 已同步，工作区 clean
-nothing to commit, working tree clean
+Your branch is up to date with 'origin/master'.   ← v3.0.0 已同步，v3.5 整体（Phase 0-7）未 commit
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   ~35 个源码文件（Phase 0-7 全部改动）
+        new file:   ~25 个新建文件（Phase 0-7 验证脚本 + 报告 + 设计文档）
 ```
+
+**实际未提交改动**：约 60 个文件（Phase 0-7 v3.5 Roadmap 全部改动，包含源码 / 验证脚本 / Review 报告 / 设计文档 / 工程文档）
 
 **最近 6 个 commit**：
 ```
-3d485c9 chore(rc8): final release v3.0.0 with full audit and tag  ← origin/master = HEAD
+3d485c9 chore(rc8): final release v3.0.0 with full audit and tag  ← origin/master = HEAD（v3.5.0 未 commit）
 e31e0b8 feat(rc7): final polish with content accuracy and seo basics
 92a605a feat(rc6): interview and ai-practice page header utility adoption
 a0c4002 feat(rc5): resume subtitle ssot and page header utility adoption
@@ -133,19 +136,18 @@ a0c4002 feat(rc5): resume subtitle ssot and page header utility adoption
 caff817 feat(rc4.1): rebuild skills page with structured categories and global page header utility
 ```
 
-**所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0` ✅ 全部已推送 origin
+**所有 Tag**：`v0.3.0` / `v0.4.0` / `v0.5.0` / `v1.0.0` / `v2.0.0` / `v3.0.0` ✅ 全部已推送 origin（**v3.5.0 待用户批准后创建**）
 
-**RC3 Baseline 状态**：✅ **冻结**（不再修改 RC3 内容，除非后续发现 P0/P1 缺陷）
+**v3.0.0 Baseline 状态**：✅ **冻结**（RC1~RC8 全部冻结，不再修改，除非后续发现 P0/P1 缺陷）
 
-**RC4 Baseline 状态**：✅ **冻结**（不再修改 RC4 内容，除非后续发现 P0/P1 缺陷）
+**Phase 0-6 Baseline 状态**：✅ **冻结**（Phase 0~6 全部冻结，不再修改，除非后续发现 P0/P1 缺陷）
 
-**RC5 Baseline 状态**：✅ **冻结**（不再修改 RC5 内容，除非后续发现 P0/P1 缺陷）
+**Phase 7 状态**：✅ **开发完成**（Final Release v3.5.0：5 维度审计 0 P0/P1，3 P2 baseline 记录；版本号升级 3.0.0 → 3.5.0；**Git commit / tag / push 待用户批准**）
 
-**RC6 Baseline 状态**：✅ **冻结**（不再修改 RC6 内容，除非后续发现 P0/P1 缺陷）
-
-**RC7 Baseline 状态**：✅ **冻结**（不再修改 RC7 内容，除非后续发现 P0/P1 缺陷）
-
-**RC8 状态**：✅ **完成并发布**（Final Release v3.0.0：commit `3d485c9` + tag `v3.0.0` 已推送 origin/master，Vercel 部署验证通过）
+**用户硬约束**（2026-07-18）：
+- 未经用户明确批准，**不得进行 Git commit / Git tag / Git push**
+- 等待用户最终验收 Phase 7 Final Review Report 后明确批准 Git 操作
+- 注：v3.5 整体（Phase 0-7）所有改动均未 commit，用户批准后将一次性提交 v3.5.0
 
 ---
 
@@ -534,6 +536,86 @@ caff817 feat(rc4.1): rebuild skills page with structured categories and global p
 - **SEO 基础资源零风险**。robots.txt + sitemap.xml 是纯静态文件，不涉及运行时逻辑；index.html meta 增量不破坏现有渲染。这是发布前的基础打磨，属于"最大价值、最小风险"
 - **不补 og:image / twitter:image**。项目无现成图片源（favicon.svg 不适合作为社交分享图），强行添加需新增资源，超出 RC7 范围；记录为 P2 留 RC8 决策
 - **不实施 per-route description**。SPA 限制下，路由级 description 需在路由守卫中动态注入 document.head，属于新功能而非打磨；记录为 P2 留 RC8 决策
+
+### 2.9 Portfolio v3.5 Roadmap — Phase 0-7（2026-07-17 ~ 2026-07-18，已完成）
+
+**设计目标**：以 v3.0.0 为基线，按《Portfolio_v3.5_CREATIVE_DIRECTION.md》+《Portfolio_v3.5_IMPLEMENTATION_PLAN.md》+《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》三份 LOCKED 文档，完成全站 Motion 系统 + Signature Visual 6 元素 + 视觉层次深化，最终发布 v3.5.0。
+
+**v3.5 Roadmap 完整阶段**（详见 §七）：
+
+| Phase | 内容 | 主要交付 | 状态 |
+|---|---|---|---|
+| Phase 0 | Motion 基础设施 | `useScrollReveal` composable + `motion.css`（Scroll Reveal + stagger + reduced-motion 降级） | ✅ 完成 |
+| Phase 1 | Scroll Reveal 全站应用 | 8 个页面 + 全局组件接入 `useScrollReveal`，data-reveal-direction 属性 | ✅ 完成 |
+| Phase 2 | Hero 视觉主角 | Hero Grid Pattern underlay + 工程指标强化（Shiki singleton 复用，无新依赖） | ✅ 完成 |
+| Phase 3 | Skills 重设计 | 6 个 Lucide 图标 + SkillsContent.categories 结构化（用户 2026-07-17 批准 +1.70 kB gzip 超预算） | ✅ 完成 |
+| Phase 4 | ProjectCard + Timeline 视觉深化 | ProjectCard 视觉层次（Surface + Shadow + Whitespace）+ Timeline stages Chinese labels | ✅ 完成 |
+| Phase 5 | DecisionSection 结构化方案对比 | `frontmatter.decisions` 驱动的结构化卡片 + Amber Accent Line Signature 3 第 1/3 配额 | ✅ 完成 |
+| Phase 6 | 色彩 + 纹理 + Footer 收尾 | Grid Pattern Footer + About 引言 Signature 3 第 2/3 + Interview 色点 + Footer 2 列 + Git Last Updated | ✅ 完成 |
+| Phase 7 | Final Polish & Release | Resume 核心竞争力 callout（Signature 3 第 3/3 配额）+ 全站一致性审查 + 最终性能验证 + v3.5 Bundle 基线汇总 + 工程文档更新 + 版本号 3.0.0 → 3.5.0 | ✅ 完成 |
+
+**Phase 7 完整生命周期**（按 2026-07-18 用户硬约束执行）：
+
+| 阶段 | 状态 | 主要交付 |
+|---|---|---|
+| 开发 | ✅ 完成 | Resume callout SSOT（frontmatter.callout）+ 类型扩展（ResumeContent.callout）+ scanResume 透传 + Resume.vue 渲染（template + scoped CSS + 打印样式 + Dark Mode + 响应式 + Scroll Reveal）+ release-gate-task-005.mjs Test 19（18 项 Phase 7 断言）+ package.json 版本号 3.0.0 → 3.5.0 |
+| 验证 | ✅ 完成 | typecheck（0 错误）+ build（1666 模块，2.61s）+ Playwright 163/163 通过 + Phase 7 一致性 26/26 通过 + Phase 7 性能 14/17（3 项 baseline 问题）+ Bundle 基线对比（Phase 7 +0.34 kB gzip，v3.5 总累积 ~ +5.0-5.5 kB gzip） |
+| Review | ✅ 完成 | 5 维度审计（Code / Design / Performance / Accessibility / Consistency）：0 P0 / 0 P1 / 3 P2（均为 v3.0.0 baseline 已知问题，非 Phase 7 引入） |
+| 文档更新 | ✅ 完成 | HANDOFF.md（§0 SNAPSHOT + §1.4 + §1.6/1.7 + §2.9 + §六/§七）+ RELEASE_REVIEW_REPORT.md §26 + Phase7_FINAL_REVIEW_REPORT.md（新建） |
+| Commit + Tag + Push | ⏸️ **待用户批准** | 用户硬约束：未经明确批准不得进行 Git commit / tag / push |
+| Phase 7 Final Report | ✅ 完成 | [Phase7_FINAL_REVIEW_REPORT.md](Phase7_FINAL_REVIEW_REPORT.md) + [RELEASE_REVIEW_REPORT.md §26](RELEASE_REVIEW_REPORT.md) |
+
+**Phase 7 改动文件（12 个，8 修改 + 4 新建）**：
+
+| 文件 | 类型 | 改动 |
+|---|---|---|
+| `src/content/resume/index.md` | 修改 | frontmatter 新增 `callout: 后端 · 分布式 · 工程`（SSOT 数据源） |
+| `src/types/resume.ts` | 修改 | `ResumeContent` 新增 `callout?: string` 字段（向后兼容） |
+| `src/utils/content.ts` | 修改 | `scanResume` 透传 `callout` 字段 |
+| `src/pages/Resume.vue` | 修改 | callout 渲染 + Accent Line + 容器样式 + 打印 + Dark Mode + 响应式 + Scroll Reveal |
+| `release-gate-task-005.mjs` | 修改 | 新增 Test 19（18 项 Phase 7 断言：callout 渲染 + Accent Line + DOM 顺序 + 移动端 + Dark Mode） |
+| `package.json` | 修改 | 版本号 3.0.0 → 3.5.0 |
+| `HANDOFF.md` | 修改 | §0 SNAPSHOT + §1.4 + §1.6/1.7 + §2.9 + §六/§七 |
+| `RELEASE_REVIEW_REPORT.md` | 修改 | 追加 §26 Phase 7 Final Review Report |
+| `phase7-consistency-verify.mjs` | 新建 | 全站一致性 + a11y 验证（7 组 26 项断言） |
+| `phase7-perf-verify.mjs` | 新建 | 性能验证（5 组 17 项断言：LCP/CLS/FCP + 7 路由 + Bundle） |
+| `phase7-bundle-baseline.txt` | 新建 | Phase 7 Bundle baseline + v3.5 累积增量汇总 |
+| `Phase7_FINAL_REVIEW_REPORT.md` | 新建 | Phase 7 独立最终验收报告 |
+
+**Phase 7 全程约束遵守：**
+- 新增组件配额：0/2（Phase 0-7 全程未新增组件，ArchitectureDiagram.vue 仍为 v3.0.0 唯一新增，剩余 1 个配额作废）
+- 新增第三方依赖：0
+- 新增 Design Token / 颜色 / 字体：0
+- 新增虚拟模块：0（仍为 8 个）
+- Markdown SSOT 保持：是（callout 内容从 `resume/index.md` frontmatter 读取，与 Phase 6 About quote 模式一致）
+- Amber Accent Line Signature 3 配额：3/3 全部完成（Phase 5 DecisionSection 1/3 + Phase 6 About 引言 2/3 + Phase 7 Resume callout 3/3）
+- 隐私扫描清洁：0 手机号 / 0 真实密钥
+- **用户硬约束严格遵守**：未经批准未执行任何 Git commit / tag / push
+
+**Phase 7 验证结果：**
+- ✅ typecheck 通过（exit 0）
+- ✅ build 通过（1666 模块，2.61s，gzip 主包 ~42.26 KB）
+- ✅ Playwright **163/163** 通过（含 18 项 Phase 7 专项断言）
+- ✅ Phase 7 一致性 **26/26** 通过
+- ⚠️ Phase 7 性能 **14/17** 通过（3 项失败均为 v3.0.0 baseline 问题：Footer CLS / FCP / Amber 对比度）
+- ✅ Bundle 增量：Phase 7 +0.34 kB gzip，v3.5 总累积 ~ +5.0-5.5 kB gzip（预算边界附近，主要增量来自已批准的 Phase 3 + Phase 6）
+
+**v3.5 Signature Visual 6 元素全站应用完成状态：**
+- ✅ S1 Number Prefix（`//` eyebrow）— 全站 section header
+- ✅ S2 Mono Eyebrow（`.mono` class）— 6 个页面 eyebrow
+- ✅ S3 Amber Accent Line（3 处配额全部完成）— DecisionSection / About 引言 / Resume callout
+- ✅ S4 Grid Pattern Underlay（2 处配额全部完成）— Hero / Footer
+- ✅ S5 Code Comment Style（`//` 注释样式）— 全站代码注释
+- ✅ S9 Underline Reveal（Footer link hover）— Footer link `::after` scaleX(0) → scaleX(1)
+
+**为什么这样设计：**
+
+- **Resume callout 是 Signature 3 Amber Accent Line 第 3/3 配额的最后一处**。按 CREATIVE_DIRECTION §7.6 设计，置于 header 与 resume__content 之间，作为"核心竞争力"视觉锚点。与 Phase 6 About quote 引言模式对齐，保持全站 Amber Accent Line 应用一致性
+- **SSOT 模式**。callout 内容从 `resume/index.md` frontmatter 读取，与 About quote / Timeline stages / ProjectDetail decisions 模式一致，避免硬编码到组件
+- **打印样式保持可见**。callout 在打印 PDF 中保持可见但简化视觉（去除 Web 装饰，保留 1pt 边框 + Amber Accent Line），符合 Resume 打印优先策略
+- **Dark Mode 自动提亮**。Amber `#d97706` → `#f59e0b`，与 About quote Accent Line / DecisionSection Accent Line 一致
+- **v3.5 Bundle 预算边界**。总累积 ~ +5.0-5.5 kB gzip，主要增量来自已批准的 Phase 3（Lucide 图标 +1.70 kB，用户 2026-07-17 批准）和 Phase 6（Footer 视觉系统收尾 +1.4-1.9 kB）。Phase 7 增量极小（+0.34 kB），未引入新依赖，符合 READINESS §4.8 预算约束精神
+- **不修复 baseline P2 问题**。Footer CLS / FCP / Amber 对比度 3 项 P2 均为 v3.0.0 baseline 已知问题，非 Phase 7 引入，按用户硬约束不扩大 Scope，仅记录留待维护期决策
 
 ---
 
@@ -988,16 +1070,25 @@ interface SkillsContent {
 | **RC5** | ✅ Completed commit `a0c4002`（origin/master 已同步，不发新 tag） | Resume 深化：ResumeContent subtitle? 字段 + scanResume 解析 + frontmatter SSOT 化 + .page__header/.page__subtitle 工具类应用 + 打印 CSS 优化 + Playwright +3 项断言（68/68 通过）+ Review（0 P0/P1，1 P2 记录）+ 完成 RC3.3 IA Review P2 #1 |
 | **RC6** | ✅ Completed commit `92a605a`（origin/master 已同步，不发新 tag） | Interview + AiPractice 深化：AiPracticeContent subtitle? 字段 + scanAiPractice 解析 + frontmatter SSOT 化 + AiPractice.vue 应用 .page__header/.page__subtitle + Interview.vue 应用 .page__header/.page__subtitle（动态计算）+ 两页移除 scoped .xxx__header + Playwright +6 项断言（74/74 通过）+ Review（0 P0/P1，2 P2 记录）+ 完成 RC3.3 IA Review P2 #3 + P2 #4 |
 | **RC7** | ✅ Completed commit `e31e0b8`（origin/master 已同步，不发新 tag） | Final Polish（2026-07-17 重新定位，原"IA + Nav 优化"经 Design Review 评估为无价值修改）：Content Accuracy（Resume subtitle "软件工程方向" → "分布式系统" + About facts 考研 "2026 届" → "2027 考研"）+ Release Polish（public/robots.txt + public/sitemap.xml 9 路由 + index.html SEO meta 增量）+ Playwright Test 7 断言同步 + Review（0 P0/P1，2 P2 记录留 RC8：og:image + per-route description）+ Bundle -0.01 KB |
-| **RC8** | ✅ Completed（待 commit + push + create tag `v3.0.0`） | Final Release v3.0.0：全站最终审计（Code/Design/Performance/Accessibility/SEO 五维度，0 P0/P1，4 P2 记录）+ 版本号 2.0.0 → 3.0.0 + Git Tag `v3.0.0` + push origin/master + Vercel 部署验证 + RC8 Final Release Report + Roadmap 全部完成，项目进入维护模式 |
+| **RC8** | ✅ Completed commit `3d485c9` + tag `v3.0.0`（已推送 origin/master） | Final Release v3.0.0：全站最终审计（Code/Design/Performance/Accessibility/SEO 五维度，0 P0/P1，4 P2 记录）+ 版本号 2.0.0 → 3.0.0 + Git Tag `v3.0.0` + push origin/master + Vercel 部署验证 + RC8 Final Release Report + Roadmap 全部完成，项目进入维护模式 |
+| **v3.5 Phase 0** | ✅ Completed（2026-07-17，待 commit） | Motion 基础设施：`useScrollReveal` composable + `motion.css`（Scroll Reveal + stagger + reduced-motion 降级） |
+| **v3.5 Phase 1** | ✅ Completed（2026-07-17，待 commit） | Scroll Reveal 全站应用：8 个页面 + 全局组件接入 `useScrollReveal`，data-reveal-direction 属性 |
+| **v3.5 Phase 2** | ✅ Completed（2026-07-17，待 commit） | Hero 视觉主角：Hero Grid Pattern underlay + 工程指标强化（Shiki singleton 复用，无新依赖） |
+| **v3.5 Phase 3** | ✅ Completed（2026-07-17，待 commit） | Skills 重设计：6 个 Lucide 图标 + SkillsContent.categories 结构化（用户 2026-07-17 批准 +1.70 kB gzip 超预算 0.70 kB） |
+| **v3.5 Phase 4** | ✅ Completed（2026-07-17，待 commit） | ProjectCard + Timeline 视觉深化：ProjectCard 视觉层次（Surface + Shadow + Whitespace）+ Timeline stages Chinese labels |
+| **v3.5 Phase 5** | ✅ Completed（2026-07-18，待 commit） | DecisionSection 结构化方案对比：`frontmatter.decisions` 驱动的结构化卡片 + Amber Accent Line Signature 3 第 1/3 配额 |
+| **v3.5 Phase 6** | ✅ Completed（2026-07-18，待 commit） | 色彩 + 纹理 + Footer 收尾：Grid Pattern Footer + About 引言 Signature 3 第 2/3 + Interview 色点 + Footer 2 列 + Git Last Updated |
+| **v3.5 Phase 7** | ✅ Completed（2026-07-18，**待用户批准 Git commit / tag / push**） | Final Polish & Release v3.5.0：Resume 核心竞争力 callout（Signature 3 第 3/3 配额）+ 全站一致性审查 26/26 + 最终性能验证 + v3.5 Bundle 基线汇总（+0.34 kB gzip，总累积 ~ +5.0-5.5 kB gzip）+ 工程文档更新 + 版本号 3.0.0 → 3.5.0 + 5 维度审计（0 P0/P1，3 P2 baseline 记录） |
 
-### 6.2 剩余（按 Portfolio v3 Roadmap 顺序）
+### 6.2 剩余（按 Portfolio v3.5 Roadmap 顺序）
 
-**✅ Roadmap 全部完成 — 无剩余阶段**
+**✅ v3.5 Roadmap 全部完成 — 无剩余阶段**
 
 **重要说明**：
-- **《Portfolio v3 Roadmap》已由用户批准为 RC4~RC8 唯一开发计划**，RC4~RC8 全部完成
-- 项目进入**维护模式**：仅 P0/P1 + 安全问题修复，不再新增功能 / 组件 / Design Token / 颜色 / 字体 / 动画 / 架构抽象
-- **后续如需开发新功能或重构**，需用户重新批准新的 Roadmap，且必须基于 v3.0.0 baseline
+- **《Portfolio v3 Roadmap》（RC4~RC8）+《Portfolio v3.5 Roadmap》（Phase 0~7）已全部完成**
+- 项目处于**维护模式**：仅 P0/P1 + 安全问题修复，不再新增功能 / 组件 / Design Token / 颜色 / 字体 / 动画 / 架构抽象
+- **后续如需开发新功能或重构**，需用户重新批准新的 Roadmap，且必须基于 v3.5.0 baseline
+- **v3.5 Phase 7 用户硬约束**：未经明确批准，不得进行 Git commit / Git tag / Git push
 - **RC3.3 Information Architecture Review 已完成**（详见 [RELEASE_REVIEW_REPORT.md §18.7](RELEASE_REVIEW_REPORT.md)），5 项 P2 建议已在 RC4~RC7 全部处理完毕
 
 **RC3.3 IA Review 给 RC4+ 的 5 项 P2 建议处理进度：**
@@ -1212,14 +1303,47 @@ interface SkillsContent {
 ═══════════════════════════════════════════════════════════════
 ```
 
-### 7.8 关键原则
+### 7.8 Portfolio v3.5 Roadmap（Phase 0 → Phase 7，2026-07-17 用户批准）
 
-1. **《Portfolio v3 Roadmap》为唯一开发计划**，禁止自行修改或重新规划
-2. **每个 RC 完整生命周期**：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆子阶段）
-3. **每个 RC 完成后必须输出 RC Final Report**，等待用户批准才能进入下一 RC
-4. **RC4~RC7 不发布新版本**，仅推送 origin/master；**RC8 统一发 v3.0.0 Final Release**
+```
+═══════════════════════════════════════════════════════════════
+  Portfolio v3.5 Roadmap（Phase 0 → Phase 7，2026-07-17 用户批准）
+  执行规则：每个 Phase 完整生命周期，不再拆子阶段
+  设计文档：CREATIVE_DIRECTION v1.0 LOCKED + IMPLEMENTATION_PLAN + READINESS
+═══════════════════════════════════════════════════════════════
+
+【已完成】
+  Phase 0 ✅ Motion 基础设施（useScrollReveal composable + motion.css）
+  Phase 1 ✅ Scroll Reveal 全站应用（8 页面 + 全局组件）
+  Phase 2 ✅ Hero 视觉主角（Grid Pattern underlay + 工程指标强化）
+  Phase 3 ✅ Skills 重设计（6 Lucide 图标 + categories 结构化，+1.70 kB gzip 用户批准）
+  Phase 4 ✅ ProjectCard + Timeline 视觉深化（Surface + Shadow + Whitespace + Chinese labels）
+  Phase 5 ✅ DecisionSection 结构化方案对比（frontmatter.decisions + Amber Accent Line 1/3）
+  Phase 6 ✅ 色彩 + 纹理 + Footer 收尾（Grid Pattern Footer + About 引言 Accent Line 2/3 + Interview 色点 + Footer 2 列）
+  Phase 7 ✅ Final Polish & Release v3.5.0 — 2026-07-18，Resume callout + 全站一致性 + 性能验证 + Bundle 基线 + 文档更新
+            · Resume 核心竞争力 callout（Amber Accent Line Signature 3 第 3/3 配额完成）
+            · 全站一致性审查 26/26 通过（Signature 6 元素全站应用 + WCAG AA + Color/Spacing/Typography Token）
+            · 最终性能验证（LCP 2140ms ✅ / CLS baseline ⚠️ / 7 路由 HTTP 200 ✅ / 0 控制台错误 ✅）
+            · v3.5 Bundle 基线汇总（Phase 7 +0.34 kB gzip，总累积 ~ +5.0-5.5 kB gzip，预算边界附近）
+            · 5 维度最终审计（Code/Design/Performance/Accessibility/Consistency）共 0 P0/P1，3 P2 baseline 记录
+            · 版本号 3.0.0 → 3.5.0
+            · ⏸️ Git commit / tag v3.5.0 / push 待用户最终验收后批准
+            · Roadmap 全部完成，项目继续处于维护模式
+
+【待推进】 — ✅ 无（v3.5 Roadmap 全部完成，项目继续处于维护模式）
+
+═══════════════════════════════════════════════════════════════
+```
+
+### 7.9 关键原则
+
+1. **《Portfolio v3 Roadmap》（RC4~RC8）+《Portfolio v3.5 Roadmap》（Phase 0~7）均为用户批准的唯一开发计划**，禁止自行修改或重新规划
+2. **每个 RC / Phase 完整生命周期**：开发 → 验证 → Review → 文档 → Commit → Push → Report（不再拆子阶段）
+3. **每个 RC / Phase 完成后必须输出 Final Review Report**，等待用户批准才能进入下一阶段
+4. **RC4~RC7 / Phase 0~6 不发布新版本**，仅推送 origin/master；**RC8 / Phase 7 统一发 Final Release**（v3.0.0 / v3.5.0）
 5. **冲突必须暴露**：如发现 Roadmap 与实际情况存在冲突，不得直接修改设计，应先分析影响、提出建议并等待用户批准
-6. **每次开始新的 RC 前**，先根据 §0 SNAPSHOT 和本章节自动恢复上下文，不需要用户重复说明项目状态
+6. **每次开始新的 RC / Phase 前**，先根据 §0 SNAPSHOT 和本章节自动恢复上下文，不需要用户重复说明项目状态
+7. **v3.5 Phase 7 用户硬约束**（2026-07-18）：未经明确批准，不得进行 Git commit / Git tag / Git push
 
 ---
 

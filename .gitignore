@@ -21,3 +21,6 @@ debug.log
 
 # 早期临时测试脚本（已被 release-gate-task-00X.mjs 替代）
 release-gate-test.mjs
+
+# TypeScript 增量构建缓存（tsconfig.json incremental: true 生成，不提交）
+*.tsbuildinfo

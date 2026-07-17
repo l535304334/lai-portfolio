@@ -158,3 +158,71 @@ section[id] {
   margin-top: var(--space-2);
   max-width: 36rem;
 }
+
+/* ===== Micro-interaction 工具类（v3.5 Phase 1 新增） =====
+ * 权威来源：《Portfolio_v3.5_IMPLEMENTATION_PLAN.md》§3 Motion System - Micro-interaction
+ * 复用现有 --transition-fast / --transition-normal / --color-accent / --ease-out Token
+ * 仅动画 compositor 友好属性（transform / opacity），禁止 layout 属性
+ */
+
+/* Link underline expand — 链接 hover 下划线从左展开
+ * 用于：ContactSection 链接、ProjectCard 查看详情链接
+ * 用法：<a class="link-underline">...</a>
+ */
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-fast) var(--ease-out);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Card accent line — 卡片 hover 左侧 accent 线条从上展开
+ * 用于：ProjectCard
+ * 用法：<article class="card card-accent">...</article>
+ * 注意：元素需 position: relative（工具类已包含）
+ */
+.card-accent {
+  position: relative;
+}
+
+.card-accent::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--transition-normal) var(--ease-out);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.card-accent:hover::before,
+.card-accent:focus-within::before {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-underline::after,
+  .card-accent::before {
+    transition: none;
+  }
+}

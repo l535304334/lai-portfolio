@@ -20,6 +20,76 @@ github: https://github.com/l535304334/jiangnan-travel
 status: Release 1.0 · 2026-07-08
 role: 全栈独立开发
 architecture: jiangnan-travel
+decisions:
+  - title: 并发控制方案选择
+    context: 多订单多司机同时竞争时，需保证一个司机不被重复分配
+    options:
+      - name: MySQL 行锁
+        description: 依赖数据库行级锁（SELECT ... FOR UPDATE）实现互斥
+        pros:
+          - 实现简单，无需引入新组件
+          - 强一致性由数据库保证
+        cons:
+          - 锁粒度粗，高并发下性能瓶颈明显
+          - 数据库压力集中，难以横向扩展
+          - 不支持跨服务锁场景
+      - name: Redis 分布式锁（Redisson 二阶锁）
+        description: order lock → driver tryLock 两阶段加锁，WatchDog 自动续期
+        pros:
+          - 锁粒度细，性能优秀
+          - WatchDog 自动续期防止业务超时
+          - tryLock 超时机制防止死锁
+          - 跨服务可用，支持微服务演进
+        cons:
+          - 引入 Redis 依赖，运维成本增加
+          - 锁后需重读 DB 防 ABA 问题
+        chosen: true
+    reasoning: 100 订单 × 20 司机并发压测零重复分配；二阶锁避免了"先锁订单后锁司机"的竞态；WatchDog 解决了业务执行时间不可预测的续期问题。
+  - title: 评分引擎策略选择
+    context: 防止高分司机垄断订单、低分司机永远接不到单的正反馈循环
+    options:
+      - name: 纯静态加权评分
+        description: 固定权重加权计算司机得分
+        pros:
+          - 实现简单，计算可预测
+          - 无状态，易水平扩展
+        cons:
+          - 无法适应实际运营反馈
+          - 容易形成正反馈循环
+      - name: 静态加权 + 动态反馈 + 时间衰减
+        description: 三层评分模型，动态调整权重并加入时间衰减因子
+        pros:
+          - 自适应运营反馈，5 轮收敛成功率 50%→70%
+          - 时间衰减有效打破高分垄断
+          - 接口驱动设计，评分策略可插拔
+        cons:
+          - 状态存储在内存（ConcurrentHashMap），重启丢失
+          - 实现复杂度较高
+        chosen: true
+    reasoning: 接口驱动设计（ScoringEngine 接口）让评分策略可插拔；时间衰减因子有效打破了"高分司机永远接单"的正反馈循环；记录为技术债务的是状态存储在内存重启丢失。
+  - title: 订单状态管理方案选择
+    context: 订单经历 8+ 状态变更，出问题后需在 30 秒内定位根因
+    options:
+      - name: 数据库状态字段
+        description: 直接用 status 字段记录订单状态，由业务代码控制转换
+        pros:
+          - 实现最简单
+          - 查询直接
+        cons:
+          - 状态转换规则分散在业务代码中，无法集中管理
+          - 非法路径难以防止
+          - 状态膨胀后维护混乱
+      - name: 枚举状态机
+        description: 10 状态 + 15+ 合法路径，枚举集中管理转换规则
+        pros:
+          - 状态转换规则集中管理，可在编译期/运行期拒绝非法路径
+          - 18 个单元测试覆盖全部合法/非法路径
+          - 便于审计与根因定位
+        cons:
+          - 状态机设计成本
+          - 新增状态需更新路径表
+        chosen: true
+    reasoning: 枚举集中管理使状态转换可审计；18 个单元测试覆盖全部合法/非法路径；结合关键操作留痕，可在 30 秒内回溯订单全生命周期定位根因。
 ---
 
 ## 项目背景

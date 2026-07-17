@@ -1,0 +1,174 @@
+/**
+ * Motion System — Developer Editorial
+ * 权威来源：
+ * - 《Portfolio_v3.5_CREATIVE_DIRECTION.md》§4 Motion Language
+ * - 《Portfolio_v3.5_IMPLEMENTATION_PLAN.md》§3 Motion System
+ * - 《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§7.2 Token 命名冲突缓解 / §7.6 fallback
+ *
+ * Phase 0：定义 Scroll Reveal 工具类 + reduced-motion 媒体查询
+ * Phase 1 修复：
+ *   - transition 持久性：将 transition 从 [data-reveal='ready'] 移到 [data-reveal]（持久选择器）
+ *     原 Phase 0 设计中，composable 移除 data-reveal 属性后 transition 一并消失，
+ *     元素会瞬间跳变而非动画过渡。改为 setAttribute('data-reveal','visible') 后，
+ *     [data-reveal] 始终匹配，transition 持续生效。
+ *   - Stagger Group 模式：用 CSS animation（非 transition）避免与组件 scoped transition 冲突。
+ *     v-for 子项（card / stat / fact）通常有 scoped transition（如 .card 的 transform/box-shadow），
+ *     transition shorthand 会覆盖全局 stagger transition。CSS animation 独立于 transition，无冲突。
+ *
+ * 工作原理：
+ * 1. 元素默认 opacity:1（无 JS 时可见，IntersectionObserver 失败 fallback）
+ * 2. useScrollReveal composable 在 onMounted 后设置 data-reveal="ready"
+ * 3. CSS 据此设置 opacity:0 + transform，准备入场动画
+ * 4. 元素进入视口后 composable 将 data-reveal 改为 "visible"，触发 transition/animation 回到 opacity:1
+ *
+ * Token 来源：tokens.css（单一来源），本文件仅消费 Token
+ */
+
+/* ===== Single Element Reveal（Transition-based）=====
+ * 适用于 section header / figure / 独立元素（无 scoped transition 冲突）
+ * [data-reveal] 持久选择器：transition 始终生效
+ * [data-reveal='ready'] 隐藏状态：opacity:0 + transform
+ * [data-reveal='visible'] 可见状态：移除隐藏，transition 触发
+ */
+
+/* 持久 transition（任何 data-reveal 值都生效） */
+[data-reveal] {
+  transition:
+    opacity var(--duration-reveal) var(--ease-out),
+    transform var(--duration-reveal) var(--ease-out);
+}
+
+/* 隐藏状态 + will-change（仅 ready 时预提示 compositor） */
+[data-reveal='ready'] {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* 入场方向变体 */
+[data-reveal='ready'][data-reveal-direction='up'] {
+  transform: translateY(16px);
+}
+
+[data-reveal='ready'][data-reveal-direction='down'] {
+  transform: translateY(-16px);
+}
+
+[data-reveal='ready'][data-reveal-direction='left'] {
+  transform: translateX(12px);
+}
+
+[data-reveal='ready'][data-reveal-direction='right'] {
+  transform: translateX(-12px);
+}
+
+/* ===== Stagger Group（Animation-based）=====
+ * 适用于 v-for 列表（card grid / stats / facts / timeline stages）
+ * 父元素：data-stagger-group + data-reveal（composable 管理）
+ * 子元素：data-stagger-index（0-5）
+ *
+ * 用 CSS animation 而非 transition：
+ * - v-for 子项通常有 scoped transition（.card / .skills__category 等）
+ * - transition shorthand 会覆盖全局 stagger transition，导致 opacity 无动画
+ * - CSS animation 独立于 transition，与组件 hover 效果无冲突
+ *
+ * 流程：
+ * 1. 父元素 data-reveal='ready' → 子元素 opacity:0 + transform（隐藏）
+ * 2. 父元素 data-reveal='visible' → 子元素 animation 触发（错峰入场）
+ * 3. animation both fill mode → 保持终态（opacity:1, transform:none）
+ */
+
+@keyframes staggerRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 子元素隐藏状态（仅当父元素为 ready） */
+[data-reveal='ready'][data-stagger-group] > [data-stagger-index] {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+
+/* 子元素入场动画（当父元素变为 visible）
+ *
+ * Phase 4 Hotfix (Pre-Phase5): animation-fill-mode 从 both 改为 backwards
+ *
+ * 根本原因（CSS Animations 规范）：
+ * - CSS Cascade 优先级：UA < User < Author（含 :hover）< Animations < !important
+ * - animation-fill-mode: both 在动画结束后持续应用 to 状态，
+ *   该状态仍处于 Animations cascade 层级，高于 Author 层级
+ * - staggerRevealUp 的 to: { transform: none } 持续应用，
+ *   覆盖 .card:hover { transform: translateY(-2px) }（Author 层级），
+ *   导致 ProjectCard hover lift 失效
+ *
+ * 修复方案：
+ * - fill-mode: backwards 只在 delay 期间应用 from 状态，动画结束后不应用 to 状态
+ * - 动画结束后元素回到 CSS 规则决定的默认状态：
+ *   opacity: 1（下方显式声明）+ transform: none（默认）
+ * - 由于不再有 Animations 层级的持续状态，:hover 可正常覆盖 transform
+ * - to 状态 = 默认状态，动画结束瞬间无视觉跳变
+ *
+ * 兼容性验证：
+ * - Scroll Reveal 入场视觉不变（from→to 插值与原方案一致）
+ * - stagger delay 仍通过 animation-delay 控制
+ * - reduced-motion 由 useScrollReveal composable 跳过 ready 状态（不触发 animation）
+ * - 不影响 .card scoped transition（motion.css 未设置 transition shorthand）
+ */
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index] {
+  animation: staggerRevealUp var(--duration-reveal) var(--ease-out) backwards;
+  opacity: 1; /* 显式声明终态，避免动画结束后依赖默认值，增强未来 keyframes 修改的稳健性 */
+}
+
+/* Stagger 延迟（通过 animation-delay 错峰） */
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='0'] {
+  animation-delay: 0ms;
+}
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='1'] {
+  animation-delay: var(--stagger-step);
+}
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='2'] {
+  animation-delay: calc(var(--stagger-step) * 2);
+}
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='3'] {
+  animation-delay: calc(var(--stagger-step) * 3);
+}
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='4'] {
+  animation-delay: calc(var(--stagger-step) * 4);
+}
+[data-reveal='visible'][data-stagger-group] > [data-stagger-index='5'] {
+  animation-delay: calc(var(--stagger-step) * 5);
+}
+
+/* ===== Reduced Motion =====
+ * 强制禁用所有 transform/opacity 动画
+ * ready 状态在 reduced-motion 下不隐藏（composable 也会跳过 ready 状态）
+ * 双重保障：composable 检查 + CSS 强制覆盖
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal='ready'] {
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  [data-reveal='ready'][data-stagger-group] > [data-stagger-index] {
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+}

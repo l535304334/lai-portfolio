@@ -2,6 +2,7 @@
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { projectDetails } from 'virtual:project-detail'
+import { useScrollReveal } from '@/composables/useScrollReveal'
 import ProjectHeader from '@/components/project/ProjectHeader.vue'
 import MetricCard from '@/components/project/MetricCard.vue'
 import MarkdownContent from '@/components/project/MarkdownContent.vue'
@@ -34,6 +35,10 @@ const next = computed(() => {
   return p ? { slug: p.slug, title: p.title } : undefined
 })
 
+// Phase 1: Scroll Reveal — project metrics stagger + content reveal
+const { target: projectMetrics } = useScrollReveal()
+const { target: projectContent } = useScrollReveal()
+
 onMounted(() => {
   if (!project.value) {
     router.replace({ name: 'not-found' })
@@ -46,15 +51,23 @@ onMounted(() => {
     <div class="container container--narrow">
       <ProjectHeader :project="project" />
 
-      <section v-if="project.metrics.length" class="project__metrics">
+      <section
+        v-if="project.metrics.length"
+        ref="projectMetrics"
+        class="project__metrics"
+        data-stagger-group
+      >
         <MetricCard
-          v-for="metric in project.metrics"
+          v-for="(metric, i) in project.metrics"
           :key="metric.label"
           :metric="metric"
+          :data-stagger-index="i"
         />
       </section>
 
-      <MarkdownContent :html="project.html" />
+      <div ref="projectContent" data-reveal-direction="up">
+        <MarkdownContent :html="project.html" />
+      </div>
 
       <ArchitectureDiagram
         :architecture="project.architecture"
@@ -74,6 +87,8 @@ onMounted(() => {
   grid-template-columns: 1fr;
   gap: var(--space-3);
   margin-bottom: var(--space-10);
+  /* Phase 1: Metrics 使用紧凑 stagger（60ms），适合小卡片快节奏 */
+  --stagger-step: var(--stagger-step-tight);
 }
 
 @media (min-width: 480px) {

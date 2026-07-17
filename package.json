@@ -1,6 +1,6 @@
 {
   "name": "lai-portfolio",
-  "version": "3.0.0",
+  "version": "3.5.0",
   "private": true,
   "type": "module",
   "description": "软件工程学生 · 技术成长档案 — Vue 3 + TypeScript 静态作品集网站",

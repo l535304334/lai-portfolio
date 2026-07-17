@@ -1,15 +1,20 @@
 <script setup lang="ts">
+import { useScrollReveal } from '@/composables/useScrollReveal'
 import type { TimelineStage } from '@/types/timeline'
 
 defineProps<{
   stages: TimelineStage[]
 }>()
+
+// Phase 1: Scroll Reveal — timeline head + stages stagger
+const { target: timelineHead } = useScrollReveal()
+const { target: timelineList } = useScrollReveal()
 </script>
 
 <template>
   <section class="timeline" aria-labelledby="timeline-title">
     <div class="container">
-      <header class="timeline__head">
+      <header ref="timelineHead" class="timeline__head" data-reveal-direction="up">
         <p class="timeline__eyebrow mono">// 技术成长</p>
         <h2 id="timeline-title" class="timeline__title">从单文件到分布式系统的演进</h2>
         <p class="timeline__lead">
@@ -17,12 +22,16 @@ defineProps<{
         </p>
       </header>
 
-      <ol class="timeline__list">
+      <ol ref="timelineList" class="timeline__list" data-stagger-group>
         <li
-          v-for="stage in stages"
+          v-for="(stage, i) in stages"
           :key="stage.date"
           class="timeline__item"
-          :class="{ 'timeline__item--upcoming': stage.upcoming }"
+          :class="{
+            'timeline__item--upcoming': stage.upcoming,
+            'timeline__item--main': stage.isMainProject,
+          }"
+          :data-stagger-index="i"
         >
           <div class="timeline__marker">
             <span class="timeline__dot" aria-hidden="true"></span>
@@ -51,11 +60,12 @@ defineProps<{
               <p class="timeline__section-text">{{ stage.nextStage }}</p>
             </div>
 
+            <!-- Phase 4: highlights chip 化（READINESS §4.5） -->
             <ul class="timeline__highlights">
               <li
                 v-for="point in stage.highlights"
                 :key="point"
-                class="timeline__highlight"
+                class="timeline__chip mono"
               >
                 {{ point }}
               </li>
@@ -107,6 +117,8 @@ defineProps<{
   border-left: 1px solid var(--color-border);
   margin-left: var(--space-2);
   padding-left: var(--space-8);
+  /* Phase 1: Timeline stages 使用松散 stagger（120ms），适合大内容块节奏 */
+  --stagger-step: var(--stagger-step-loose);
 }
 
 .timeline__item {
@@ -135,6 +147,19 @@ defineProps<{
   border-radius: 50%;
   background-color: var(--color-accent);
   box-shadow: 0 0 0 3px var(--color-surface);
+  /* Phase 4: hover transition（READINESS §4.5: dot 放大 + amber glow） */
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+/* Phase 4: stage hover — dot 放大 + amber glow（仅非 upcoming stage）
+   READINESS §4.5 交互验收 */
+.timeline__item:not(.timeline__item--upcoming):hover .timeline__dot {
+  transform: scale(1.4);
+  box-shadow:
+    0 0 0 3px var(--color-surface),
+    0 0 12px 2px var(--color-accent);
 }
 
 /* Upcoming — hollow dot, muted treatment */
@@ -225,25 +250,81 @@ defineProps<{
   color: var(--color-text-muted);
 }
 
-/* Highlights list */
+/* Phase 4: Highlights chip 化（READINESS §4.5: Timeline highlights chip 化）
+   从 v3.0.0 纯文本列表改为 chip 形式，呼应 Skills chip 设计语言 */
 .timeline__highlights {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+  list-style: none;
+  padding-left: 0;
 }
 
-.timeline__highlight {
-  font-size: var(--text-sm);
+.timeline__chip {
+  font-size: var(--text-xs);
   color: var(--color-text-secondary);
-  line-height: var(--leading-normal);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  line-height: 1.5;
+  /* Phase 4: chip hover 反馈（READINESS §4.5 交互验收） */
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.timeline__chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+/* Phase 4: 主项目放大 1.2x — 字体 + padding 强化，dot 位置不变
+   READINESS §3.6: "仅放大 stage 内容，dot 位置不变"
+   READINESS §4.5: "Timeline 主项目阶段放大 1.2x"
+   实现策略：用字体放大 + padding 增加（非 transform: scale），避免布局溢出 */
+.timeline__item--main .timeline__content {
+  max-width: 48rem; /* 默认 42rem → 加宽 */
+}
+
+.timeline__item--main .timeline__stage-title {
+  font-size: var(--text-2xl); /* 默认 --text-xl → 放大一级 */
+}
+
+.timeline__item--main .timeline__stack {
+  font-size: var(--text-base); /* 默认 --text-sm → 放大一级 */
+}
+
+.timeline__item--main .timeline__capability {
+  padding: var(--space-5) var(--space-6); /* 默认 --space-4 --space-5 → 放大 */
+}
+
+.timeline__item--main .timeline__capability-text {
+  font-size: var(--text-base); /* 默认 --text-sm → 放大一级 */
+  font-weight: var(--font-weight-semibold);
+}
+
+/* 主项目 dot 默认稍大，建立视觉权重（仍保持 dot 位置不变） */
+.timeline__item--main .timeline__dot {
+  width: 9px;
+  height: 9px;
+}
+
+.timeline__item--main:hover .timeline__dot {
+  transform: scale(1.4);
 }
 
 @media (min-width: 768px) {
   .timeline__title {
     font-size: var(--text-4xl);
+  }
+
+  /* Phase 4: 平板/桌面端主项目 stage-title 进一步放大 */
+  .timeline__item--main .timeline__stage-title {
+    font-size: var(--text-3xl);
   }
 }
 </style>

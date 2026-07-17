@@ -19,6 +19,11 @@
   --color-accent-strong: #b45309;
   --color-on-accent: #ffffff;
 
+  /* Phase 3: Slate Blue 辅助色（Skills 分类色 / Interview 分类色 / 状态指示）
+   * 权威来源：CREATIVE_DIRECTION §5.4 / READINESS §1.5.1
+   * 使用范围约束：READINESS §1.5.2（禁止用于 CTA / 链接 / eyebrow / Signature Accent Line） */
+  --color-accent-secondary: #475569;
+
   --color-success: #059669;
   --color-warning: #d97706;
   --color-error: #dc2626;
@@ -85,6 +90,29 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
 
+  /* ===== Motion — Scroll Reveal（v3.5 Phase 0 新增） =====
+   * 复用现有 --transition-fast / --transition-normal 用于 hover / micro-interaction
+   * 仅新增 reveal 专用 duration（现有 Token 无此语义）
+   * 权威来源：《IMPLEMENTATION_READINESS.md》§7.2 Token 命名冲突缓解
+   */
+  --duration-reveal: 500ms; /* Scroll Reveal 入场（section header / card / timeline stage） */
+  --duration-slowest: 600ms; /* ArchitectureDiagram 入场（例外，允许 > 500ms） */
+
+  /* Motion Easing — compositor 友好的 cubic-bezier
+   * 仅动画 transform / opacity / filter / clip-path
+   * 禁止动画 layout 属性（width / height / top / left / margin / padding）
+   */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* 入场：快速开始缓慢结束 */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* hover：平滑过渡 */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* 弹性，仅 BackToTop */
+
+  /* Motion Stagger — 用于 Card grid / Stats / Facts 错峰入场
+   * 通过 transition-delay + data-stagger-index 实现
+   */
+  --stagger-step: 80ms; /* 默认 stagger 间隔（Card grid / Facts） */
+  --stagger-step-tight: 60ms; /* 紧凑 stagger（Stats） */
+  --stagger-step-loose: 120ms; /* 松散 stagger（Timeline stages） */
+
   /* ===== Layout ===== */
   --content-max-width: 800px;
   --layout-max-width: 1200px;
@@ -94,6 +122,27 @@
   --code-bg: #1e293b;
   --code-text: #e2e8f0;
   --code-line-number: #64748b;
+
+  /* ===== Phase 6: Grid Pattern Underlay（Signature 4） =====
+   * 权威来源：CREATIVE_DIRECTION §6.3 #4 / §7.1 Hero / §7.9 Footer
+   * CSS background-image + linear-gradient 生成网格纹理（不引入新资源）
+   * 暗色模式提高透明度（见 [data-theme='dark']）
+   */
+  --grid-pattern-size: 32px;
+  --grid-pattern-color: rgba(0, 0, 0, 0.035);
+
+  /* ===== Phase 6: Interview 分类色（按项目维度，方案 B） =====
+   * 权威来源：CREATIVE_DIRECTION §7.7 + 用户决策（2026-07-18）
+   * jiangnan-travel → Amber（主项目）
+   * love-letter → Slate Blue
+   * exam-system → Teal（避免与 love-letter 重色）
+   * general → Slate Gray
+   * 色点 + 文字双重标识（a11y READINESS §4.7）
+   */
+  --color-interview-jiangnan: var(--color-accent);        /* Amber #d97706 */
+  --color-interview-love: var(--color-accent-secondary);  /* Slate Blue #475569 */
+  --color-interview-exam: #0d9488;                         /* Teal */
+  --color-interview-general: #64748b;                      /* Slate Gray */
 }
 
 [data-theme='dark'] {
@@ -110,7 +159,21 @@
   --color-accent-strong: #fbbf24;
   --color-on-accent: #ffffff;
 
+  /* Phase 3: Slate Blue 暗色模式提亮（READINESS §1.5.1 验证对比度 5.62:1 / 7.31:1 通过 AA） */
+  --color-accent-secondary: #94a3b8;
+
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* Phase 6: Grid Pattern 暗色模式提亮（READINESS §3.8 风险缓解） */
+  --grid-pattern-color: rgba(255, 255, 255, 0.05);
+
+  /* Phase 6: Interview 分类色暗色模式提亮
+   * - jiangnan-travel 继承 --color-accent dark 提亮（#f59e0b）
+   * - love-letter 需独立提亮到 slate-300，避免与 general 重复
+   * - exam/general 已有独立提亮色 */
+  --color-interview-love: #cbd5e1;      /* Slate 300 — love-letter dark 提亮 */
+  --color-interview-exam: #2dd4bf;      /* Teal light */
+  --color-interview-general: #94a3b8;   /* Slate Gray light */
 }

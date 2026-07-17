@@ -18,6 +18,12 @@ export interface PersonalContent {
   date: string
   /** 一句话定位（如 "软件工程学生 · 后端开发 · 分布式系统"） */
   subtitle?: string
+  /**
+   * Phase 6: 引言 Signature Element（CREATIVE_DIRECTION §7.5）
+   * 渲染为 Accent Line + blockquote，位于 header 与正文之间
+   * 锁定文案："工程师的克制，学者的严谨"
+   */
+  quote?: string
   /** 结构化关键事实（≤4 项，长期稳定且适合快速扫描的信息） */
   facts?: PersonalFact[]
   /** Markdown body 渲染后的 HTML */

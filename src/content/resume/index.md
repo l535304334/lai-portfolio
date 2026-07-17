@@ -4,6 +4,9 @@ type: resume
 title: 赖睿轩 · 简历
 date: 2026-07
 subtitle: 软件工程学生 · 后端开发 · 分布式系统
+# Phase 7: 核心竞争力 callout 内容（CREATIVE_DIRECTION §7.6 / §6.3 #3 Amber Accent Line 第 3/3 配额）
+# 渲染为带 Accent Line 的 callout 容器，置于 header 与 Markdown 内容之间
+callout: 后端 · 分布式 · 工程
 ---
 
 535304334@qq.com · github.com/l535304334

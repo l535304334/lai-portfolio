@@ -1,0 +1,37 @@
+﻿Phase 6 Bundle Baseline (2026-07-18)
+============================================
+
+First Load (index + Home):
+- index.html                     2.94 kB | gzip:  1.26 kB
+- index-BiwSYm5r.css            15.63 kB | gzip:  3.58 kB (Footer + global)
+- index-D2m6G6M6.js            109.09 kB | gzip: 42.26 kB (Footer + global)
+- Home-xAAY5nIJ.css            15.30 kB | gzip:  2.42 kB (Hero Grid Pattern)
+- Home-CY7w_KxX.js             15.48 kB | gzip:  5.60 kB
+
+Lazy-loaded pages:
+- About-DE-d6vft.css             1.85 kB | gzip:  0.62 kB
+- About-BIg0vmsd.js              3.14 kB | gzip:  1.88 kB
+- Interview-B0JIc2Nj.css        2.73 kB | gzip:  0.81 kB
+- Interview-D-6ocyqM.js        15.38 kB | gzip:  7.09 kB
+- Resume-DsT6TGC1.css           1.87 kB | gzip:  0.62 kB
+- Resume-DWLszu65.js            5.30 kB | gzip:  3.04 kB
+- Skills-Y4F8vR51.css           3.64 kB | gzip:  0.81 kB
+- Skills-txbL8DFZ.js            7.84 kB | gzip:  2.85 kB
+- ProjectDetail-C7t7n51M.css    9.06 kB | gzip:  1.62 kB
+- ProjectDetail-BusywGwJ.js    30.33 kB | gzip: 12.34 kB
+- AiPractice-B0WmLOew.js        3.98 kB | gzip:  2.20 kB
+- NotFound-DsaarKJd.css         1.04 kB | gzip:  0.38 kB
+- NotFound-BooeW7iL.js          0.66 kB | gzip:  0.50 kB
+- MarkdownContent-BfTJGkQf.css  2.72 kB | gzip:  0.67 kB
+- MarkdownContent-xJlE3l7_.js   0.27 kB | gzip:  0.23 kB
+- useScrollReveal-CShE5Ylx.js   0.76 kB | gzip:  0.46 kB
+- arrow-right-CAFizx2n.js       0.34 kB | gzip:  0.27 kB
+
+Phase 6 Increment Estimate (gzip):
+- Footer rewrite (Grid Pattern + 2col + timestamp + underline reveal) ~ +1.0-1.5 kB
+- Hero Grid Pattern (4 lines CSS) ~ +0.05 kB
+- About quote Signature (quote style + Accent Line) ~ +0.2 kB
+- Interview category color dots (5 classes) ~ +0.1 kB
+- Resume button text (text only) = 0 kB
+
+Total Phase 6 Increment: ~ +1.4-1.9 kB gzip

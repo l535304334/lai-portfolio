@@ -11,12 +11,11 @@ const props = withDefaults(defineProps<{
 })
 
 const detailPath = computed(() => `/projects/${props.project.slug}`)
-const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
 </script>
 
 <template>
   <article
-    class="card"
+    class="card card-accent"
     :class="{ 'card--featured': featured }"
   >
     <div class="card__head">
@@ -50,7 +49,7 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
         </li>
       </ul>
 
-      <!-- Featured: full metrics grid -->
+      <!-- Featured: full metrics grid (4 cols on wide screens) -->
       <dl v-if="featured" class="card__metrics card__metrics--grid">
         <div v-for="m in project.metrics" :key="m.label" class="card__metric">
           <dt class="card__metric-value mono">{{ m.value }}</dt>
@@ -58,17 +57,18 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
         </div>
       </dl>
 
-      <!-- Normal: condensed inline metrics -->
-      <p v-else class="card__metrics card__metrics--inline mono">
-        <span v-for="(m, i) in primaryMetrics" :key="m.label">
-          <span class="card__metric-value-inline">{{ m.value }}</span> {{ m.label }}
-          <span v-if="i < primaryMetrics.length - 1" class="card__metric-sep">·</span>
-        </span>
-      </p>
+      <!-- Phase 4: Normal — restored to 2-col metrics grid (was inline in v3.0.0)
+           READINESS §4.5: ProjectCard normal 恢复 2 列 metrics 网格，≤320px 退化 1 列 -->
+      <dl v-else class="card__metrics card__metrics--grid card__metrics--grid-normal">
+        <div v-for="m in project.metrics" :key="m.label" class="card__metric">
+          <dt class="card__metric-value card__metric-value--compact mono">{{ m.value }}</dt>
+          <dd class="card__metric-label">{{ m.label }}</dd>
+        </div>
+      </dl>
     </div>
 
     <div class="card__foot">
-      <RouterLink :to="detailPath" class="card__link">
+      <RouterLink :to="detailPath" class="card__link link-underline">
         查看详情
         <ArrowRight :size="14" :stroke-width="2" aria-hidden="true" />
       </RouterLink>
@@ -200,21 +200,23 @@ const primaryMetrics = computed(() => props.project.metrics.slice(0, 2))
   margin-top: 2px;
 }
 
-/* Metrics — normal inline */
-.card__metrics--inline {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  line-height: var(--leading-code);
+/* Phase 4: Normal metrics grid — 2 cols, compact (replaces v3.0.0 inline) */
+.card__metrics--grid-normal {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-4) 0;
 }
 
-.card__metric-value-inline {
-  color: var(--color-text-primary);
+.card__metric-value--compact {
+  font-size: var(--text-base);
   font-weight: var(--font-weight-medium);
 }
 
-.card__metric-sep {
-  color: var(--color-text-muted);
-  margin: 0 var(--space-2);
+/* Phase 4: ≤320px 退化为 1 列（READINESS §4.5 响应式验收） */
+@media (max-width: 320px) {
+  .card__metrics--grid-normal {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card__foot {

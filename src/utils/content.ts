@@ -9,6 +9,7 @@
  * - virtual:ai-practice-content — AI 工程实践内容（含渲染后 HTML），AI 实践页懒加载使用
  * - virtual:skills-content — 技术能力内容（含渲染后 HTML），技能页懒加载使用
  * - virtual:personal-content — 关于我内容（含渲染后 HTML），关于页懒加载使用
+ * - virtual:hero-snippet — Hero 代码片段（Shiki 构建时预渲染 HTML，Phase 2 Hero Code Snippet Card 使用）
  */
 
 import fs from 'node:fs'
@@ -16,14 +17,14 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import type { Plugin } from 'vite'
 import type { ProjectSummary, ProjectContent } from '../types/project'
-import type { DecisionContent } from '../types/decision'
+import type { DecisionContent, DecisionItem, DecisionOption } from '../types/decision'
 import type { InterviewCategory, InterviewQAPair } from '../types/interview'
 import type { AiPracticeContent } from '../types/ai-practice'
 import type { PersonalContent } from '../types/personal'
 import type { SkillsContent } from '../types/skills'
 import type { ResumeContent } from '../types/resume'
 import type { TimelineContent, TimelineStage } from '../types/timeline'
-import { renderMarkdown } from './markdown'
+import { renderMarkdown, renderCode } from './markdown'
 
 const VIRTUAL_CONTENT_ID = 'virtual:content'
 const RESOLVED_CONTENT_ID = '\0' + VIRTUAL_CONTENT_ID
@@ -41,8 +42,35 @@ const VIRTUAL_RESUME_ID = 'virtual:resume-content'
 const RESOLVED_RESUME_ID = '\0' + VIRTUAL_RESUME_ID
 const VIRTUAL_TIMELINE_ID = 'virtual:timeline-content'
 const RESOLVED_TIMELINE_ID = '\0' + VIRTUAL_TIMELINE_ID
+const VIRTUAL_HERO_SNIPPET_ID = 'virtual:hero-snippet'
+const RESOLVED_HERO_SNIPPET_ID = '\0' + VIRTUAL_HERO_SNIPPET_ID
 
 const CONTENT_BASE = 'src/content'
+
+/**
+ * Hero 代码片段静态字符串（Phase 2：江南出行分布式锁 acquireLock）
+ *
+ * 权威来源：
+ * - 《Portfolio_v3.5_CREATIVE_DIRECTION.md》§6 锁定决策 3（Hero 代码片段内容）
+ * - 《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.4 代码片段候选
+ *
+ * 设计约束：
+ * - 限制 ≤ 12 行（移动端高度可控，见 Readiness §1.4 缓解措施）
+ * - TypeScript 代码（Shiki langs 已加载 typescript，见 markdown.ts）
+ * - 与 jiangnan-travel 项目内容呼应，不重复
+ */
+const HERO_SNIPPET_CODE = `// distributed-lock.ts
+async function acquireLock(
+  key: string,
+  ttl: number
+): Promise<boolean> {
+  const token = uuid()
+  const ok = await redis.set(
+    key, token,
+    'PX', ttl, 'NX'
+  )
+  return ok === 'OK'
+}`
 
 /** 面试分类排序优先级（项目相关在前，通用在后） */
 const INTERVIEW_ORDER = ['jiangnan-travel', 'love-letter', 'exam-system', 'general']
@@ -123,7 +151,12 @@ async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
         role: data.role ? String(data.role) : undefined,
         architecture: data.architecture ? String(data.architecture) : undefined,
         html,
-        decision: (await loadDecisionBySlug(root, String(data.slug))) ?? undefined,
+        // Phase 5: 优先从 project frontmatter.decisions 解析结构化方案对比
+        // 不存在时 fallback 到 loadDecisionBySlug（decisions/*.md Markdown 渲染）
+        decision:
+          parseDecisionsFromFrontmatter(data, String(data.slug)) ??
+          (await loadDecisionBySlug(root, String(data.slug))) ??
+          undefined,
       }
       return detail
     }),
@@ -140,6 +173,76 @@ function getContentFiles(root: string, subdir: string): string[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith('.md'))
     .map((f) => path.resolve(dir, f))
+}
+
+/**
+ * Phase 5: 从 project frontmatter.decisions 解析结构化方案对比字段
+ * 存在有效 decisions 数组时返回带 decisions 的 DecisionContent，否则返回 null（fallback 到 loadDecisionBySlug）
+ *
+ * 渐进迁移（READINESS §3.7）：
+ * - 无 decisions 字段 → null → fallback 到 decisions/*.md Markdown 渲染
+ * - 有 decisions 字段但格式无效 → null → 同样 fallback
+ * - 有 decisions 字段且格式有效 → 结构化 DecisionContent
+ */
+function parseDecisionsFromFrontmatter(
+  data: Record<string, unknown>,
+  slug: string,
+): DecisionContent | null {
+  if (!Array.isArray(data.decisions) || data.decisions.length === 0) {
+    return null
+  }
+
+  const items: DecisionItem[] = data.decisions
+    .map((raw: unknown) => {
+      if (!raw || typeof raw !== 'object') return null
+      const r = raw as Record<string, unknown>
+      const title = String(r.title ?? '')
+      if (!title) return null
+
+      const options = Array.isArray(r.options) ? parseDecisionOptions(r.options) : []
+      // 至少 2 个方案才有对比意义（READINESS §4.6 方案对比结构）
+      if (options.length < 2) return null
+
+      const item: DecisionItem = {
+        title,
+        context: r.context ? String(r.context) : undefined,
+        options,
+        reasoning: r.reasoning ? String(r.reasoning) : undefined,
+      }
+      return item
+    })
+    .filter((item): item is DecisionItem => item !== null)
+
+  if (items.length === 0) return null
+
+  return {
+    slug,
+    type: 'decision',
+    title: String(data.title ?? ''),
+    date: String(data.date ?? ''),
+    html: '', // 无 fallback HTML（使用结构化 decisions 渲染）
+    decisions: items,
+  }
+}
+
+/** Phase 5: 解析方案选项列表（parseDecisionsFromFrontmatter 辅助函数） */
+function parseDecisionOptions(raw: unknown[]): DecisionOption[] {
+  return raw
+    .map((opt: unknown) => {
+      if (!opt || typeof opt !== 'object') return null
+      const o = opt as Record<string, unknown>
+      const name = String(o.name ?? '')
+      if (!name) return null
+      const option: DecisionOption = {
+        name,
+        description: String(o.description ?? ''),
+        pros: Array.isArray(o.pros) ? o.pros.map(String) : undefined,
+        cons: Array.isArray(o.cons) ? o.cons.map(String) : undefined,
+        chosen: Boolean(o.chosen),
+      }
+      return option
+    })
+    .filter((opt): opt is DecisionOption => opt !== null)
 }
 
 /** 按 slug 加载单个决策文件，渲染为 DecisionContent；不存在返回 null */
@@ -289,6 +392,10 @@ async function scanSkills(root: string): Promise<SkillsContent | null> {
           .map((c: Record<string, unknown>) => ({
             name: String(c.name ?? ''),
             items: String(c.items ?? ''),
+            // Phase 3: 扩展字段（READINESS §1.6.2），全部可选，向后兼容
+            icon: c.icon ? String(c.icon) : undefined,
+            priority: (c.priority as 'high' | 'medium' | 'low' | undefined) ?? undefined,
+            colorTier: (c.colorTier as 'amber' | 'slate-blue' | 'slate' | undefined) ?? undefined,
           }))
           .filter((c) => c.name && c.items)
       : undefined,
@@ -318,6 +425,8 @@ async function scanPersonal(root: string): Promise<PersonalContent | null> {
     title: String(data.title),
     date: String(data.date ?? ''),
     subtitle: data.subtitle ? String(data.subtitle) : undefined,
+    // Phase 6: 引言 Signature Element — frontmatter.quote 透传
+    quote: data.quote ? String(data.quote) : undefined,
     facts: Array.isArray(data.facts)
       ? data.facts
           .map((f: Record<string, unknown>) => ({
@@ -352,6 +461,8 @@ async function scanResume(root: string): Promise<ResumeContent | null> {
     title: String(data.title),
     date: String(data.date ?? ''),
     subtitle: data.subtitle ? String(data.subtitle) : undefined,
+    // Phase 7: 核心竞争力 callout 透传（CREATIVE_DIRECTION §7.6 / §6.3 #3 Amber Accent Line 第 3/3 配额）
+    callout: data.callout ? String(data.callout) : undefined,
     html,
   }
 }
@@ -387,6 +498,8 @@ async function scanTimeline(root: string): Promise<TimelineContent | null> {
       nextStage: String(s.nextStage ?? ''),
       capability: String(s.capability ?? ''),
       upcoming: Boolean(s.upcoming),
+      // Phase 4: 主项目标记（READINESS §3.6/§4.5），可选字段，向后兼容
+      isMainProject: Boolean(s.isMainProject),
     }
   })
 
@@ -429,6 +542,9 @@ export function contentPlugin(): Plugin {
       }
       if (id === VIRTUAL_TIMELINE_ID) {
         return RESOLVED_TIMELINE_ID
+      }
+      if (id === VIRTUAL_HERO_SNIPPET_ID) {
+        return RESOLVED_HERO_SNIPPET_ID
       }
     },
     async load(id) {
@@ -515,6 +631,15 @@ export function contentPlugin(): Plugin {
         }
 
         return `export const timeline = ${JSON.stringify(timeline)}`
+      }
+      if (id === RESOLVED_HERO_SNIPPET_ID) {
+        // Phase 2: Hero 代码片段构建时预渲染
+        // 权威来源：《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.3.1
+        // - 必须构建时预渲染，禁止运行时调用 Shiki（避免 WASM 下载威胁 LCP）
+        // - 复用 markdown.ts 的 renderCode，零额外初始化成本（Shiki 单例已初始化）
+        // - 静态字符串 HERO_SNIPPET_CODE 无需 watch 文件
+        const html = await renderCode(HERO_SNIPPET_CODE, 'typescript')
+        return `export default ${JSON.stringify(html)}`
       }
     },
   }

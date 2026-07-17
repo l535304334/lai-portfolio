@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Github, Mail, ArrowUpRight } from 'lucide-vue-next'
+import { useScrollReveal } from '@/composables/useScrollReveal'
 import type { ContactInfo } from '@/types/contact'
 
 const props = defineProps<{
@@ -10,26 +11,30 @@ const props = defineProps<{
 const githubHandle = computed(() =>
   props.contact.github.replace(/^https?:\/\/github\.com\//, ''),
 )
+
+// Phase 1: Scroll Reveal — contact main + methods
+const { target: contactMain } = useScrollReveal()
+const { target: contactMethods } = useScrollReveal()
 </script>
 
 <template>
   <section class="contact" aria-labelledby="contact-title">
     <div class="container">
       <div class="contact__grid">
-        <div class="contact__main">
+        <div ref="contactMain" class="contact__main" data-reveal-direction="up">
           <p class="contact__eyebrow mono">// 联系方式</p>
           <h2 id="contact-title" class="contact__title">赖睿轩</h2>
           <p class="contact__lead">软件工程学生</p>
         </div>
 
-        <dl class="contact__methods">
+        <dl ref="contactMethods" class="contact__methods" data-reveal-direction="up">
           <div class="contact__method">
             <dt class="contact__method-key mono">
               <Mail :size="14" :stroke-width="1.75" aria-hidden="true" />
               Email
             </dt>
             <dd class="contact__method-value">
-              <a :href="`mailto:${contact.email}`" class="contact__link">
+              <a :href="`mailto:${contact.email}`" class="contact__link link-underline">
                 {{ contact.email }}
               </a>
             </dd>
@@ -45,7 +50,7 @@ const githubHandle = computed(() =>
                 :href="contact.github"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="contact__link"
+                class="contact__link link-underline"
               >
                 {{ githubHandle }}
                 <ArrowUpRight :size="12" :stroke-width="2" aria-hidden="true" />

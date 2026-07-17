@@ -45,3 +45,16 @@ declare module 'virtual:timeline-content' {
   import type { TimelineContent } from '@/types/timeline'
   export const timeline: TimelineContent | null
 }
+
+declare module 'virtual:hero-snippet' {
+  // Phase 2: Hero 代码片段构建时预渲染的 HTML 字符串
+  // 内容为江南出行分布式锁 acquireLock（TypeScript），由 Shiki github-dark 主题渲染
+  // HeroSection.vue 通过 v-html 渲染到 <pre> 中
+  const heroSnippetHtml: string
+  export default heroSnippetHtml
+}
+
+// Phase 6: Git Last Updated 时间戳（vite define 注入）
+// 权威来源：CREATIVE_DIRECTION §7.9 / READINESS §3.8
+// ISO 8601 格式字符串，优先 git 最后提交时间，fallback 到 build time
+declare const __LAST_UPDATED__: string

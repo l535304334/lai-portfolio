@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useScrollReveal } from '@/composables/useScrollReveal'
 
 const props = defineProps<{
   /** 架构图标识（对应 frontmatter.architecture，匹配 src/assets/projects/{architecture}.svg） */
@@ -21,6 +22,9 @@ const svgModuleLoaders = import.meta.glob('../../assets/projects/*.svg', {
 /** 当前匹配到的 SVG URL（异步加载，初始为 undefined） */
 const svgUrl = ref<string | undefined>(undefined)
 
+// Phase 1: Scroll Reveal — architecture diagram figure
+const { target: diagramFigure } = useScrollReveal()
+
 watchEffect(async () => {
   const arch = props.architecture
   if (!arch) {
@@ -40,7 +44,12 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <figure v-if="svgUrl" class="architecture-diagram">
+  <figure
+    v-if="svgUrl"
+    ref="diagramFigure"
+    class="architecture-diagram"
+    data-reveal-direction="up"
+  >
     <figcaption class="architecture-diagram__caption mono">架构图</figcaption>
     <img
       :src="svgUrl"

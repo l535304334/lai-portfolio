@@ -4,6 +4,9 @@ type: personal
 title: 关于我
 date: 2026-07
 subtitle: 软件工程学生 · 后端开发 · 分布式系统
+# Phase 6: 引言 Signature Element（CREATIVE_DIRECTION §7.5 / §9.2 决策 6）
+# 锁定文案："工程师的克制，学者的严谨"，渲染为 Accent Line + blockquote
+quote: "工程师的克制，学者的严谨"
 facts:
   - label: 教育
     value: 南昌大学 · 软件工程 · 2023 级

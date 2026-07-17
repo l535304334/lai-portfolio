@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/HeroSection.vue'
 import ProjectCard from '@/components/home/ProjectCard.vue'
 import TimelineSection from '@/components/home/TimelineSection.vue'
 import ContactSection from '@/components/home/ContactSection.vue'
+import { useScrollReveal } from '@/composables/useScrollReveal'
 import { projectSummaries as projects } from 'virtual:content'
 import { timeline as timelineContent } from 'virtual:timeline-content'
 import type { ContactInfo } from '@/types/contact'
@@ -14,6 +15,10 @@ const contact: ContactInfo = {
   github: 'https://github.com/l535304334',
   email: '535304334@qq.com',
 }
+
+// Phase 1: Scroll Reveal — projects section header + projects grid stagger
+const { target: projectsHead } = useScrollReveal()
+const { target: projectsGrid } = useScrollReveal()
 </script>
 
 <template>
@@ -22,17 +27,18 @@ const contact: ContactInfo = {
 
     <section id="projects" class="home__projects" aria-labelledby="projects-title">
       <div class="container">
-        <header class="home__projects-head">
+        <header ref="projectsHead" class="home__projects-head" data-reveal-direction="up">
           <p class="home__eyebrow mono">// 精选项目</p>
           <h2 id="projects-title" class="home__section-title">三个完整项目，三种工程挑战</h2>
         </header>
 
-        <div class="home__projects-grid">
+        <div ref="projectsGrid" class="home__projects-grid" data-stagger-group>
           <ProjectCard
-            v-for="project in projects"
+            v-for="(project, i) in projects"
             :key="project.slug"
             :project="project"
             :featured="project.order === 1"
+            :data-stagger-index="i"
           />
         </div>
       </div>

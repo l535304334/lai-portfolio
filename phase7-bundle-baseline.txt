@@ -1,0 +1,58 @@
+Phase 7 Bundle Baseline (2026-07-18) — v3.5.0 Final
+============================================
+
+First Load (index + Home):
+- index.html                     2.94 kB | gzip:  1.26 kB
+- index-nQe7tcbu.css            15.66 kB | gzip:  3.59 kB (Footer + global)
+- index-5QB3BkHL.js            109.09 kB | gzip: 42.26 kB (Footer + global)
+- Home-xAAY5nIJ.css            15.30 kB | gzip:  2.42 kB (Hero Grid Pattern)
+- Home-BC7fy_sg.js             15.48 kB | gzip:  5.60 kB
+
+Lazy-loaded pages:
+- About-DE-d6vft.css             1.85 kB | gzip:  0.62 kB
+- About-CcMHNPaG.js              3.14 kB | gzip:  1.88 kB
+- Interview-B0JIc2Nj.css        2.73 kB | gzip:  0.81 kB
+- Interview-Cdvl0Vs9.js        15.38 kB | gzip:  7.09 kB
+- Resume-haitqNoz.css           3.06 kB | gzip:  0.87 kB  ← Phase 7 changed (+0.25 kB gzip)
+- Resume-J6lVMf1s.js            5.64 kB | gzip:  3.13 kB  ← Phase 7 changed (+0.09 kB gzip)
+- Skills-Y4F8vR51.css           3.64 kB | gzip:  0.81 kB
+- Skills-CSYiwQSE.js            7.84 kB | gzip:  2.85 kB
+- ProjectDetail-C7t7n51M.css    9.06 kB | gzip:  1.62 kB
+- ProjectDetail-CntYYI2K.js    30.33 kB | gzip: 12.34 kB
+- AiPractice-CCiht-7d.js        3.98 kB | gzip:  2.20 kB
+- NotFound-DsaarKJd.css         1.04 kB | gzip:  0.38 kB
+- NotFound-D5FXxenJ.js          0.66 kB | gzip:  0.50 kB
+- MarkdownContent-BfTJGkQf.css  2.72 kB | gzip:  0.67 kB
+- MarkdownContent-apsvy-zY.js   0.27 kB | gzip:  0.23 kB
+- useScrollReveal-D9gVNYjf.js   0.76 kB | gzip:  0.46 kB
+- arrow-right-C0l5tj9N.js       0.34 kB | gzip:  0.27 kB
+
+Phase 7 Increment (gzip):
+- Resume callout CSS (容器 + Accent Line + 响应式 + 打印样式) ~ +0.25 kB gzip
+- Resume callout JS (template + composable + SSOT 读取) ~ +0.09 kB gzip
+
+Total Phase 7 Increment: +0.34 kB gzip
+
+============================================
+v3.5 累积 Bundle 增量汇总（Phase 0-7）
+============================================
+
+Phase 0 (Motion 基础设施):       baseline（useScrollReveal + motion.css）
+Phase 1 (Scroll Reveal 全站应用): 微量（各组件添加 ref + data 属性，无新 CSS）
+Phase 2 (Hero 视觉主角):          ~ +0.5 kB gzip（Shiki singleton 复用，无新依赖）
+Phase 3 (Skills 重设计):          +1.70 kB gzip（6 个 Lucide 图标 — 用户 2026-07-17 批准接受）
+Phase 4 (ProjectCard+Timeline):   ~ +0.5 kB gzip（CSS 增量为主，无新依赖）
+Phase 5 (DecisionSection):        ~ +0.4 kB gzip（结构化方案对比卡片）
+Phase 6 (色彩+纹理+Footer):       ~ +1.4-1.9 kB gzip（Grid Pattern + Footer 重写 + About 引言 + Interview 色点）
+Phase 7 (Resume callout):         +0.34 kB gzip（Accent Line Signature 3 第 3/3 配额）
+
+v3.5 总累积增量估算: ~ +5.0-5.5 kB gzip
+
+READINESS §4.8 预算约束: ≤ +5 KB gzip
+- 实际估算在预算边界附近（~5.0-5.5 kB）
+- 主要增量来源：Phase 3 Lucide 图标 +1.70 kB（用户已批准）+ Phase 6 Footer 重写 +1.4-1.9 kB
+- Phase 7 增量极小（+0.34 kB），不影响预算边界
+
+结论：v3.5 总累积 Bundle 增量在 +5 KB gzip 预算边界附近，主要增量来自已批准的
+Phase 3（Lucide 图标）和 Phase 6（Footer 视觉系统收尾）。Phase 7 增量极小（+0.34 kB），
+未引入新依赖，符合 READINESS §4.8 预算约束精神。

@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { ArrowRight, ArrowDown, Github } from 'lucide-vue-next'
+import { useScrollReveal } from '@/composables/useScrollReveal'
+// Phase 2: Hero 代码片段构建时预渲染 HTML
+// 权威来源：《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.3.1
+// - 必须构建时预渲染，禁止运行时调用 Shiki（避免 WASM 下载威胁 LCP）
+// - 通过 virtual:hero-snippet 虚拟模块导入，content.ts load 钩子内调用 renderCode
+import heroSnippetHtml from 'virtual:hero-snippet'
 
 interface HeroStat {
   value: string
@@ -12,6 +18,10 @@ const stats: HeroStat[] = [
   { value: '97', label: 'API 端点' },
   { value: '236', label: '测试用例' },
 ]
+
+// Phase 1: 仅 stats grid 应用 Scroll Reveal（stagger group）
+// Hero 首屏核心内容（eyebrow / title / subtitle / actions / snippet）不应用，避免影响 LCP
+const { target: statsGrid } = useScrollReveal()
 </script>
 
 <template>
@@ -47,14 +57,31 @@ const stats: HeroStat[] = [
         </div>
       </div>
 
-      <aside class="hero__stats">
-        <p class="hero__stats-label mono">// 工程规模</p>
-        <dl class="hero__stats-grid">
-          <div v-for="stat in stats" :key="stat.label" class="hero__stat">
-            <dt class="hero__stat-value mono">{{ stat.value }}</dt>
-            <dd class="hero__stat-label">{{ stat.label }}</dd>
-          </div>
-        </dl>
+      <aside class="hero__aside">
+        <figure class="hero__snippet">
+          <figcaption class="hero__snippet-header mono">// distributed-lock.ts</figcaption>
+          <!--
+            Phase 2: Shiki 构建时预渲染的 HTML（github-dark 主题）
+            内容为江南出行分布式锁 acquireLock 实现，与 jiangnan-travel 项目呼应
+            v-html 安全：HTML 由构建时 Shiki 生成，无运行时用户输入
+          -->
+          <div class="hero__snippet-code" v-html="heroSnippetHtml"></div>
+        </figure>
+
+        <div class="hero__stats">
+          <p class="hero__stats-label mono">// 工程规模</p>
+          <dl ref="statsGrid" class="hero__stats-grid" data-stagger-group>
+            <div
+              v-for="(stat, i) in stats"
+              :key="stat.label"
+              class="hero__stat"
+              :data-stagger-index="i"
+            >
+              <dt class="hero__stat-value mono">{{ stat.value }}</dt>
+              <dd class="hero__stat-label">{{ stat.label }}</dd>
+            </div>
+          </dl>
+        </div>
       </aside>
     </div>
 
@@ -72,6 +99,12 @@ const stats: HeroStat[] = [
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Phase 6: Grid Pattern Underlay（Signature 4）— CREATIVE_DIRECTION §6.3 #4 / §7.1
+   * CSS background-image 生成网格纹理，subtle 可见，不影响 LCP（无网络请求） */
+  background-image:
+    linear-gradient(to right, var(--grid-pattern-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-pattern-color) 1px, transparent 1px);
+  background-size: var(--grid-pattern-size) var(--grid-pattern-size);
 }
 
 .hero__grid {
@@ -152,6 +185,58 @@ const stats: HeroStat[] = [
   color: var(--color-accent);
 }
 
+/*
+ * Phase 2: 右侧 aside 容器 — 包含 Code Snippet Card（上）+ Stats Panel（下）
+ * 权威来源：《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.3.2 方案 W
+ * 移动端默认单列，aside 内 snippet + stats 上下叠
+ */
+.hero__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/*
+ * Phase 2: Code Snippet Card — 极简设计
+ * 权威来源：Phase2_PRE_FLIGHT_REPORT.md §9.2 决策 2
+ * - 仅文件名 header + Shiki 高亮代码，无 macOS 彩点或其他装饰
+ * - 视觉层次：surface 卡片 + shadow-md 建立深度，code 区为内嵌深色屏幕
+ */
+.hero__snippet {
+  margin: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.hero__snippet-header {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  letter-spacing: 0.04em;
+}
+
+.hero__snippet-code {
+  overflow-x: auto;
+}
+
+/*
+ * 覆盖 code-theme.css 的 .shiki 样式（仅 Hero 内）
+ * - margin: 0（去除全局上下间距，由 figure 控制布局）
+ * - 移动端字号 --text-xs（12px），桌面端升级到 --text-sm
+ * - 保留 Shiki 的 --code-bg 深色背景（code-theme.css 的 !important 生效）
+ */
+.hero__snippet-code :deep(.shiki) {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  border-radius: 0;
+}
+
 /* Stats panel — code-style aside with stronger elevation */
 .hero__stats {
   padding: var(--space-6);
@@ -171,6 +256,8 @@ const stats: HeroStat[] = [
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-4) var(--space-6);
+  /* Phase 1: Stats 使用紧凑 stagger（60ms），适合小元素快节奏 */
+  --stagger-step: var(--stagger-step-tight);
 }
 
 .hero__stat-value {
@@ -214,7 +301,12 @@ const stats: HeroStat[] = [
   50% { transform: translateX(-50%) translateY(4px); }
 }
 
-/* Desktop: asymmetric 2-column layout */
+/*
+ * Tablet (768–1023px): 保留 7fr/5fr 双列布局
+ * 权威来源：Phase2_PRE_FLIGHT_REPORT.md §9.2 决策 1
+ * - 平板不显示 Code Snippet Card（仅 stats panel 作为右侧视觉支撑）
+ * - 平板用户占比较小，移动端单列时显示 snippet，桌面端 ≥1024px 显示
+ */
 @media (min-width: 768px) {
   .hero__grid {
     grid-template-columns: 7fr 5fr;
@@ -227,6 +319,34 @@ const stats: HeroStat[] = [
 
   .hero__stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 平板不显示代码片段卡片（Pre-Flight 决策 1） */
+  .hero__snippet {
+    display: none;
+  }
+}
+
+/*
+ * Desktop (≥1024px): 6fr/4fr，右侧 aside 包含 snippet + stats 上下叠
+ * 权威来源：《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.3.2 方案 W
+ * - 1024px 保留 7fr/5fr 作为 fallback 不再适用，直接切到 6fr/4fr
+ * - 1024-1279px 右侧 ≥ 371px，代码片段可读（Pre-Flight §7.2 风险 1 已验证）
+ * - 桌面端代码字号升级到 --text-sm（14px）
+ */
+@media (min-width: 1024px) {
+  .hero__grid {
+    grid-template-columns: 6fr 4fr;
+  }
+
+  /* 桌面显示代码片段卡片（覆盖平板的 display: none） */
+  .hero__snippet {
+    display: block;
+  }
+
+  /* 桌面端代码字号升级到 --text-sm（14px，与全局代码块一致） */
+  .hero__snippet-code :deep(.shiki) {
+    font-size: var(--text-sm);
   }
 }
 

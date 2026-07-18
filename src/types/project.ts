@@ -19,6 +19,8 @@ export interface ProjectSummary {
   featured?: boolean
   order?: number
   github?: string
+  /** 批次4-P1: 项目封面截图标识（对应 src/assets/screenshots/{cover}.png），featured 卡片缩略用 */
+  cover?: string
 }
 
 /** 项目详情 — 含 markdown-it + Shiki 渲染后的 HTML，可选附带技术决策 */
@@ -38,6 +40,8 @@ export interface ProjectContent {
   role?: string
   /** 架构图标识（如 "jiangnan-travel"），从 frontmatter.architecture 提取，对应 src/assets/projects/{architecture}.svg */
   architecture?: string
+  /** 批次4-P1: 项目封面截图标识（如 "jiangnan-passenger-home"），对应 src/assets/screenshots/{cover}.png */
+  cover?: string
   html: string
   /** 技术决策记录（按 slug 匹配 decisions/*.md，可选） */
   decision?: DecisionContent

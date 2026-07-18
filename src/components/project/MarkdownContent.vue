@@ -12,6 +12,8 @@ defineProps<{
 /* ===== 容器：防止宽表格/代码块溢出 ===== */
 .markdown {
   overflow-x: auto;
+  /* Editorial 章节编号：每个 markdown 实例独立计数 */
+  counter-reset: md-section;
 }
 
 /* ===== 标题 ===== */
@@ -24,17 +26,22 @@ defineProps<{
   margin-bottom: var(--space-5);
   padding-left: var(--space-4);
   letter-spacing: -0.01em;
+  /* 左侧 Accent Line 竖线（原 ::before 迁移至此） */
+  border-left: 3px solid var(--color-accent);
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+  counter-increment: md-section;
 }
 
+/* Editorial 章节编号：// 01 · 标题文字 */
 .markdown :deep(h2::before) {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.15em;
-  bottom: 0.15em;
-  width: 3px;
-  background-color: var(--color-accent);
-  border-radius: var(--radius-sm);
+  content: '// ' counter(md-section, decimal-leading-zero) ' \00B7\00A0';
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-muted);
+  letter-spacing: 0;
+  margin-right: var(--space-1);
 }
 
 .markdown :deep(h2:first-child) {
@@ -54,7 +61,7 @@ defineProps<{
   font-size: var(--text-base);
   color: var(--color-text-secondary);
   line-height: var(--leading-normal);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .markdown :deep(strong) {

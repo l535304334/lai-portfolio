@@ -2,6 +2,7 @@
 import { ArrowRight, Github } from 'lucide-vue-next'
 import { computed } from 'vue'
 import type { ProjectSummary } from '@/types/project'
+import ProjectCover from '@/components/project/ProjectCover.vue'
 
 const props = withDefaults(defineProps<{
   project: ProjectSummary
@@ -18,6 +19,14 @@ const detailPath = computed(() => `/projects/${props.project.slug}`)
     class="card card-accent"
     :class="{ 'card--featured': featured }"
   >
+    <!-- 批次4-P1: featured 卡片封面缩略（方案文档 P1.2）
+         仅 featured 且有 cover 时显示，与 normal 卡片拉开"封面化"差距 -->
+    <ProjectCover
+      v-if="featured && project.cover"
+      :cover="project.cover"
+      :title="project.title"
+      variant="thumb"
+    />
     <div class="card__head">
       <span v-if="project.order" class="card__order mono" :class="{ 'card__order--featured': featured }">
         <template v-if="featured">{{ String(project.order).padStart(2, '0') }} / 主项目</template>

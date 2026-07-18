@@ -106,6 +106,8 @@ function scanProjectSummaries(root: string): ProjectSummary[] {
       featured: Boolean(data.featured),
       order: typeof data.order === 'number' ? data.order : undefined,
       github: data.github ? String(data.github) : undefined,
+      // 批次4-P1: 项目封面截图标识透传（featured 卡片缩略用）
+      cover: data.cover ? String(data.cover) : undefined,
     }
     return summary
   })
@@ -150,6 +152,8 @@ async function scanProjectDetails(root: string): Promise<ProjectContent[]> {
         status: data.status ? String(data.status) : undefined,
         role: data.role ? String(data.role) : undefined,
         architecture: data.architecture ? String(data.architecture) : undefined,
+        // 批次4-P1: 项目封面截图标识透传（详情页封面用）
+        cover: data.cover ? String(data.cover) : undefined,
         html,
         // Phase 5: 优先从 project frontmatter.decisions 解析结构化方案对比
         // 不存在时 fallback 到 loadDecisionBySlug（decisions/*.md Markdown 渲染）

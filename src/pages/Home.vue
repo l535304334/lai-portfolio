@@ -28,7 +28,7 @@ const { target: projectsGrid } = useScrollReveal()
     <section id="projects" class="home__projects" aria-labelledby="projects-title">
       <div class="container">
         <header ref="projectsHead" class="home__projects-head" data-reveal-direction="up">
-          <p class="home__eyebrow mono">// 精选项目</p>
+          <p class="home__eyebrow mono">// 01 · 精选项目</p>
           <h2 id="projects-title" class="home__section-title">三个完整项目，三种工程挑战</h2>
         </header>
 
@@ -72,6 +72,18 @@ const { target: projectsGrid } = useScrollReveal()
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   letter-spacing: -0.01em;
+}
+
+/* 批次2-P2: editorial 章节短线 — 24px × 2px Amber，水平开章
+ * 与 DecisionSection 垂直 Accent Line 形成「水平开章 / 垂直强调」双语法 */
+.home__section-title::after {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-accent);
+  margin-top: var(--space-4);
+  border-radius: var(--radius-sm);
 }
 
 /* Bento grid — featured card spans 2 rows on desktop */

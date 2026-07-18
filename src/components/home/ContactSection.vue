@@ -22,9 +22,10 @@ const { target: contactMethods } = useScrollReveal()
     <div class="container">
       <div class="contact__grid">
         <div ref="contactMain" class="contact__main" data-reveal-direction="up">
-          <p class="contact__eyebrow mono">// 联系方式</p>
+          <p class="contact__eyebrow mono">// 03 · 联系方式</p>
           <h2 id="contact-title" class="contact__title">赖睿轩</h2>
           <p class="contact__lead">软件工程学生</p>
+          <p class="contact__signature mono">后端 · 分布式 · 工程实践</p>
         </div>
 
         <dl ref="contactMethods" class="contact__methods" data-reveal-direction="up">
@@ -96,6 +97,14 @@ const { target: contactMethods } = useScrollReveal()
   color: var(--color-text-secondary);
   line-height: var(--leading-normal);
   max-width: 28rem;
+}
+
+/* 批次1-P6: 定位签名 — editorial 三关键词，与 Footer about-role 呼应但更精炼 */
+.contact__signature {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  letter-spacing: 0.02em;
 }
 
 /* Contact methods — definition list styled as key-value pairs */

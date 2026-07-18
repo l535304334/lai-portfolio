@@ -25,10 +25,30 @@ function getLastUpdated(): string {
   return new Date().toISOString()
 }
 
+/**
+ * 批次1-P6: Git Commit Hash 注入（短 hash）
+ * - 优先使用 git 短 hash（7 位）
+ * - Vercel 构建环境无 git 访问时 fallback 到 'dev'
+ * - 强化"工程师的网站"气质（Creative Direction §7.9）
+ */
+function getGitCommit(): string {
+  try {
+    const hash = execSync('git rev-parse --short HEAD', {
+      encoding: 'utf8',
+      timeout: 3000,
+    }).trim()
+    if (hash) return hash
+  } catch {
+    // git 不可用 — fallback 到 'dev'
+  }
+  return 'dev'
+}
+
 export default defineConfig({
   plugins: [vue(), contentPlugin()],
   define: {
     __LAST_UPDATED__: JSON.stringify(getLastUpdated()),
+    __GIT_COMMIT__: JSON.stringify(getGitCommit()),
   },
   resolve: {
     alias: {

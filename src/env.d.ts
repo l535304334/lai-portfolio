@@ -58,3 +58,7 @@ declare module 'virtual:hero-snippet' {
 // 权威来源：CREATIVE_DIRECTION §7.9 / READINESS §3.8
 // ISO 8601 格式字符串，优先 git 最后提交时间，fallback 到 build time
 declare const __LAST_UPDATED__: string
+
+// 批次1-P6: Git Commit Hash（vite define 注入）
+// 短 hash 字符串，优先 git 短 hash，fallback 到 'dev'
+declare const __GIT_COMMIT__: string

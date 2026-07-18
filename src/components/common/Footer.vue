@@ -8,6 +8,9 @@ import { Github } from 'lucide-vue-next'
 const lastUpdated = __LAST_UPDATED__
 const lastUpdatedDisplay = lastUpdated.substring(0, 10)
 
+// 批次1-P6: Git Commit Hash（短 hash）
+const gitCommit = __GIT_COMMIT__
+
 const year = new Date().getFullYear()
 
 // Phase 6: Sitemap 链接列表（CREATIVE_DIRECTION §7.9）
@@ -63,6 +66,8 @@ const sitemap = [
         </span>
         <span class="footer__separator" aria-hidden="true">·</span>
         <span class="footer__tech mono">Built with Vue 3 + TypeScript + Vite</span>
+        <span class="footer__separator" aria-hidden="true">·</span>
+        <span class="footer__commit mono">commit {{ gitCommit }}</span>
       </div>
     </div>
   </footer>
@@ -191,6 +196,13 @@ const sitemap = [
 .footer__tech {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
+}
+
+/* 批次1-P6: commit hash 样式（复用 tech 样式，略降权重） */
+.footer__commit {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  opacity: 0.75;
 }
 
 /* Phase 6: 响应式 — 移动端单列（READINESS §4.7 响应式验收） */

@@ -1,4 +1,4 @@
-﻿Phase 6 Bundle Baseline (2026-07-18)
+﻿﻿Phase 6 Bundle Baseline (2026-07-18)
 ============================================
 
 First Load (index + Home):

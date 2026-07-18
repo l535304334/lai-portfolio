@@ -12,11 +12,13 @@ interface HeroStat {
   label: string
 }
 
+// 批次2-P4: Hero stats 改为「能力维度」而非「项目指标」
+// 避免 218/97/236 与 featured 项目卡 metrics 重复，传递「我是什么人」
 const stats: HeroStat[] = [
   { value: '3', label: '完整项目' },
-  { value: '218', label: '源文件' },
-  { value: '97', label: 'API 端点' },
-  { value: '236', label: '测试用例' },
+  { value: '4', label: '周企业实习' },
+  { value: '408', label: '考研方向' },
+  { value: '0', label: 'UI 框架依赖' },
 ]
 
 // Phase 1: 仅 stats grid 应用 Scroll Reveal（stagger group）
@@ -31,7 +33,7 @@ const { target: statsGrid } = useScrollReveal()
         <p class="hero__eyebrow mono">// 赖睿轩 · 软件工程学生</p>
 
         <h1 id="hero-title" class="hero__title">
-          客户端 · Serverless · 分布式系统<br />
+          <span class="hero__title-domain">客户端 · Serverless · 分布式系统</span>
           <span class="hero__title-accent">三类工程实践</span>
         </h1>
 
@@ -123,15 +125,29 @@ const { target: statsGrid } = useScrollReveal()
 }
 
 .hero__title {
-  font-size: var(--text-4xl);
   font-weight: var(--font-weight-semibold);
   letter-spacing: -0.02em;
   line-height: var(--leading-heading);
   margin-bottom: var(--space-6);
 }
 
+/* 批次2-P2: Editorial 排版强化 —「领域声明 → 主张」节奏
+ * domain（第一行）：较小字号 + secondary 色，作为"领域声明"
+ * accent（第二行）：大字号 + Amber，作为"视觉锤" */
+.hero__title-domain {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: 0;
+  margin-bottom: var(--space-2);
+}
+
 .hero__title-accent {
+  display: block;
+  font-size: var(--text-5xl);
   color: var(--color-accent);
+  letter-spacing: -0.02em;
 }
 
 .hero__subtitle {
@@ -302,51 +318,53 @@ const { target: statsGrid } = useScrollReveal()
 }
 
 /*
- * Tablet (768–1023px): 保留 7fr/5fr 双列布局
- * 权威来源：Phase2_PRE_FLIGHT_REPORT.md §9.2 决策 1
- * - 平板不显示 Code Snippet Card（仅 stats panel 作为右侧视觉支撑）
- * - 平板用户占比较小，移动端单列时显示 snippet，桌面端 ≥1024px 显示
+ * Tablet (768–1023px): 保留 6fr/4fr 双列布局 + 代码片段（批次2-P4 优化）
+ * 原 v3.5 决策：平板隐藏 snippet（Pre-Flight 决策 1）
+ * 批次2-P4 改良：平板保留 snippet 降级呈现（字号 --text-xs + 横向滚动）
+ * - 平板占访客 10-15%，隐藏 snippet 丢失「代码即证据」核心
+ * - 6fr/4fr 给 snippet 更多空间（原 7fr/5fr 偏紧）
  */
 @media (min-width: 768px) {
   .hero__grid {
-    grid-template-columns: 7fr 5fr;
+    grid-template-columns: 6fr 4fr;
     gap: var(--space-16);
   }
 
-  .hero__title {
-    font-size: var(--text-5xl);
+  /* 平板 accent 升级到 display(56px) */
+  .hero__title-accent {
+    font-size: var(--text-display);
   }
 
   .hero__stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* 平板不显示代码片段卡片（Pre-Flight 决策 1） */
+  /* 批次2-P4: 平板保留 snippet（移除原 display: none），降级呈现 */
   .hero__snippet {
-    display: none;
+    display: block;
   }
 }
 
 /*
  * Desktop (≥1024px): 6fr/4fr，右侧 aside 包含 snippet + stats 上下叠
  * 权威来源：《Portfolio_v3.5_IMPLEMENTATION_READINESS.md》§1.3.2 方案 W
- * - 1024px 保留 7fr/5fr 作为 fallback 不再适用，直接切到 6fr/4fr
- * - 1024-1279px 右侧 ≥ 371px，代码片段可读（Pre-Flight §7.2 风险 1 已验证）
  * - 桌面端代码字号升级到 --text-sm（14px）
  */
 @media (min-width: 1024px) {
-  .hero__grid {
-    grid-template-columns: 6fr 4fr;
-  }
-
-  /* 桌面显示代码片段卡片（覆盖平板的 display: none） */
-  .hero__snippet {
-    display: block;
-  }
-
   /* 桌面端代码字号升级到 --text-sm（14px，与全局代码块一致） */
   .hero__snippet-code :deep(.shiki) {
     font-size: var(--text-sm);
+  }
+}
+
+/*
+ * Wide Desktop (≥1280px): Hero title accent 升级到 72px（批次2-P2）
+ * 建立 editorial「巨大标题 vs 紧凑正文」对比
+ * 仅在宽屏启用，避免 1024-1279px 区间 72px 过大
+ */
+@media (min-width: 1280px) {
+  .hero__title-accent {
+    font-size: var(--text-hero);
   }
 }
 

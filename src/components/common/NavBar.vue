@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { Menu, X } from 'lucide-vue-next'
 import ThemeToggle from './ThemeToggle.vue'
 
 interface NavLink {
   label: string
   to: string
+  /** 自定义 active 前缀匹配：当 to 是锚点但需在详情页高亮时使用 */
+  activePrefix?: string
 }
 
 const links: NavLink[] = [
   { label: '首页', to: '/' },
-  { label: '项目', to: '/#projects' },
+  // activePrefix: /projects/:slug 详情页时"项目"高亮（v3.5 遗留问题修复）
+  { label: '项目', to: '/#projects', activePrefix: '/projects' },
   { label: '能力', to: '/skills' },
   { label: '面试', to: '/interview' },
   { label: 'AI 实践', to: '/ai-practice' },
@@ -18,10 +22,18 @@ const links: NavLink[] = [
   { label: '关于', to: '/about' },
 ]
 
+const route = useRoute()
 const mobileOpen = ref(false)
 
 function closeMobile() {
   mobileOpen.value = false
+}
+
+/** 自定义 active 判断：链接配置了 activePrefix 且当前路径匹配前缀时返回 true
+ *  修复 /projects/:slug 详情页"项目"不高亮（to 为 /#projects 锚点，RouterLink 默认不匹配） */
+function isCustomActive(link: NavLink): boolean {
+  if (!link.activePrefix) return false
+  return route.path.startsWith(link.activePrefix)
 }
 </script>
 
@@ -36,6 +48,10 @@ function closeMobile() {
           :key="link.to"
           :to="link.to"
           class="nav__link"
+          :class="{
+            'nav__link--custom': !!link.activePrefix,
+            'nav__link--custom-active': isCustomActive(link),
+          }"
         >
           {{ link.label }}
         </RouterLink>
@@ -62,6 +78,10 @@ function closeMobile() {
         :key="link.to"
         :to="link.to"
         class="nav__mobile-link"
+        :class="{
+          'nav__mobile-link--custom': !!link.activePrefix,
+          'nav__mobile-link--custom-active': isCustomActive(link),
+        }"
         @click="closeMobile"
       >
         {{ link.label }}
@@ -128,7 +148,10 @@ function closeMobile() {
   background-color: var(--color-accent);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform var(--transition-fast);
+  opacity: 1;
+  transition:
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
 }
 
 .nav__link:hover,
@@ -136,8 +159,40 @@ function closeMobile() {
   color: var(--color-text-primary);
 }
 
+/* 非 exact-active（如 /projects/x 命中"项目"）：半透明下划线，强化"你在哪"反馈 */
+.nav__link.router-link-active::after {
+  transform: scaleX(1);
+  opacity: 0.4;
+}
+
+/* exact-active（精确匹配当前页）：完整 Amber 下划线 */
 .nav__link.router-link-exact-active::after {
   transform: scaleX(1);
+  opacity: 1;
+}
+
+/* 自定义 active 链接（activePrefix）：屏蔽 RouterLink 默认 active 样式
+ * 此类链接的 active 状态完全由 nav__link--custom-active 控制
+ * 修复 v3.5 遗留：Home 页"项目"(to="/#projects") 的 path="/" 触发 router-link-exact-active 误高亮 */
+.nav__link--custom.router-link-active,
+.nav__link--custom.router-link-exact-active {
+  color: var(--color-text-secondary);
+}
+
+.nav__link--custom.router-link-active::after,
+.nav__link--custom.router-link-exact-active::after {
+  transform: scaleX(0);
+}
+
+/* 自定义 active（/projects/:slug 详情页"项目"高亮）— 半透明下划线
+ * 修复 v3.5 遗留：to 为 /#projects 锚点，RouterLink 默认不匹配详情路由 */
+.nav__link--custom-active {
+  color: var(--color-text-primary);
+}
+
+.nav__link--custom-active::after {
+  transform: scaleX(1);
+  opacity: 0.4;
 }
 
 .nav__actions {
@@ -186,6 +241,17 @@ function closeMobile() {
 
 .nav__mobile-link:hover,
 .nav__mobile-link.router-link-active {
+  color: var(--color-accent);
+}
+
+/* 自定义 active 链接（activePrefix）：屏蔽 RouterLink 默认 active 样式
+ * 修复 v3.5 遗留：Home 页"项目"误高亮 */
+.nav__mobile-link--custom.router-link-active {
+  color: var(--color-text-secondary);
+}
+
+/* 自定义 active（移动端 /projects/:slug 详情页"项目"高亮）— Amber 文字色 */
+.nav__mobile-link--custom-active {
   color: var(--color-accent);
 }
 

@@ -20,6 +20,7 @@ github: https://github.com/l535304334/jiangnan-travel
 status: Release 1.0 · 2026-07-08
 role: 全栈独立开发
 architecture: jiangnan-travel
+cover: jiangnan-passenger-home
 decisions:
   - title: 并发控制方案选择
     context: 多订单多司机同时竞争时，需保证一个司机不被重复分配

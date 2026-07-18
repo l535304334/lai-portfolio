@@ -14,7 +14,7 @@ const { target: aboutQuote } = useScrollReveal()
   <div v-if="personal" class="page">
     <div class="container container--narrow">
       <header ref="aboutHeader" class="about__header" data-reveal-direction="up">
-        <p class="page__eyebrow mono">关于我</p>
+        <p class="page__eyebrow mono">// 关于</p>
         <h1 class="page__title">{{ personal.title }}</h1>
         <p v-if="personal.subtitle" class="about__subtitle">{{ personal.subtitle }}</p>
 

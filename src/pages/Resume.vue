@@ -18,7 +18,7 @@ function downloadPdf() {
   <div v-if="resume" class="page">
     <div class="container container--narrow">
       <header ref="resumeHeader" class="page__header resume__header" data-reveal-direction="up">
-        <p class="page__eyebrow mono">简历</p>
+        <p class="page__eyebrow mono">// 简历</p>
         <h1 class="page__title">{{ resume.title }}</h1>
         <p v-if="resume.subtitle" class="page__subtitle">{{ resume.subtitle }}</p>
         <button

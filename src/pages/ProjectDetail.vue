@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { projectDetails } from 'virtual:project-detail'
 import { useScrollReveal } from '@/composables/useScrollReveal'
 import ProjectHeader from '@/components/project/ProjectHeader.vue'
+import ProjectCover from '@/components/project/ProjectCover.vue'
 import MetricCard from '@/components/project/MetricCard.vue'
 import MarkdownContent from '@/components/project/MarkdownContent.vue'
 import ArchitectureDiagram from '@/components/project/ArchitectureDiagram.vue'
@@ -50,6 +51,14 @@ onMounted(() => {
   <div v-if="project" class="page">
     <div class="container container--narrow">
       <ProjectHeader :project="project" />
+
+      <!-- 批次4-P1: 项目封面截图（方案文档 P1.1）
+           ProjectHeader 与 metrics 之间，懒加载不阻塞 LCP -->
+      <ProjectCover
+        :cover="project.cover"
+        :title="project.title"
+        variant="detail"
+      />
 
       <section
         v-if="project.metrics.length"
